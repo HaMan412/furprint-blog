@@ -2,7 +2,7 @@
 title: 这是一篇测试文章
 description: 一篇测试文章，确保能够正常提交
 pubDate: 04 15 2025
-image: /dist/image/1.png
+image: /image/1.png
 categories:
   - Documentation
   - Examples
@@ -27,4 +27,3 @@ tags:
 ```cmd
 this is cmd
 ```
-
