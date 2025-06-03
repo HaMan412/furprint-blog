@@ -29,3 +29,7 @@ this is cmd
 ```
 
 这是一条新的记录
+
+```cmd
+this is test cmd
+```
