@@ -1,0 +1,68 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { Icon } from "astro-icon/components";
+import MainCard from "@/components/MainCard.astro";
+import FeatureCard from "@/components/mdx/FeatureCard.astro";
+---
+
+<BaseLayout title="首页">
+  <MainCard
+    title="Welcome to HaMan's Blog"
+    description="It wraps me in the sparkling twilight."
+    image="https://vip.123pan.cn/1815727707/ymjew503t0l000d7w32x8oi2h7uosf6vDIYPAIUvAwUOAvxvAdrxAa==.webp"
+    infoIcon="lucide:info"
+  >
+    <div class="space-y-8">
+      <!-- Hero Section -->
+      <section class="py-6">
+        <div class="flex flex-col items-center text-center">
+          <h1
+            class="text-4xl font-bold mb-4 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent leading-loose"
+          >
+            🌟 哈曼の赛博小窝
+          </h1>
+          <p class="text-xl text-base-content/80 max-w-3xl mb-8">
+            一个记录生活，分享项目与实践的个人博客，来者皆为客，祝好
+          </p>
+          <div class="flex flex-wrap gap-4 justify-center">
+            <a href="/blog" class="btn btn-primary gap-2 btn-shine-effect">
+              <Icon name="lucide:book-open" class="w-5 h-5" />
+              <span>即刻查阅文章</span>
+            </a>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Features Section -->
+    <section class="py-6">
+      <h2 class="text-2xl font-bold mb-6 flex items-center gap-2">
+        <Icon name="lucide:sparkles" class="w-6 h-6 text-primary" />
+        <span>正在运行的项目</span>
+      </h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <FeatureCard
+          title="Minecraft 服务器"
+          description="Furprint 1.21.5纯净生存服务器，强制正版验证，服务器会长期开设下去，欢迎大家来玩呀，服务器IP：furprint.cn"
+          icon="lucide:server"
+          color="oklch(0.7 0.2 30)"
+        />
+
+        <FeatureCard
+          title="CSOL 2014 怀旧服"
+          description="Furprint 2014 怀旧服，服务器将会架设1年，服务器最高可容纳30-50人同时在线游玩，欢迎加入！服务器群：227332586"
+          icon="lucide:computer"
+          color="oklch(0.8 0.2 80)"
+        />
+
+        <FeatureCard
+          title="哈曼の实时状态"
+          description="Furprint.cn 一个可以7*24小时视监哈曼的网站，可以看到哈曼的电脑或其他设备在赣神魔"
+          icon="lucide:scan-eye"
+          color="oklch(0.7 0.2 10)"
+        />
+      </div>
+    </section>
+  </MainCard>
+</BaseLayout>

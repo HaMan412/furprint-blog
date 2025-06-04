@@ -1,0 +1,107 @@
+---
+
+// 导入基础布局和组件
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import MainCard from "@/components/MainCard.astro";
+
+// 定义照片数据
+const images = [
+  { src: "https://vip.123pan.cn/1815727707/ymjew503t0l000d7w32x8oi1l5uoq4bwDIYPAIUvAwUOAvxvAdrxAa==.png" },
+  { src: "https://vip.123pan.cn/1815727707/yk6baz03t0m000d7w33g8skz6pavw19iDIYPAIUvAwUOAvxvAdrxAa==.png" },
+  { src: "https://vip.123pan.cn/1815727707/yk6baz03t0l000d7w33feu0ai5v9hf1mDIYPAIUvAwUOAvxvAdrxAa==.png" },
+  { src: "https://vip.123pan.cn/1815727707/ymjew503t0n000d7w32y5zprtupxhh21DIYPAIUvAwUOAvxvAdrxAa==.png" },
+  { src: "https://vip.123pan.cn/1815727707/ymjew503t0m000d7w32xqwituvab43blDIYPAIUvAwUOAvxvAdrxAa==.png" },
+  { src: "https://vip.123pan.cn/1815727707/yk6baz03t0n000d7w33h145xk9qi8v0kDIYPAIUvAwUOAvxvAdrxAa==.png" },
+  { src: "https://vip.123pan.cn/1815727707/yk6baz03t0m000d7w33g8skw8lavvjroDIYPAIUvAwUOAvxvAdrxAa==.png" },
+  { src: "https://vip.123pan.cn/1815727707/yk6baz03t0l000d7w33feu09msv9ggglDIYPAIUvAwUOAvxvAdrxAa==.png" },
+  { src: "https://vip.123pan.cn/1815727707/yk6baz03t0n000d7w33h145worqi7258DIYPAIUvAwUOAvxvAdrxAa==.PNG" },
+  { src: "https://vip.123pan.cn/1815727707/yk6baz03t0m000d7w33g8sl235aw03mnDIYPAIUvAwUOAvxvAdrxAa==.png" },
+  { src: "https://vip.123pan.cn/1815727707/yk6baz03t0l000d7w33feu0e6ov9loj0DIYPAIUvAwUOAvxvAdrxAa==.png" },
+  { src: "https://vip.123pan.cn/1815727707/yk6baz03t0n000d7w33h14611qqic5jcDIYPAIUvAwUOAvxvAdrxAa==.png" },
+  { src: "https://vip.123pan.cn/1815727707/ymjew503t0m000d7w32xqwivusab8rniDIYPAIUvAwUOAvxvAdrxAa==.png" },
+  { src: "https://vip.123pan.cn/1815727707/ymjew503t0m000d7w32xqwivdmab7lr6DIYPAIUvAwUOAvxvAdrxAa==.png" },
+  { src: "https://vip.123pan.cn/1815727707/ymjew503t0n000d7w32y5zpt97pxktazDIYPAIUvAwUOAvxvAdrxAa==.png" },
+  { src: "https://vip.123pan.cn/1815727707/yk6baz03t0m000d7w33g8sl1d8avzdoeDIYPAIUvAwUOAvxvAdrxAa==.png" },];
+
+---
+
+<BaseLayout title="照片墙">
+  <MainCard
+    title="图墙"
+    description="有生活的，有风景的，有二次元的，也有毛绒绒的！"
+    image="https://vip.123pan.cn/1815727707/ymjew503t0m000d7w32xqwiubxab5e81DIYPAIUvAwUOAvxvAdrxAa==.webp"
+    infoIcon="lucide:camera"
+  >
+    <div class="gallery-container">
+      {
+        images.map((image) => (
+          <div class="photo-card group">
+            <a href={image.src} target="_blank" rel="noopener noreferrer" class="photo-link">
+              <div class="photo-wrapper">
+                <img
+                  src={image.src}
+                  alt="照片"
+                  loading="lazy"
+                  class="gallery-image"
+                />
+              </div>
+            </a>
+          </div>
+        ))
+      }
+    </div>
+  </MainCard>
+</BaseLayout>
+
+<style>
+  /* 响应式网格布局 */
+  .gallery-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 12px;
+    padding: 15px;
+  }
+
+  /* 自适应图片容器 */
+  .photo-wrapper {
+    position: relative;
+    width: 100%;
+    padding-top: 75%; /* 3:4 比例容器 */
+    overflow: hidden;
+    border-radius: 8px;
+  }
+
+  /* 图片填充优化 */
+  .gallery-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* 覆盖式填充 */
+    transition: transform 0.3s ease;
+  }
+
+  /* 悬停效果 */
+  .photo-card:hover .gallery-image {
+    transform: scale(1.03);
+    filter: brightness(1.05);
+  }
+
+  /* 响应式调整 */
+  @media (max-width: 1024px) {
+    .gallery-container {
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    }
+  }
+
+  @media (max-width: 768px) {
+    .gallery-container {
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    }
+  }
+</style>
+
+<script is:inline>
+  // 移除分页相关脚本
+</script>

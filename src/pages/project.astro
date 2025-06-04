@@ -1,0 +1,92 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { Icon } from "astro-icon/components";
+import MainCard from "@/components/MainCard.astro";
+import GitHubStats from "@/components/mdx/GitHubStats.astro";
+import RepositoryCard from "@/components/mdx/RepositoryCard.astro";
+---
+
+<BaseLayout title="项目">
+  <MainCard
+    title="项目"
+    description="正在运行的开源项目＆部分开发日志"
+    image="https://vip.123pan.cn/1815727707/yk6baz03t0n000d7w33h145rf2qi183xDIYPAIUvAwUOAvxvAdrxAa==.png"
+    infoIcon="lucide:code-2"
+  >
+    <!-- Featured Projects -->
+    <section class="py-4">
+      <h2 class="text-2xl font-bold mb-6 flex items-center gap-2">
+        <Icon name="lucide:star" class="w-6 h-6 text-primary" />
+        <span>当前项目</span>
+      </h2>
+
+      <GitHubStats username="HaMan412" repositoryName="furprint-blog" showLanguages={true} showContributors={true} />
+    </section>
+
+    <!-- My Repositories -->
+    <section class="py-4">
+      <h2 class="text-2xl font-bold mb-6 flex items-center gap-2">
+        <Icon name="lucide:folder" class="w-6 h-6 text-primary" />
+        <span>我的仓库</span>
+      </h2>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <RepositoryCard repo="HaMan412/furprint-blog" isPinned={true} />
+      </div>
+
+      <div class="flex justify-center mt-10">
+        <a
+          href="https://github.com/HaMan412?tab=repositories"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="btn btn-outline gap-2"
+        >
+          <Icon name="lucide:github" class="w-5 h-5" />
+          <span>在GitHub查看</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- Open Source Contributions -->
+    <section class="py-4">
+      <h2 class="text-2xl font-bold mb-6 flex items-center gap-2">
+        <Icon name="lucide:git-pull-request" class="w-6 h-6 text-primary" />
+        <span>开发日志</span>
+      </h2>
+
+      <div class="card bg-base-200 p-6">
+        <ul class="space-y-6">
+          {
+            [
+              {
+                project: "Astro",
+                description: "Contributed to performance improvements and bug fixes",
+                url: "https://github.com/withastro/astro",
+              },
+            ].map((contrib) => (
+              <li class="flex items-start gap-4">
+                <div class="flex-shrink-0 bg-base-300 p-2 rounded-full">
+                  <Icon name="lucide:git-commit" class="w-6 h-6 text-primary" />
+                </div>
+                <div>
+                  <h3 class="text-lg font-bold">
+                    <a
+                      href={contrib.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="hover:text-primary transition-colors flex items-center gap-1"
+                    >
+                      {contrib.project}
+                      <Icon name="lucide:external-link" class="w-4 h-4" />
+                    </a>
+                  </h3>
+                  <p class="text-base-content/80">{contrib.description}</p>
+                </div>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </section>
+  </MainCard>
+</BaseLayout>

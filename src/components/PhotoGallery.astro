@@ -1,0 +1,191 @@
+---
+// 1. 明确定义类型接口
+export interface Props {
+  images: {
+    src: string;
+    alt: string;
+    date?: string;
+    category?: string;
+  }[];
+}
+
+const { images } = Astro.props;
+---
+
+<!-- 2. 瀑布流布局结构 -->
+<div class="gallery-container">
+  {
+    images.map((image) => (
+      <div class="photo-card" data-category={image.category || "default"}>
+        <img src={image.src} alt={image.alt} loading="lazy" width="400" height="600" class="gallery-image" />
+        <div class="image-overlay">
+          <p>{image.alt}</p>
+          {image.date && <span>📅 {image.date}</span>}
+        </div>
+      </div>
+    ))
+  }
+</div>
+
+<!-- 3. 模态框结构 -->
+<div id="image-modal" class="modal">
+  <span class="close">&times;</span>
+  <img class="modal-content" id="modal-image" />
+</div>
+
+<!-- 4. 样式部分 -->
+<style>
+  /* 瀑布流核心 */
+  .gallery-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+  }
+
+  .photo-card {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    transition:
+      transform 0.4s,
+      box-shadow 0.4s;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+  }
+
+  /* 悬停凸起效果 */
+  .photo-card:hover {
+    transform: translateY(-8px) scale(1.03);
+    box-shadow: 0 20px 30px rgba(0, 0, 0, 0.15);
+    z-index: 10;
+  }
+
+  .gallery-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s;
+  }
+
+  .photo-card:hover .gallery-image {
+    transform: scale(1.05);
+  }
+
+  /* 信息遮罩动画 */
+  .image-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
+    color: white;
+    padding: 1.5rem 1rem;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.4s ease;
+  }
+
+  .photo-card:hover .image-overlay {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* 模态框样式 */
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 100;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.9);
+    justify-content: center;
+    align-items: center;
+  }
+
+  .modal-content {
+    max-width: 90%;
+    max-height: 90%;
+    object-fit: contain;
+  }
+
+  .close {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    color: white;
+    font-size: 40px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+
+  /* 响应式调整 */
+  @media (max-width: 1024px) {
+    .gallery-container {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  @media (max-width: 768px) {
+    .gallery-container {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (max-width: 480px) {
+    .gallery-container {
+      grid-template-columns: 1fr;
+    }
+    .modal-content {
+      max-width: 95%;
+    }
+  }
+</style>
+
+<!-- 5. 修复后的模态框脚本 -->
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const modal = document.getElementById("image-modal") as HTMLElement | null;
+    const modalImg = document.getElementById("modal-image") as HTMLImageElement | null;
+
+    // 图片点击显示模态框
+    document.querySelectorAll(".gallery-image").forEach((imgElement) => {
+      const img = imgElement as HTMLImageElement;
+      img.addEventListener("click", () => {
+        if (modal && modalImg) {
+          modal.style.display = "flex";
+          modalImg.src = img.src;
+          document.body.style.overflow = "hidden"; // 防止背景滚动
+        }
+      });
+    });
+
+    // 关闭按钮事件
+    const closeBtn = document.querySelector(".close");
+    if (closeBtn) {
+      closeBtn.addEventListener("click", () => {
+        if (modal) {
+          modal.style.display = "none";
+          document.body.style.overflow = "auto";
+        }
+      });
+    }
+
+    // 背景点击关闭
+    if (modal) {
+      modal.addEventListener("click", (e) => {
+        if (e.target === modal) {
+          modal.style.display = "none";
+          document.body.style.overflow = "auto";
+        }
+      });
+    }
+
+    // ESC键关闭支持
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && modal && modal.style.display === "flex") {
+        modal.style.display = "none";
+        document.body.style.overflow = "auto";
+      }
+    });
+  });
+</script>
