@@ -2,7 +2,7 @@
 title: 这是一篇测试文章
 description: 一篇测试文章，确保能够正常提交
 pubDate: 04 15 2025
-image: /image/1.png
+image: "https://vip.123pan.cn/1815727707/yk6baz03t0l000d7w33feu09msv9ggglDIYPAIUvAwUOAvxvAdrxAa==.png"
 categories:
   - Documentation
   - Examples
