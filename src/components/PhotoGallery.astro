@@ -1,0 +1,99 @@
+---
+// 1. 组件属性定义
+export interface Photo {
+  src: string;
+  alt: string;
+  date?: string;
+  category?: string;
+}
+export interface Props {
+  photos: Photo[];
+}
+const { photos } = Astro.props;
+---
+
+<!-- 2. 瀑布流布局结构 -->
+<div class="gallery-container">
+  {photos.map((photo) => (
+    <div class="photo-card" 
+         data-category={photo.category || 'default'}>
+      <img
+        src={photo.src}
+        alt={photo.alt}
+        loading="lazy"
+        width="400"
+        height="600"
+        class="gallery-image"
+      />
+      <div class="image-overlay">
+        <p>{photo.alt}</p>
+        {photo.date && <span>📅 {photo.date}</span>}
+      </div>
+    </div>
+  ))}
+</div>
+
+<!-- 3. 样式设计 -->
+<style>
+  /* 瀑布流核心实现 [1,8](@ref) */
+  .gallery-container {
+    column-count: 4; /* 电脑端4列 */
+    column-gap: 20px;
+  }
+
+  .photo-card {
+    break-inside: avoid;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+    transition: all 0.4s ease;
+  }
+
+  /* 响应式布局调整 */
+  @media (max-width: 1200px) {
+    .gallery-container { column-count: 3; }
+  }
+  @media (max-width: 768px) {
+    .gallery-container { column-count: 2; }
+  }
+  @media (max-width: 480px) {
+    .gallery-container { column-count: 1; }
+  }
+
+  /* 悬停凸起效果 [9,11](@ref) */
+  .photo-card:hover {
+    transform: translateY(-8px) scale(1.03);
+    box-shadow: 0 20px 30px rgba(0,0,0,0.2);
+    z-index: 10;
+  }
+
+  .gallery-image {
+    width: 100%;
+    height: auto;
+    transition: transform 0.5s;
+  }
+
+  .photo-card:hover .gallery-image {
+    transform: scale(1.05);
+  }
+
+  /* 信息遮罩层 */
+  .image-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(transparent, rgba(0,0,0,0.7));
+    color: white;
+    padding: 1.5rem 1rem 0.8rem;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.4s ease;
+  }
+
+  .photo-card:hover .image-overlay {
+    opacity: 1;
+    transform: translateY(0);
+  }
+</style>
