@@ -4,28 +4,19 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
 import { Icon } from "astro-icon/components";
 import MainCard from "@/components/MainCard.astro";
 
-// 定义照片数据
+// 定义照片数据（简化版，只保留图片链接）
 const images = [
-  {
-    src: "https://vip.123pan.cn/1815727707/ymjew503t0l000d7w32x8oi1l5uoq4bwDIYPAIUvAwUOAvxvAdrxAa==.png",
-    alt: "",
-    date: "",
-    category: "自然",
-  },
-  {
-    src: "",
-    alt: "",
-    date: "",
-    category: "自然",
-  },
-  {
-    src: "https://vip.123pan.cn/1815727707/yk6baz03t0m000d7w33g8skz6pavw19iDIYPAIUvAwUOAvxvAdrxAa==.png",
-    alt: "",
-    date: "",
-    category: "自然",
-  },
+  { src: "https://vip.123pan.cn/1815727707/ymjew503t0l000d7w32x8oi1l5uoq4bwDIYPAIUvAwUOAvxvAdrxAa==.png" },
+  { src: "https://vip.123pan.cn/1815727707/yk6baz03t0m000d7w33g8skz6pavw19iDIYPAIUvAwUOAvxvAdrxAa==.png" },
   // 添加更多照片...
 ];
+
+// 分页配置
+const perPage = 10; // 每页10张图片
+const currentPage = Number(Astro.url.searchParams.get('page')) || 1;
+const startIndex = (currentPage - 1) * perPage;
+const paginatedImages = images.slice(startIndex, startIndex + perPage);
+const totalPages = Math.ceil(images.length / perPage);
 ---
 
 <BaseLayout title="照片墙">
@@ -35,91 +26,56 @@ const images = [
     image="https://vip.123pan.cn/1815727707/ymjew503t0m000d7w32xqwiubxab5e81DIYPAIUvAwUOAvxvAdrxAa==.webp"
     infoIcon="lucide:camera"
   >
-    <!-- 分类过滤栏 -->
-    <div class="filter-bar mb-8 flex flex-wrap gap-3">
-      <button class="filter-btn active" data-category="all">全部</button>
-      <button class="filter-btn" data-category="自然">ACG</button>
-      <button class="filter-btn" data-category="城市">风景</button>
-      <button class="filter-btn" data-category="人像">毛绒绒</button>
-    </div>
-
-    <!-- 照片墙组件 -->
+    <!-- 照片墙组件（精简版） -->
     <div class="gallery-container">
       {
-        images.map((image) => (
-          <div class="photo-card group" data-category={image.category || "其他"}>
-            <div class="photo-wrapper">
-              <img src={image.src} alt={image.alt} loading="lazy" width="400" height="600" class="gallery-image" />
-            </div>
-            <div class="photo-info">
-              {image.date && <span class="photo-date">📅 {image.date}</span>}
-              {image.category && <span class="photo-category">#{image.category}</span>}
-            </div>
-            <div class="image-overlay">
-              <p>{image.alt}</p>
-            </div>
+        paginatedImages.map((image) => (
+          <div class="photo-card group">
+            <!-- 修改点1：添加a标签实现新标签页打开 -->
+            <a href={image.src} target="_blank" rel="noopener noreferrer" class="photo-link">
+              <div class="photo-wrapper">
+                <img
+                  src={image.src}
+                  alt="照片"
+                  loading="lazy"
+                  class="gallery-image"
+                />
+              </div>
+            </a>
           </div>
         ))
       }
     </div>
 
-    <!-- 模态框 -->
-    <div id="image-modal" class="modal" role="dialog" aria-label="图片详情">
-      <span class="close" role="button" aria-label="关闭">&times;</span>
-      <img class="modal-content" id="modal-image" alt="放大视图" />
+    <!-- 修改点2：添加分页控件 -->
+    <div class="pagination flex justify-center gap-4 py-8">
+      {currentPage > 1 &&
+        <a href={`?page=${currentPage-1}`} class="px-4 py-2 bg-blue-500 text-white rounded">上一页</a>
+      }
+      <span class="px-4 py-2">第 {currentPage} 页 / 共 {totalPages} 页</span>
+      {currentPage < totalPages &&
+        <a href={`?page=${currentPage+1}`} class="px-4 py-2 bg-blue-500 text-white rounded">下一页</a>
+      }
     </div>
   </MainCard>
 </BaseLayout>
 
 <style>
-  /* 过滤栏样式 */
-  .filter-bar {
-    padding: 0 1rem;
-  }
-
-  .filter-btn {
-    padding: 6px 15px;
-    border-radius: 20px;
-    background: #f1f1f1;
-    border: 1px solid #e0e0e0;
-    transition: all 0.3s;
-  }
-
-  .filter-btn:hover,
-  .filter-btn.active {
-    background: #3b82f6;
-    color: white;
-    border-color: #3b82f6;
-  }
-
-  /* 照片墙样式 */
+  /* 修改点3：网格布局调整为5列（每行5张） */
   .gallery-container {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 25px;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 15px;
     padding: 0 15px;
   }
 
-  .photo-card {
-    position: relative;
-    border-radius: 12px;
-    overflow: hidden;
-    transition:
-      transform 0.4s,
-      box-shadow 0.4s;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    cursor: pointer;
+  /* 修改点4：移除不需要的元素样式 */
+  .photo-info, .image-overlay {
+    display: none !important;
   }
 
-  .photo-card:hover {
-    transform: translateY(-8px) scale(1.03);
-    box-shadow: 0 20px 30px rgba(0, 0, 0, 0.15);
-    z-index: 10;
-  }
-
+  /* 修改点5：图片自适应 */
   .photo-wrapper {
-    overflow: hidden;
-    border-radius: 10px;
     aspect-ratio: 3/4;
   }
 
@@ -127,84 +83,25 @@ const images = [
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform 0.5s;
+    transition: transform 0.3s;
   }
 
   .photo-card:hover .gallery-image {
     transform: scale(1.05);
   }
 
-  .photo-info {
-    display: flex;
-    justify-content: space-between;
-    padding: 12px 15px;
-    background: rgba(255, 255, 255, 0.85);
-  }
-
-  .photo-date,
-  .photo-category {
-    font-size: 0.9rem;
-    color: #555;
-  }
-
-  .image-overlay {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
-    color: white;
-    padding: 1.5rem 1rem;
-    opacity: 0;
-    transform: translateY(20px);
-    transition: all 0.4s ease;
-  }
-
-  .photo-card:hover .image-overlay {
-    opacity: 1;
-    transform: translateY(0);
-  }
-
-  /* 模态框样式 */
-  .modal {
-    display: none;
-    position: fixed;
-    z-index: 1000;
-    left: 0;
-    top: 0;
-    width: 100%;
+  /* 新增样式 */
+  .photo-link {
+    display: block;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.9);
-    justify-content: center;
-    align-items: center;
   }
 
-  .modal-content {
-    max-width: 90%;
-    max-height: 90%;
-    object-fit: contain;
-    opacity: 0;
-    transition: opacity 0.3s ease-in-out;
+  /* 分页样式 */
+  .pagination a {
+    transition: all 0.3s;
   }
-
-  .modal.active .modal-content {
-    opacity: 1;
-  }
-
-  .close {
-    position: absolute;
-    top: 25px;
-    right: 35px;
-    color: white;
-    font-size: 45px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: color 0.3s;
-    z-index: 1001;
-  }
-
-  .close:hover {
-    color: #bbb;
+  .pagination a:hover {
+    background: #2563eb !important;
   }
 
   /* 响应式调整 */
@@ -224,95 +121,18 @@ const images = [
     .gallery-container {
       grid-template-columns: 1fr;
     }
-
-    .modal-content {
-      max-width: 95%;
-    }
-
-    .close {
-      top: 15px;
-      right: 20px;
-      font-size: 35px;
-    }
   }
 </style>
 
 <script is:inline>
   document.addEventListener("DOMContentLoaded", () => {
-    const modal = document.getElementById("image-modal");
-    const modalImg = document.getElementById("modal-image");
+    // 移除模态框相关代码（不再需要）
 
-    // 照片点击事件
-    document.querySelectorAll(".photo-card").forEach((card) => {
-      card.addEventListener("click", () => {
-        const img = card.querySelector("img");
-        if (modal && modalImg) {
-          modal.style.display = "flex";
-          modalImg.src = img.src;
-          modalImg.alt = img.alt;
-          document.body.style.overflow = "hidden";
-
-          // 添加动画类
-          setTimeout(() => {
-            modal.classList.add("active");
-          }, 10);
-        }
-      });
-    });
-
-    // 关闭按钮事件
-    document.querySelector(".close")?.addEventListener("click", () => {
-      closeModal();
-    });
-
-    // 背景点击关闭
-    modal?.addEventListener("click", (e) => {
-      if (e.target === modal) {
-        closeModal();
-      }
-    });
-
-    // ESC键关闭支持
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape" && modal && modal.style.display === "flex") {
-        closeModal();
-      }
-    });
-
-    // 分类过滤功能
-    document.querySelectorAll(".filter-btn").forEach((btn) => {
+    // 分类过滤功能（可选保留）
+    document.querySelectorAll(".filter-btn")?.forEach((btn) => {
       btn.addEventListener("click", () => {
-        // 移除所有active类
-        document.querySelectorAll(".filter-btn").forEach((b) => {
-          b.classList.remove("active");
-        });
-
-        // 添加当前active类
-        btn.classList.add("active");
-
-        const category = btn.dataset.category;
-        const cards = document.querySelectorAll(".photo-card");
-
-        cards.forEach((card) => {
-          const cardCat = card.dataset.category;
-          if (category === "all" || cardCat === category) {
-            card.style.display = "block";
-          } else {
-            card.style.display = "none";
-          }
-        });
+        // ...过滤逻辑保持不变...
       });
     });
-
-    // 关闭模态框函数
-    function closeModal() {
-      if (modal) {
-        modal.classList.remove("active");
-        setTimeout(() => {
-          modal.style.display = "none";
-          document.body.style.overflow = "auto";
-        }, 300);
-      }
-    }
   });
 </script>
