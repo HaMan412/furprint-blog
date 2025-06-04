@@ -27,12 +27,7 @@ site:
       text: 文章
       href: /blog
       svg: "material-symbols:book-2-outline-rounded"
-      target: _self
-    - id: all
-      text: 全部文章
-      href: /blog
-      svg: "material-symbols:ink-pen-outline-rounded"
-      target: _self # 子菜单项配置
+      target: _self  # 子菜单项配置
     - id: project
       text: 项目
       href: /project
