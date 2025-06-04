@@ -28,13 +28,11 @@ site:
       href: /blog
       svg: "material-symbols:book-2-outline-rounded"
       target: _self
-      subItems:
-        - id: all
-          text: 全部文章
-          href: /blog
-          svg: "material-symbols:ink-pen-outline-rounded"
-          target: _self
-        # 子菜单项配置
+    - id: all
+      text: 全部文章
+      href: /blog
+      svg: "material-symbols:ink-pen-outline-rounded"
+      target: _self # 子菜单项配置
     - id: project
       text: 项目
       href: /project
@@ -44,6 +42,11 @@ site:
       text: 朋友
       href: /friend
       svg: "material-symbols:supervisor-account-outline-rounded"
+      target: _self
+    - id: photo
+      text: 相册
+      href: /photo
+      svg: "material-symbols:wallpaper-outline-rounded"
       target: _self
 
 # 用户的个人信息

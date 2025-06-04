@@ -7,40 +7,34 @@ import MainCard from "@/components/MainCard.astro";
 // 定义照片数据
 const images = [
   {
-    src: "/gallery/mountain.jpg",
-    alt: "山脉日出",
-    date: "2023-06-15",
+    src: "https://vip.123pan.cn/1815727707/ymjew503t0l000d7w32x8oi1l5uoq4bwDIYPAIUvAwUOAvxvAdrxAa==.png",
     category: "自然",
   },
   {
-    src: "/gallery/cityscape.jpg",
-    alt: "城市夜景",
-    date: "2023-08-22",
-    category: "城市",
+    src: "https://vip.123pan.cn/1815727707/yk6baz03t0m000d7w33g8skz6pavw19iDIYPAIUvAwUOAvxvAdrxAa==.png",
+    category: "自然",
   },
   {
-    src: "/gallery/portrait.jpg",
-    alt: "人像摄影",
-    date: "2023-05-30",
-    category: "人像",
+    src: "https://vip.123pan.cn/1815727707/yk6baz03t0l000d7w33feu0ai5v9hf1mDIYPAIUvAwUOAvxvAdrxAa==.png",
+    category: "自然",
   },
   // 添加更多照片...
 ];
 ---
 
-<BaseLayout title="照片墙 | 视觉记忆">
+<BaseLayout title="照片墙">
   <MainCard
-    title="视觉记忆"
-    description="捕捉生活中的美好瞬间，每一帧都是时光的印记"
-    textOverlay="MEMORIES"
+    title="图墙"
+    description="有生活的，有风景的，有二次元的，也有毛绒绒的！"
+    image="https://vip.123pan.cn/1815727707/ymjew503t0m000d7w32xqwiubxab5e81DIYPAIUvAwUOAvxvAdrxAa==.webp"
     infoIcon="lucide:camera"
   >
     <!-- 分类过滤栏 -->
     <div class="filter-bar mb-8 flex flex-wrap gap-3">
       <button class="filter-btn active" data-category="all">全部</button>
-      <button class="filter-btn" data-category="自然">自然</button>
-      <button class="filter-btn" data-category="城市">城市</button>
-      <button class="filter-btn" data-category="人像">人像</button>
+      <button class="filter-btn" data-category="自然">ACG</button>
+      <button class="filter-btn" data-category="城市">风景</button>
+      <button class="filter-btn" data-category="人像">毛绒绒</button>
     </div>
 
     <!-- 照片墙组件 -->
