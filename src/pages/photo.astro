@@ -1,67 +1,57 @@
 ---
 // 导入基础布局和组件
 import BaseLayout from "@/layouts/BaseLayout.astro";
-import { Icon } from "astro-icon/components";
 import MainCard from "@/components/MainCard.astro";
 
-// 定义照片数据（简化版，只保留图片链接）
+// 照片数据（简化版）
 const images = [
   { src: "https://vip.123pan.cn/1815727707/ymjew503t0l000d7w32x8oi1l5uoq4bwDIYPAIUvAwUOAvxvAdrxAa==.png" },
   { src: "https://vip.123pan.cn/1815727707/yk6baz03t0m000d7w33g8skz6pavw19iDIYPAIUvAwUOAvxvAdrxAa==.png" },
+  { src: "https://vip.123pan.cn/1815727707/yk6baz03t0l000d7w33feu0ai5v9hf1mDIYPAIUvAwUOAvxvAdrxAa==.png" },
+  { src: "https://vip.123pan.cn/1815727707/ymjew503t0n000d7w32y5zprtupxhh21DIYPAIUvAwUOAvxvAdrxAa==.png" },
+  { src: "https://vip.123pan.cn/1815727707/ymjew503t0m000d7w32xqwituvab43blDIYPAIUvAwUOAvxvAdrxAa==.png" },
+  { src: "https://vip.123pan.cn/1815727707/yk6baz03t0n000d7w33h145xk9qi8v0kDIYPAIUvAwUOAvxvAdrxAa==.png" },
+  { src: "https://vip.123pan.cn/1815727707/yk6baz03t0m000d7w33g8skw8lavvjroDIYPAIUvAwUOAvxvAdrxAa==.png" },
+  { src: "https://vip.123pan.cn/1815727707/yk6baz03t0l000d7w33feu09msv9ggglDIYPAIUvAwUOAvxvAdrxAa==.png" },
+  { src: "https://vip.123pan.cn/1815727707/yk6baz03t0n000d7w33h145worqi7258DIYPAIUvAwUOAvxvAdrxAa==.PNG" },
   // 添加更多照片...
 ];
-
-// 分页配置
-const perPage = 10; // 每页10张图片
-const currentPage = Number(Astro.url.searchParams.get('page')) || 1;
-const startIndex = (currentPage - 1) * perPage;
-const paginatedImages = images.slice(startIndex, startIndex + perPage);
-const totalPages = Math.ceil(images.length / perPage);
 ---
 
-<BaseLayout title="照片墙">
+<BaseLayout title="相册">
   <MainCard
-    title="图墙"
+    title="相册"
     description="有生活的，有风景的，有二次元的，也有毛绒绒的！"
     image="https://vip.123pan.cn/1815727707/ymjew503t0m000d7w32xqwiubxab5e81DIYPAIUvAwUOAvxvAdrxAa==.webp"
     infoIcon="lucide:camera"
   >
-    <!-- 照片墙组件（精简版） -->
+    <!-- 照片墙容器 -->
     <div class="gallery-container">
-      {
-        paginatedImages.map((image) => (
-          <div class="photo-card group">
-            <!-- 修改点1：添加a标签实现新标签页打开 -->
-            <a href={image.src} target="_blank" rel="noopener noreferrer" class="photo-link">
-              <div class="photo-wrapper">
-                <img
-                  src={image.src}
-                  alt="照片"
-                  loading="lazy"
-                  class="gallery-image"
-                />
-              </div>
-            </a>
+      {images.map((image) => (
+        <div class="photo-card">
+          <!-- 修改点1：移除<a>标签，改为div包裹 -->
+          <div class="photo-wrapper" data-src={image.src}>
+            <img
+              src={image.src}
+              alt="照片"
+              loading="lazy"
+              class="gallery-image"
+            />
           </div>
-        ))
-      }
+        </div>
+      ))}
     </div>
 
-    <!-- 修改点2：添加分页控件 -->
-    <div class="pagination flex justify-center gap-4 py-8">
-      {currentPage > 1 &&
-        <a href={`?page=${currentPage-1}`} class="px-4 py-2 bg-blue-500 text-white rounded">上一页</a>
-      }
-      <span class="px-4 py-2">第 {currentPage} 页 / 共 {totalPages} 页</span>
-      {currentPage < totalPages &&
-        <a href={`?page=${currentPage+1}`} class="px-4 py-2 bg-blue-500 text-white rounded">下一页</a>
-      }
+    <!-- 修改点2：添加模态窗结构 -->
+    <div id="image-modal" class="modal">
+      <span class="close-modal">&times;</span>
+      <img class="modal-image" id="modal-image" alt="原图预览" />
     </div>
   </MainCard>
 </BaseLayout>
 
 <style>
-  /* 修改点3：网格布局调整为5列（每行5张） */
+  /* 网格布局保持5列 */
   .gallery-container {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
@@ -69,14 +59,10 @@ const totalPages = Math.ceil(images.length / perPage);
     padding: 0 15px;
   }
 
-  /* 修改点4：移除不需要的元素样式 */
-  .photo-info, .image-overlay {
-    display: none !important;
-  }
-
-  /* 修改点5：图片自适应 */
+  /* 图片容器 */
   .photo-wrapper {
     aspect-ratio: 3/4;
+    cursor: pointer;
   }
 
   .gallery-image {
@@ -86,53 +72,111 @@ const totalPages = Math.ceil(images.length / perPage);
     transition: transform 0.3s;
   }
 
-  .photo-card:hover .gallery-image {
+  .photo-wrapper:hover .gallery-image {
     transform: scale(1.05);
   }
 
-  /* 新增样式 */
-  .photo-link {
-    display: block;
+  /* 新增模态窗样式 */
+  .modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
     height: 100%;
+    background: rgba(0,0,0,0.9);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
   }
 
-  /* 分页样式 */
-  .pagination a {
-    transition: all 0.3s;
+  .modal.active {
+    display: flex;
+    animation: fadeIn 0.3s;
   }
-  .pagination a:hover {
-    background: #2563eb !important;
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  .modal-image {
+    max-width: 90%;
+    max-height: 90%;
+    object-fit: contain;
+    border: 3px solid white;
+    border-radius: 5px;
+  }
+
+  .close-modal {
+    position: absolute;
+    top: 30px;
+    right: 40px;
+    color: white;
+    font-size: 50px;
+    cursor: pointer;
+    transition: color 0.3s;
+  }
+
+  .close-modal:hover {
+    color: #ff6b6b;
   }
 
   /* 响应式调整 */
-  @media (max-width: 1024px) {
-    .gallery-container {
-      grid-template-columns: repeat(3, 1fr);
-    }
+  @media (max-width: 1200px) {
+    .gallery-container { grid-template-columns: repeat(4, 1fr); }
   }
 
   @media (max-width: 768px) {
-    .gallery-container {
-      grid-template-columns: repeat(2, 1fr);
-    }
+    .gallery-container { grid-template-columns: repeat(3, 1fr); }
+    .close-modal { font-size: 40px; right: 30px; }
   }
 
   @media (max-width: 480px) {
-    .gallery-container {
-      grid-template-columns: 1fr;
-    }
+    .gallery-container { grid-template-columns: repeat(2, 1fr); }
+    .modal-image { max-width: 95%; }
   }
 </style>
 
 <script is:inline>
   document.addEventListener("DOMContentLoaded", () => {
-    // 移除模态框相关代码（不再需要）
+    // 获取模态窗元素
+    const modal = document.getElementById('image-modal');
+    const modalImg = document.getElementById('modal-image');
+    const closeBtn = document.querySelector('.close-modal');
 
-    // 分类过滤功能（可选保留）
-    document.querySelectorAll(".filter-btn")?.forEach((btn) => {
-      btn.addEventListener("click", () => {
-        // ...过滤逻辑保持不变...
+    // 点击图片打开模态窗
+    document.querySelectorAll('.photo-wrapper').forEach(wrapper => {
+      wrapper.addEventListener('click', () => {
+        const imgSrc = wrapper.dataset.src;
+        modalImg.src = imgSrc;
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden'; // 禁止背景滚动
       });
     });
+
+    // 关闭模态窗的三种方式
+    // 方式1：点击关闭按钮
+    closeBtn.addEventListener('click', closeModal);
+
+    // 方式2：点击模态窗背景
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) closeModal();
+    });
+
+    // 方式3：按ESC键
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && modal.classList.contains('active')) {
+        closeModal();
+      }
+    });
+
+    // 关闭函数
+    function closeModal() {
+      modal.classList.remove('active');
+      setTimeout(() => {
+        document.body.style.overflow = 'auto'; // 恢复滚动
+      }, 300);
+    }
   });
 </script>
