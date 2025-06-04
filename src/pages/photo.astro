@@ -1,18 +1,31 @@
 ---
+// 1. 导入照片墙组件
 import PhotoGallery from "@/components/PhotoGallery.astro";
-import BaseLayout from "@/layouts/BaseLayout.astro";
+import MainCard from "@/components/MainCard.astro";
+
+// 2. 定义图片数据（或从API/本地获取）
+const images = [
+  { src: "/images/photo1.jpg", alt: "山脉风景", date: "2023-06-15" },
+  { src: "/images/photo2.jpg", alt: "海滩日落", category: "自然" },
+  // 更多图片...
+];
 ---
 
-<BaseLayout title="照片墙">
-  <h1>我的摄影集</h1>
-  <PhotoGallery images={photos} />
-</BaseLayout>
-// 获取图片数据（支持本地+图床混合）
-const photos = [
-  {
-    src: "https://vip.123pan.cn/1815727707/yk6baz03t0m000d7w33g8skr2pavp1zaDIYPAIUvAwUOAvxvAdrxAa==.png", // 本地图片
-    alt: "海岸日落",
-    date: "2023-08-15",
-  },
-  // 添加更多图片...
-];
+<!-- 3. 页面布局结构 -->
+<html lang="zh-CN">
+  <head>
+    <title>我的照片墙 | Astro画廊</title>
+    <meta name="description" content="精选摄影作品展示" />
+  </head>
+  <body>
+    <header><!-- 导航栏 --></header>
+
+    <main>
+      <h1>摄影作品集</h1>
+      <!-- 4. 嵌入照片墙组件 -->
+      <PhotoGallery images={images} />
+    </main>
+
+    <footer><!-- 页脚 --></footer>
+  </body>
+</html>
