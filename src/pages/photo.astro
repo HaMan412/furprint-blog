@@ -1,31 +1,318 @@
 ---
-// 1. 导入照片墙组件
-import PhotoGallery from "@/components/PhotoGallery.astro";
+// 导入基础布局和组件
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { Icon } from "astro-icon/components";
 import MainCard from "@/components/MainCard.astro";
 
-// 2. 定义图片数据（或从API/本地获取）
+// 定义照片数据
 const images = [
-  { src: "/images/photo1.jpg", alt: "山脉风景", date: "2023-06-15" },
-  { src: "/images/photo2.jpg", alt: "海滩日落", category: "自然" },
-  // 更多图片...
+  {
+    src: "/gallery/mountain.jpg",
+    alt: "山脉日出",
+    date: "2023-06-15",
+    category: "自然",
+  },
+  {
+    src: "/gallery/cityscape.jpg",
+    alt: "城市夜景",
+    date: "2023-08-22",
+    category: "城市",
+  },
+  {
+    src: "/gallery/portrait.jpg",
+    alt: "人像摄影",
+    date: "2023-05-30",
+    category: "人像",
+  },
+  // 添加更多照片...
 ];
 ---
 
-<!-- 3. 页面布局结构 -->
-<html lang="zh-CN">
-  <head>
-    <title>我的照片墙 | Astro画廊</title>
-    <meta name="description" content="精选摄影作品展示" />
-  </head>
-  <body>
-    <header><!-- 导航栏 --></header>
+<BaseLayout title="照片墙 | 视觉记忆">
+  <MainCard
+    title="视觉记忆"
+    description="捕捉生活中的美好瞬间，每一帧都是时光的印记"
+    textOverlay="MEMORIES"
+    infoIcon="lucide:camera"
+  >
+    <!-- 分类过滤栏 -->
+    <div class="filter-bar mb-8 flex flex-wrap gap-3">
+      <button class="filter-btn active" data-category="all">全部</button>
+      <button class="filter-btn" data-category="自然">自然</button>
+      <button class="filter-btn" data-category="城市">城市</button>
+      <button class="filter-btn" data-category="人像">人像</button>
+    </div>
 
-    <main>
-      <h1>摄影作品集</h1>
-      <!-- 4. 嵌入照片墙组件 -->
-      <PhotoGallery images={images} />
-    </main>
+    <!-- 照片墙组件 -->
+    <div class="gallery-container">
+      {
+        images.map((image) => (
+          <div class="photo-card group" data-category={image.category || "其他"}>
+            <div class="photo-wrapper">
+              <img src={image.src} alt={image.alt} loading="lazy" width="400" height="600" class="gallery-image" />
+            </div>
+            <div class="photo-info">
+              {image.date && <span class="photo-date">📅 {image.date}</span>}
+              {image.category && <span class="photo-category">#{image.category}</span>}
+            </div>
+            <div class="image-overlay">
+              <p>{image.alt}</p>
+            </div>
+          </div>
+        ))
+      }
+    </div>
 
-    <footer><!-- 页脚 --></footer>
-  </body>
-</html>
+    <!-- 模态框 -->
+    <div id="image-modal" class="modal" role="dialog" aria-label="图片详情">
+      <span class="close" role="button" aria-label="关闭">&times;</span>
+      <img class="modal-content" id="modal-image" alt="放大视图" />
+    </div>
+  </MainCard>
+</BaseLayout>
+
+<style>
+  /* 过滤栏样式 */
+  .filter-bar {
+    padding: 0 1rem;
+  }
+
+  .filter-btn {
+    padding: 6px 15px;
+    border-radius: 20px;
+    background: #f1f1f1;
+    border: 1px solid #e0e0e0;
+    transition: all 0.3s;
+  }
+
+  .filter-btn:hover,
+  .filter-btn.active {
+    background: #3b82f6;
+    color: white;
+    border-color: #3b82f6;
+  }
+
+  /* 照片墙样式 */
+  .gallery-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 25px;
+    padding: 0 15px;
+  }
+
+  .photo-card {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    transition:
+      transform 0.4s,
+      box-shadow 0.4s;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+  }
+
+  .photo-card:hover {
+    transform: translateY(-8px) scale(1.03);
+    box-shadow: 0 20px 30px rgba(0, 0, 0, 0.15);
+    z-index: 10;
+  }
+
+  .photo-wrapper {
+    overflow: hidden;
+    border-radius: 10px;
+    aspect-ratio: 3/4;
+  }
+
+  .gallery-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s;
+  }
+
+  .photo-card:hover .gallery-image {
+    transform: scale(1.05);
+  }
+
+  .photo-info {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 15px;
+    background: rgba(255, 255, 255, 0.85);
+  }
+
+  .photo-date,
+  .photo-category {
+    font-size: 0.9rem;
+    color: #555;
+  }
+
+  .image-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
+    color: white;
+    padding: 1.5rem 1rem;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.4s ease;
+  }
+
+  .photo-card:hover .image-overlay {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* 模态框样式 */
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.9);
+    justify-content: center;
+    align-items: center;
+  }
+
+  .modal-content {
+    max-width: 90%;
+    max-height: 90%;
+    object-fit: contain;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+  }
+
+  .modal.active .modal-content {
+    opacity: 1;
+  }
+
+  .close {
+    position: absolute;
+    top: 25px;
+    right: 35px;
+    color: white;
+    font-size: 45px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.3s;
+    z-index: 1001;
+  }
+
+  .close:hover {
+    color: #bbb;
+  }
+
+  /* 响应式调整 */
+  @media (max-width: 1024px) {
+    .gallery-container {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .gallery-container {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 480px) {
+    .gallery-container {
+      grid-template-columns: 1fr;
+    }
+
+    .modal-content {
+      max-width: 95%;
+    }
+
+    .close {
+      top: 15px;
+      right: 20px;
+      font-size: 35px;
+    }
+  }
+</style>
+
+<script is:inline>
+  document.addEventListener("DOMContentLoaded", () => {
+    const modal = document.getElementById("image-modal");
+    const modalImg = document.getElementById("modal-image");
+
+    // 照片点击事件
+    document.querySelectorAll(".photo-card").forEach((card) => {
+      card.addEventListener("click", () => {
+        const img = card.querySelector("img");
+        if (modal && modalImg) {
+          modal.style.display = "flex";
+          modalImg.src = img.src;
+          modalImg.alt = img.alt;
+          document.body.style.overflow = "hidden";
+
+          // 添加动画类
+          setTimeout(() => {
+            modal.classList.add("active");
+          }, 10);
+        }
+      });
+    });
+
+    // 关闭按钮事件
+    document.querySelector(".close")?.addEventListener("click", () => {
+      closeModal();
+    });
+
+    // 背景点击关闭
+    modal?.addEventListener("click", (e) => {
+      if (e.target === modal) {
+        closeModal();
+      }
+    });
+
+    // ESC键关闭支持
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && modal && modal.style.display === "flex") {
+        closeModal();
+      }
+    });
+
+    // 分类过滤功能
+    document.querySelectorAll(".filter-btn").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        // 移除所有active类
+        document.querySelectorAll(".filter-btn").forEach((b) => {
+          b.classList.remove("active");
+        });
+
+        // 添加当前active类
+        btn.classList.add("active");
+
+        const category = btn.dataset.category;
+        const cards = document.querySelectorAll(".photo-card");
+
+        cards.forEach((card) => {
+          const cardCat = card.dataset.category;
+          if (category === "all" || cardCat === category) {
+            card.style.display = "block";
+          } else {
+            card.style.display = "none";
+          }
+        });
+      });
+    });
+
+    // 关闭模态框函数
+    function closeModal() {
+      if (modal) {
+        modal.classList.remove("active");
+        setTimeout(() => {
+          modal.style.display = "none";
+          document.body.style.overflow = "auto";
+        }, 300);
+      }
+    }
+  });
+</script>
