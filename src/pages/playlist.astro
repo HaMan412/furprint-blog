@@ -123,6 +123,7 @@ const songs = [
                 class="audio-player"
                 controls
                 data-song-id={song.id}
+                crossorigin="anonymous"
               ></audio>
             </div>
           </div>
@@ -374,39 +375,50 @@ const songs = [
       }
     }
 
-    function playNewSong(item, songId, audioSrc) {
-      // 关闭之前的播放
-      if (currentAudio && currentAudio !== item) {
-        const prevPlayer = currentAudio.querySelector('.audio-player');
-        prevPlayer.pause();
-        setPlayState(currentAudio, 'inactive');
-        currentAudio.classList.remove('expanded');
-        currentAudio.querySelector('.audio-player-container').classList.add('hidden');
-      }
+function playNewSong(item, songId, audioSrc) {
+  // 关闭之前的播放
+  if (currentAudio && currentAudio !== item) {
+    const prevPlayer = currentAudio.querySelector('.audio-player');
+    prevPlayer.pause();
+    setPlayState(currentAudio, 'inactive');
+    currentAudio.classList.remove('expanded');
+    currentAudio.querySelector('.audio-player-container').classList.add('hidden');
+  }
 
-      // 更新当前歌曲
-      currentSongId = songId;
-      currentAudio = item;
+  // 更新当前歌曲
+  currentSongId = songId;
+  currentAudio = item;
 
-      // 设置新歌曲播放
-      const audioPlayer = item.querySelector('.audio-player');
-      audioPlayer.src = audioSrc;
-      item.classList.add('expanded');
-      setPlayState(item, 'playing');
+  // 设置新歌曲播放（添加代理功能）
+  const audioPlayer = item.querySelector('.audio-player');
 
-      const playerContainer = item.querySelector('.audio-player-container');
-      playerContainer.classList.remove('hidden');
+  // 代理设置 - 解决 Cloudflare 环境中的跨域问题
+  const proxyBaseUrl = 'https://music-proxy.maomaowo.workers.dev/';
+  const proxyUrl = `${proxyBaseUrl}?url=${encodeURIComponent(audioSrc)}`;
 
-      // 尝试播放
-      const playPromise = audioPlayer.play();
+  // 在开发环境使用原始音频源
+  const isLocal = window.location.hostname === 'localhost' || window.location.protocol === 'file:';
+  const finalUrl = isLocal ? audioSrc : proxyUrl;
 
-      if (playPromise !== undefined) {
-        playPromise.catch(error => {
-          console.log("自动播放被阻止:", error);
-          audioPlayer.controls = true;
-        });
-      }
-    }
+  audioPlayer.src = finalUrl;
+  audioPlayer.crossOrigin = 'anonymous'; // 跨域设置
+
+  item.classList.add('expanded');
+  setPlayState(item, 'playing');
+
+  const playerContainer = item.querySelector('.audio-player-container');
+  playerContainer.classList.remove('hidden');
+
+  // 尝试播放
+  const playPromise = audioPlayer.play();
+
+  if (playPromise !== undefined) {
+    playPromise.catch(error => {
+      console.log("自动播放被阻止:", error);
+      audioPlayer.controls = true;
+    });
+  }
+}
 
     function setPlayState(item, state) {
       const indicator = item.querySelector('.state-indicator');
@@ -443,6 +455,8 @@ const songs = [
       player.addEventListener('error', function() {
         const item = this.closest('.song-item');
         if (!item) return;
+        const errorMsg = this.error ? `错误代码: ${this.error.code}` : "未知错误";
+        nowPlayingText.textContent = `播放失败: ${errorMsg}`;
 
         nowPlayingText.textContent = "播放失败，请尝试其他歌曲";
         setPlayState(item, 'inactive');
