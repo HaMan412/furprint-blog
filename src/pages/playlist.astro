@@ -36,7 +36,7 @@ const songs = [
     title: "Secret Link (和泉紗霧角色歌)",
     artist: "藤田茜",
     cover: "https://vip.123pan.cn/1815727707/ymjew503t0l000d7w32x8raklc240qibDIYPAIUvAwUOAvxvAdrxAa==.png",
-    audio: "https://maomaowo.cn/Secret Link.mp3",
+    audio: "https://maomaowo.cn/Secret Link (和泉紗霧角色歌).mp3",
     duration: "3:46",
   },
   {
@@ -78,6 +78,16 @@ const songs = [
       <span id="now-playing-text">当前未播放歌曲</span>
     </div>
 
+    <!-- 全局播放器 -->
+    <div id="global-player-container" class="audio-player-container">
+      <audio
+        id="global-audio-player"
+        controls
+        playsinline
+        class="audio-player"
+      ></audio>
+    </div>
+
     <div class="playlist">
       {songs.map((song, index) => (
         <div
@@ -108,15 +118,6 @@ const songs = [
               </div>
 
               <div class="song-duration">{song.duration}</div>
-            </div>
-
-            <!-- 在歌曲项内添加播放器容器 -->
-            <div class="audio-player-container hidden">
-              <audio
-                class="audio-player"
-                controls
-                data-song-id={song.id}
-              ></audio>
             </div>
           </div>
         </div>
@@ -268,12 +269,12 @@ const songs = [
     font-feature-settings: "tnum";
   }
 
-  /* 歌曲项内的播放器样式 */
+  /* 全局播放器样式 */
   .audio-player-container {
     width: 100%;
-    margin-top: 12px;
-    padding-top: 12px;
-    border-top: 1px dashed rgba(229, 231, 235, 0.8);
+    margin-bottom: 20px;
+    border-radius: 8px;
+    overflow: hidden;
   }
 
   .audio-player {
@@ -321,127 +322,189 @@ const songs = [
       font-size: 1rem;
     }
   }
+
+  /* 新增提示样式 */
+  .text-blue-500 {
+    color: #3b82f6;
+  }
+  .underline {
+    text-decoration: underline;
+  }
+  .cursor-pointer {
+    cursor: pointer;
+  }
 </style>
 
 <script is:inline>
-  document.addEventListener("DOMContentLoaded", () => {
-    const nowPlayingText = document.getElementById("now-playing-text");
-    let currentSongId = null;
-    let currentAudio = null;
+  // 初始化播放器状态
+  let audioContextInitialized = false;
+  const nowPlayingText = document.getElementById("now-playing-text");
+  const globalAudioPlayer = document.getElementById('global-audio-player');
+  let currentSongItem = null;
 
-    // 初始化歌曲点击事件
+  // 核心修复：Astro路由导航监听
+  if (window.Astro) {
+    window.Astro.on('page', () => {
+      initAudioContext();
+      initPlayer();
+    });
+  }
+
+  // 主初始化函数
+  function initPlayer() {
     document.querySelectorAll(".song-item").forEach(item => {
-      item.addEventListener("click", function(e) {
-        // 防止点击播放器触发歌曲项点击
-        if (e.target.closest('.audio-player')) return;
-
-        const songId = this.dataset.id;
-        const audioSrc = this.dataset.audio;
-        const songTitle = this.querySelector('.song-title').textContent;
-        const songArtist = this.querySelector('.song-artist').textContent;
-
-        // 更新当前播放显示
-        nowPlayingText.textContent = `正在播放: ${songTitle} - ${songArtist}`;
-
-        // 处理歌曲项状态
-        if (currentSongId === songId) {
-          togglePlayback(item);
-          return;
-        }
-
-        playNewSong(item, songId, audioSrc);
-      });
+      item.addEventListener("click", handleSongClick);
     });
 
-    function togglePlayback(item) {
-      const playerContainer = item.querySelector('.audio-player-container');
-      const audioPlayer = item.querySelector('.audio-player');
+    // 事件监听
+    globalAudioPlayer.addEventListener('ended', handlePlaybackEnd);
+    globalAudioPlayer.addEventListener('error', handlePlaybackError);
+  }
 
-      if (audioPlayer.paused) {
-        audioPlayer.play();
-        // 更新图标为暂停状态
-        setPlayState(item, 'playing');
-      } else {
-        audioPlayer.pause();
-        setPlayState(item, 'paused');
-      }
+  // 音频上下文解锁（关键修复）
+  function initAudioContext() {
+    if (audioContextInitialized) return;
+
+    try {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const oscillator = ctx.createOscillator();
+      oscillator.connect(ctx.destination);
+      oscillator.start();
+      oscillator.stop(ctx.currentTime + 0.001);
+      audioContextInitialized = true;
+    } catch (e) {
+      console.log("音频上下文初始化失败:", e);
+    }
+  }
+
+  // 歌曲点击处理
+  function handleSongClick(e) {
+    if (e.target.closest('.audio-player')) return;
+    const item = this;
+    const audioSrc = item.dataset.audio;
+    const songTitle = item.querySelector('.song-title').textContent;
+    const songArtist = item.querySelector('.song-artist').textContent;
+
+    nowPlayingText.textContent = `正在播放: ${songTitle} - ${songArtist}`;
+    currentSongItem === item ? togglePlayback() : playNewSong(item, audioSrc);
+  }
+
+  // 播放/暂停切换
+  function togglePlayback() {
+    if (globalAudioPlayer.paused) {
+      playAudioSafely(globalAudioPlayer);
+      setPlayState(currentSongItem, 'playing');
+    } else {
+      globalAudioPlayer.pause();
+      setPlayState(currentSongItem, 'paused');
+    }
+  }
+
+  // 播放新歌曲
+  function playNewSong(item, audioSrc) {
+    // 关闭之前的播放
+    if (currentSongItem) {
+      setPlayState(currentSongItem, 'inactive');
+      currentSongItem.classList.remove('expanded');
     }
 
-    function playNewSong(item, songId, audioSrc) {
-      // 关闭之前的播放
-      if (currentAudio && currentAudio !== item) {
-        const prevPlayer = currentAudio.querySelector('.audio-player');
-        prevPlayer.pause();
-        setPlayState(currentAudio, 'inactive');
-        currentAudio.classList.remove('expanded');
-        currentAudio.querySelector('.audio-player-container').classList.add('hidden');
-      }
+    // 更新当前歌曲
+    currentSongItem = item;
 
-      // 更新当前歌曲
-      currentSongId = songId;
-      currentAudio = item;
+    // 设置新歌曲播放
+    globalAudioPlayer.src = audioSrc;
+    item.classList.add('expanded');
+    setPlayState(item, 'playing');
 
-      // 设置新歌曲播放
-      const audioPlayer = item.querySelector('.audio-player');
-      audioPlayer.src = audioSrc;
-      item.classList.add('expanded');
-      setPlayState(item, 'playing');
+    // 安全播放
+    playAudioSafely(globalAudioPlayer);
+  }
 
-      const playerContainer = item.querySelector('.audio-player-container');
-      playerContainer.classList.remove('hidden');
+  // 安全播放函数，处理AbortError
+  function playAudioSafely(audioElement) {
+    // 确保音频已加载
+    if (audioElement.readyState < 3) {
+      audioElement.load();
+    }
 
-      // 尝试播放
-      const playPromise = audioPlayer.play();
+    const playPromise = audioElement.play();
 
-      if (playPromise !== undefined) {
-        playPromise.catch(error => {
-          console.log("自动播放被阻止:", error);
-          audioPlayer.controls = true;
+    if (playPromise !== undefined) {
+      playPromise
+        .then(() => {
+          // 播放成功
+        })
+        .catch(error => {
+          console.log("播放错误:", error);
+          if (error.name === 'AbortError') {
+            // 处理中断错误：等待短暂延迟后重试
+            setTimeout(() => {
+              audioElement.play().catch(e => console.log("重试播放失败:", e));
+            }, 300);
+          } else if (error.name === 'NotAllowedError') {
+            // 显示用户引导提示
+            showPlaybackHint();
+          } else {
+            audioElement.controls = true;
+          }
         });
-      }
     }
+  }
 
-    function setPlayState(item, state) {
-      const indicator = item.querySelector('.state-indicator');
-      if (!indicator) return;
+  // 设置播放状态
+  function setPlayState(item, state) {
+    const indicator = item.querySelector('.state-indicator');
+    if (!indicator) return;
 
-      const playIcon = indicator.querySelector('.play-icon');
-      const pauseIcon = indicator.querySelector('.pause-icon');
+    const playIcon = indicator.querySelector('.play-icon');
+    const pauseIcon = indicator.querySelector('.pause-icon');
 
-      if (state === 'playing') {
-        playIcon.classList.add('hidden');
-        pauseIcon.classList.remove('hidden');
-      } else if (state === 'paused') {
-        playIcon.classList.remove('hidden');
-        pauseIcon.classList.add('hidden');
-      } else if (state === 'inactive') {
-        playIcon.classList.remove('hidden');
-        pauseIcon.classList.add('hidden');
-        item.classList.remove('expanded');
-      }
+    if (state === 'playing') {
+      playIcon.classList.add('hidden');
+      pauseIcon.classList.remove('hidden');
+    } else if (state === 'paused') {
+      playIcon.classList.remove('hidden');
+      pauseIcon.classList.add('hidden');
+    } else if (state === 'inactive') {
+      playIcon.classList.remove('hidden');
+      pauseIcon.classList.add('hidden');
+      item.classList.remove('expanded');
     }
+  }
 
-    // 监听播放结束事件
-    document.querySelectorAll('.audio-player').forEach(player => {
-      player.addEventListener('ended', function() {
-        const item = this.closest('.song-item');
-        if (!item) return;
+  // 播放结束处理
+  function handlePlaybackEnd() {
+    nowPlayingText.textContent = "播放结束，请选择其他歌曲";
+    if (currentSongItem) {
+      setPlayState(currentSongItem, 'inactive');
+      currentSongItem.classList.remove('expanded');
+      currentSongItem = null;
+    }
+  }
 
-        nowPlayingText.textContent = "播放结束，请选择其他歌曲";
-        setPlayState(item, 'inactive');
-        item.classList.remove('expanded');
-        item.querySelector('.audio-player-container').classList.add('hidden');
-      });
+  // 播放错误处理
+  function handlePlaybackError() {
+    nowPlayingText.textContent = "播放失败，请尝试其他歌曲";
+    if (currentSongItem) {
+      setPlayState(currentSongItem, 'inactive');
+      currentSongItem.classList.remove('expanded');
+      currentSongItem = null;
+    }
+  }
 
-      player.addEventListener('error', function() {
-        const item = this.closest('.song-item');
-        if (!item) return;
-
-        nowPlayingText.textContent = "播放失败，请尝试其他歌曲";
-        setPlayState(item, 'inactive');
-        item.classList.remove('expanded');
-        item.querySelector('.audio-player-container').classList.add('hidden');
-      });
+  // 显示播放提示
+  function showPlaybackHint() {
+    nowPlayingText.innerHTML = `播放被阻止，请<span class="text-blue-500 underline cursor-pointer">点击此处</span>激活`;
+    nowPlayingText.querySelector('span').addEventListener('click', () => {
+      if (globalAudioPlayer.src) {
+        playAudioSafely(globalAudioPlayer);
+      }
     });
+  }
+
+  // 初始加载执行
+  document.addEventListener("DOMContentLoaded", () => {
+    initAudioContext();
+    initPlayer();
   });
 </script>
