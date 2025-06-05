@@ -1,0 +1,454 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import MainCard from "@/components/MainCard.astro";
+
+const songs = [
+  {
+    title: "Signals",
+    artist: "Lazer Boomerang",
+    cover: "https://vip.123pan.cn/1815727707/ymjew503t0l000d7w32x8raj9w2103y4DIYPAIUvAwUOAvxvAdrxAa==.png",
+    id: "2165763414",
+    audio: "https://music.163.com/song/media/outer/url?id=2165763414.mp3",
+    duration: "4:26",
+  },
+  {
+    title: "Vortex",
+    artist: "SaliHai",
+    cover: "https://vip.123pan.cn/1815727707/yk6baz03t0m000d7w33g8y2s5gg9bi1wDIYPAIUvAwUOAvxvAdrxAa==.png",
+    id: "2679995272",
+    audio: "https://music.163.com/song/media/outer/url?id=2679995272.mp3",
+    duration: "5:14",
+  },
+  {
+    title: "Speed of flow",
+    artist: "THE RODEO CARBURETTOR",
+    cover: "https://vip.123pan.cn/1815727707/ymjew503t0l000d7w32x8rak5m230enxDIYPAIUvAwUOAvxvAdrxAa==.png",
+    id: "4950243",
+    audio: "https://music.163.com/song/media/outer/url?id=4950243.mp3",
+    duration: "3:47",
+  },
+  {
+    title: "His Theme",
+    artist: "Toby Fox",
+    cover: "https://vip.123pan.cn/1815727707/yk6baz03t0l000d7w33ff4yvsjn00yb3DIYPAIUvAwUOAvxvAdrxAa==.png",
+    id: "39227633",
+    audio: "https://music.163.com/song/media/outer/url?id=39227633.mp3",
+    duration: "2:05",
+  },
+  {
+    title: "Secret Link (和泉紗霧角色歌)",
+    artist: "藤田茜",
+    cover: "https://vip.123pan.cn/1815727707/ymjew503t0l000d7w32x8raklc240qibDIYPAIUvAwUOAvxvAdrxAa==.png",
+    id: "487003529",
+    audio: "https://music.163.com/song/media/outer/url?id=487003529.mp3",
+    duration: "3:46",
+  },
+  {
+    title: "Sincerely",
+    artist: "TRUE - 唐沢美帆",
+    cover: "https://vip.123pan.cn/1815727707/yk6baz03t0m000d7w33g8y2uuxg9e6a1DIYPAIUvAwUOAvxvAdrxAa==.png",
+    id: "534065323",
+    audio: "https://music.163.com/song/media/outer/url?id=534065323.mp3",
+    duration: "4:35",
+  },
+  {
+    title: "Whatever It Takes",
+    artist: "Imagine Dragons",
+    cover: "https://vip.123pan.cn/1815727707/yk6baz03t0n000d7w33h1aornrvvryuhDIYPAIUvAwUOAvxvAdrxAa==.png",
+    id: "545756876",
+    audio: "https://music.163.com/song/media/outer/url?id=545756876.mp3",
+    duration: "3:21",
+  },
+  {
+    title: "D.T.M.",
+    artist: "Simon Curtis",
+    cover: "https://vip.123pan.cn/1815727707/yk6baz03t0l000d7w33ff4ywmrn10rgiDIYPAIUvAwUOAvxvAdrxAa==.png",
+    id: "1989355",
+    audio: "https://music.163.com/song/media/outer/url?id=1989355.mp3",
+    duration: "3:17",
+  },
+];
+---
+
+<BaseLayout title="哈曼の歌单">
+  <MainCard
+    title="哈曼の歌单"
+    description="愿世间一切归于宁静"
+    image="https://vip.123pan.cn/1815727707/yk6baz03t0n000d7w33h1aoqtpvvqz9gDIYPAIUvAwUOAvxvAdrxAa==.png"
+    infoIcon="lucide:music"
+  >
+    <div id="now-playing" class="now-playing">
+      <svg class="play-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10" />
+        <polygon points="10 8 16 12 10 16" />
+      </svg>
+      <span id="now-playing-text">当前未播放歌曲</span>
+    </div>
+
+    <div class="playlist">
+      {songs.map((song, index) => (
+        <div
+          class="song-item group"
+          data-index={index}
+          data-id={song.id}
+          data-audio={song.audio}
+        >
+          <div class="song-content">
+            <div class="song-basic">
+              <div class="song-cover">
+                <img src={song.cover} alt={song.title} loading="lazy" />
+                <!-- 播放状态指示器 -->
+                <div class="state-indicator">
+                  <svg class="play-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white">
+                    <polygon points="9,7 17,12 9,17" />
+                  </svg>
+                  <svg class="pause-icon hidden" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white">
+                    <rect x="8" y="5" width="4" height="14" />
+                    <rect x="14" y="5" width="4" height="14" />
+                  </svg>
+                </div>
+              </div>
+
+              <div class="song-info">
+                <h3 class="song-title">{song.title}</h3>
+                <p class="song-artist">{song.artist}</p>
+              </div>
+
+              <div class="song-duration">{song.duration}</div>
+            </div>
+
+            <!-- 在歌曲项内添加播放器容器 -->
+            <div class="audio-player-container hidden">
+              <audio
+                class="audio-player"
+                controls
+                data-song-id={song.id}
+              ></audio>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </MainCard>
+</BaseLayout>
+
+<style>
+  /* 当前播放指示器 */
+  .now-playing {
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    background-color: rgba(59, 130, 246, 0.08);
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-size: 1rem;
+    color: #1e40af;
+    transition: all 0.3s ease;
+  }
+
+  .now-playing svg {
+    margin-right: 10px;
+    color: #3b82f6;
+  }
+
+  /* 歌曲列表 */
+  .playlist {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  /* 歌曲项样式 */
+  .song-item {
+    display: flex;
+    padding: 14px 16px;
+    border-radius: 12px;
+    background-color: #ffffff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    border: 1px solid rgba(229, 231, 235, 0.6);
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+
+  .song-item:hover {
+    background-color: #f8fafc;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    border-color: rgba(191, 219, 254, 0.8);
+  }
+
+  /* 歌曲内容布局 */
+  .song-content {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .song-basic {
+    display: flex;
+    align-items: center;
+    width: 100%;
+  }
+
+  /* 状态指示器 */
+  .song-cover {
+    position: relative;
+    width: 56px;
+    height: 56px;
+    margin-right: 16px;
+    border-radius: 8px;
+    overflow: hidden;
+    flex-shrink: 0;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  .song-cover img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+
+  .song-item:hover .song-cover img {
+    transform: scale(1.05);
+  }
+
+  .state-indicator {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.3);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    border-radius: 8px;
+  }
+
+  .song-item:hover .state-indicator {
+    opacity: 1;
+  }
+
+  .song-item.expanded .state-indicator {
+    opacity: 1;
+    background-color: rgba(0, 0, 0, 0.3);
+  }
+
+  .state-indicator svg {
+    width: 26px;
+    height: 26px;
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.4));
+  }
+
+  .song-info {
+    flex: 1;
+    overflow: hidden;
+  }
+
+  .song-title {
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: #1e293b;
+    margin: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .song-artist {
+    font-size: 0.92rem;
+    color: #4b5563;
+    margin: 4px 0 0 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .song-duration {
+    color: #64748b;
+    font-size: 0.92rem;
+    margin: 0 16px;
+    flex-shrink: 0;
+    font-feature-settings: "tnum";
+  }
+
+  /* 歌曲项内的播放器样式 */
+  .audio-player-container {
+    width: 100%;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px dashed rgba(229, 231, 235, 0.8);
+  }
+
+  .audio-player {
+    width: 100%;
+    border-radius: 8px;
+  }
+
+  /* 响应式设计 */
+  @media (max-width: 768px) {
+    .song-item {
+      padding: 12px;
+    }
+
+    .song-cover {
+      width: 48px;
+      height: 48px;
+      margin-right: 14px;
+    }
+
+    .song-title {
+      font-size: 1.05rem;
+    }
+
+    .song-duration {
+      margin: 0 12px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .song-duration {
+      display: none;
+    }
+
+    .song-item {
+      padding: 10px 12px;
+    }
+
+    .song-cover {
+      width: 44px;
+      height: 44px;
+      margin-right: 12px;
+    }
+
+    .song-title {
+      font-size: 1rem;
+    }
+  }
+</style>
+
+<script is:inline>
+  document.addEventListener("DOMContentLoaded", () => {
+    const nowPlayingText = document.getElementById("now-playing-text");
+    let currentSongId = null;
+    let currentAudio = null;
+
+    // 初始化歌曲点击事件
+    document.querySelectorAll(".song-item").forEach(item => {
+      item.addEventListener("click", function(e) {
+        // 防止点击播放器触发歌曲项点击
+        if (e.target.closest('.audio-player')) return;
+
+        const songId = this.dataset.id;
+        const audioSrc = this.dataset.audio;
+        const songTitle = this.querySelector('.song-title').textContent;
+        const songArtist = this.querySelector('.song-artist').textContent;
+
+        // 更新当前播放显示
+        nowPlayingText.textContent = `正在播放: ${songTitle} - ${songArtist}`;
+
+        // 处理歌曲项状态
+        if (currentSongId === songId) {
+          togglePlayback(item);
+          return;
+        }
+
+        playNewSong(item, songId, audioSrc);
+      });
+    });
+
+    function togglePlayback(item) {
+      const playerContainer = item.querySelector('.audio-player-container');
+      const audioPlayer = item.querySelector('.audio-player');
+
+      if (audioPlayer.paused) {
+        audioPlayer.play();
+        // 更新图标为暂停状态
+        setPlayState(item, 'playing');
+      } else {
+        audioPlayer.pause();
+        setPlayState(item, 'paused');
+      }
+    }
+
+    function playNewSong(item, songId, audioSrc) {
+      // 关闭之前的播放
+      if (currentAudio && currentAudio !== item) {
+        const prevPlayer = currentAudio.querySelector('.audio-player');
+        prevPlayer.pause();
+        setPlayState(currentAudio, 'inactive');
+        currentAudio.classList.remove('expanded');
+        currentAudio.querySelector('.audio-player-container').classList.add('hidden');
+      }
+
+      // 更新当前歌曲
+      currentSongId = songId;
+      currentAudio = item;
+
+      // 设置新歌曲播放
+      const audioPlayer = item.querySelector('.audio-player');
+      audioPlayer.src = audioSrc;
+      item.classList.add('expanded');
+      setPlayState(item, 'playing');
+
+      const playerContainer = item.querySelector('.audio-player-container');
+      playerContainer.classList.remove('hidden');
+
+      // 尝试播放
+      const playPromise = audioPlayer.play();
+
+      if (playPromise !== undefined) {
+        playPromise.catch(error => {
+          console.log("自动播放被阻止:", error);
+          audioPlayer.controls = true;
+        });
+      }
+    }
+
+    function setPlayState(item, state) {
+      const indicator = item.querySelector('.state-indicator');
+      if (!indicator) return;
+
+      const playIcon = indicator.querySelector('.play-icon');
+      const pauseIcon = indicator.querySelector('.pause-icon');
+
+      if (state === 'playing') {
+        playIcon.classList.add('hidden');
+        pauseIcon.classList.remove('hidden');
+      } else if (state === 'paused') {
+        playIcon.classList.remove('hidden');
+        pauseIcon.classList.add('hidden');
+      } else if (state === 'inactive') {
+        playIcon.classList.remove('hidden');
+        pauseIcon.classList.add('hidden');
+        item.classList.remove('expanded');
+      }
+    }
+
+    // 监听播放结束事件
+    document.querySelectorAll('.audio-player').forEach(player => {
+      player.addEventListener('ended', function() {
+        const item = this.closest('.song-item');
+        if (!item) return;
+
+        nowPlayingText.textContent = "播放结束，请选择其他歌曲";
+        setPlayState(item, 'inactive');
+        item.classList.remove('expanded');
+        item.querySelector('.audio-player-container').classList.add('hidden');
+      });
+
+      player.addEventListener('error', function() {
+        const item = this.closest('.song-item');
+        if (!item) return;
+
+        nowPlayingText.textContent = "播放失败，请尝试其他歌曲";
+        setPlayState(item, 'inactive');
+        item.classList.remove('expanded');
+        item.querySelector('.audio-player-container').classList.add('hidden');
+      });
+    });
+  });
+</script>
