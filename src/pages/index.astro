@@ -46,22 +46,88 @@ import FeatureCard from "@/components/mdx/FeatureCard.astro";
           title="Minecraft 服务器"
           description="Furprint 1.21.5纯净生存服务器，强制正版验证，服务器会长期开设下去，欢迎大家来玩呀，服务器IP：furprint.cn"
           icon="lucide:server"
-          color="oklch(0.7 0.2 30)"
+          color="oklch(0.9 0.2 30)"
         />
 
         <FeatureCard
           title="CSOL 2014 怀旧服"
           description="Furprint 2014 怀旧服，服务器将会架设1年，服务器最高可容纳30-50人同时在线游玩，欢迎加入！服务器群：227332586"
           icon="lucide:computer"
-          color="oklch(0.8 0.2 80)"
+          color="oklch(0.9 0.2 80)"
         />
 
         <FeatureCard
           title="哈曼の实时状态"
-          description="Furprint.cn 一个可以7*24小时视监哈曼的网站，可以看到哈曼的电脑或其他设备在赣神魔"
+          description="furprint.cn 一个可以7*24小时视监哈曼的网站，可以看到哈曼的电脑或其他设备在赣神魔"
           icon="lucide:scan-eye"
-          color="oklch(0.7 0.2 10)"
+          color="oklch(0.9 0.2 10)"
         />
+
+        <FeatureCard
+          title="FurprintTV 在线观影"
+          description="LibreTV开源项目，可在线观影，搜索想看的影片&番剧即可（下滑可找到观影地址与访问密码）"
+          icon="lucide:clapperboard"
+          color="oklch(0.9 0.2 254)"
+        />
+
+        <FeatureCard
+          title="Furmail 临时邮件"
+          description="MoeMail开源项目，仅支持接受邮件，可用于注册等常用环境，可创建临时邮箱或永久邮箱，临时邮箱到期自动销毁（下滑有网址）"
+          icon="lucide:mail-check"
+          color="oklch(0.9 0.2 10)"
+        />
+      </div>
+    </section>
+
+    <!-- Open Source Contributions -->
+    <section class="py-4">
+      <h2 class="text-2xl font-bold mb-6 flex items-center gap-2">
+        <Icon name="lucide:git-pull-request" class="w-6 h-6 text-primary" />
+        <span>可用项目网站</span>
+      </h2>
+
+      <div class="card bg-base-200 p-6">
+        <ul class="space-y-6">
+          {
+            [
+              {
+                project: "FurprintTV 在线观影",
+                description: "累了就看会儿电影看会儿番剧吧~ 访问密码：furprint",
+                url: "https://libretv.furprint.top/",
+              },
+              {
+                project: "Furmail 临时邮件",
+                description: "仅可接收邮件，可用于注册等多种场景，禁止用于注册包括但不限于黄赌毒等违法网站&平台！",
+                url: "https://mail.furprint.top/",
+              },
+              {
+                project: "哈曼还活着吗？",
+                description: "用于视奸哈曼（嗯对）",
+                url: "http://furprint.cn/",
+              },
+            ].map((contrib) => (
+              <li class="flex items-start gap-4">
+                <div class="flex-shrink-0 bg-base-300 p-2 rounded-full">
+                  <Icon name="lucide:git-commit" class="w-6 h-6 text-primary" />
+                </div>
+                <div>
+                  <h3 class="text-lg font-bold">
+                    <a
+                      href={contrib.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="hover:text-primary transition-colors flex items-center gap-1"
+                    >
+                      {contrib.project}
+                      <Icon name="lucide:external-link" class="w-4 h-4" />
+                    </a>
+                  </h3>
+                  <p class="text-base-content/80">{contrib.description}</p>
+                </div>
+              </li>
+            ))
+          }
+        </ul>
       </div>
     </section>
   </MainCard>
