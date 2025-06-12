@@ -24,8 +24,8 @@ Python版本3.10及以上  **安装时必须勾选 ADD PATH 【[Python下载](ht
 Git  安装时可无脑下一步【[Git下载](https://haman.lanzoul.com/isoOn2ynt6je)】【[官网链接](https://git-scm.com/)】  
 >国内网络环境可能无法使用git指令克隆github的仓库   
 >建议使用代理软件，并配置好git的代理   
->推荐使用 Clash**【[Clash下载](https://haman.lanzoul.com/iwnTg2ynx6a)】【[项目仓库](https://github.com/clash-verge-rev/clash-verge-rev)】  
->如果你还不会使用Clash或设置git的代理，可以前往【[Clash教程]()】查看帮助  
+>推荐使用 Clash【[Clash下载](https://haman.lanzoul.com/iwnTg2ynx6a)】【[项目仓库](https://github.com/clash-verge-rev/clash-verge-rev)】  
+>如果你还不会使用Clash或设置git的代理，可以前往【[Clash教程](https://furprint.top/blog/clash-useteach)】查看帮助  
 >如果你没有节点可用，可以先临时订阅本站提供的节点  
 >订阅链接在博客主页下滑自行查找，请勿恶意使用  
 
@@ -35,13 +35,13 @@ Git  安装时可无脑下一步【[Git下载](https://haman.lanzoul.com/isoOn2y
 2. 进入`Furprint`文件夹，点击文件夹上方的导航栏，输入`cmd`并直接回车
 ![打开cmd](https://vip.123pan.cn/1815727707/yk6baz03t0m000d7w33g9ms2um4ijuayDIYPAIUvAwUOAvxvAdrxAa==.png)
 3. 此时会打开命令窗口，接下来以此复制以下指令粘贴到命令窗口并回车使用
-```cmd
+```bash
 python -m venv MaiBotEnv
 ```
 正确输入后不会有其他反馈，但是会多出一个文件夹`MaiBotEnv`
 ![创建虚拟环境1](https://vip.123pan.cn/1815727707/yk6baz03t0m000d7w33g9ms5mg4imdr4DIYPAIUvAwUOAvxvAdrxAa==.png)
 4. 继续输入指令用于启用虚拟环境，复制完整，其中的`.`也算哦！
-```cmd
+```bash
 .\\MaiBotEnv\\Scripts\\activate
 ```
 正确启用后，你的路径前缀应该长这样  
@@ -55,19 +55,19 @@ python -m venv MaiBotEnv
 > 此时你所在的文件夹目录应当是`Furprint`，并且已启用虚拟环境
 
 1. 克隆`MaiMBot`本体
-```CMD
+```bash
 git clone https://github.com/MaiM-with-u/MaiBot.git
 ```
 正确反馈应当如下，且文件夹内新增`MaiBot`文件夹
 ![克隆本体](https://vip.123pan.cn/1815727707/yk6baz03t0m000d7w33g9ms84c4ipajpDIYPAIUvAwUOAvxvAdrxAa==.png)
 2. 克隆`Maim_Message`包
-```CMD
+```bash
 git clone https://github.com/MaiM-with-u/maim_message.git
 ```
 正确反馈应当如下，且文件夹内新增`maim_message`文件夹
 ![克隆message](https://vip.123pan.cn/1815727707/ymjew503t0l000d7w32x9999rno9qg94DIYPAIUvAwUOAvxvAdrxAa==.png)
 3. 克隆`NoneBot-Adapters`适配器
-```CMD
+```bash
 git clone https://github.com/MaiM-with-u/nonebot-plugin-maibot-adapters.git
 ```
 正确反馈应当如下，且文件夹内新增`nonebot-plugin-maibot-adapters`文件夹
@@ -77,7 +77,7 @@ git clone https://github.com/MaiM-with-u/nonebot-plugin-maibot-adapters.git
 > 此时你所在的文件夹目录应该是`MaiBot`，开启虚拟环境后使用`cd maibot`即可
 
 1. 安装依赖
-```CMD
+```bash
 pip install -i https://mirrors.aliyun.com/pypi/simple -r .\\requirements.txt
 ```
 可能会在最后一步卡很长一段时间，回车一下后刷会儿视频慢慢等就好（
@@ -85,14 +85,14 @@ pip install -i https://mirrors.aliyun.com/pypi/simple -r .\\requirements.txt
 2. 进入`maim_message`文件夹，并安装这个包
 > 此时你应该处于虚拟环境下
 
-```CMD
+```bash
 pip install -e .
 ```
 ![安装包](https://vip.123pan.cn/1815727707/yk6baz03t0m000d7w33g9ms8xs4iqdjaDIYPAIUvAwUOAvxvAdrxAa==.png)
 ***
 ### 安装NoneBot
 在CMD中使用指令
-```CMD
+```bash
 pip install -i https://mirrors.aliyun.com/pypi/simple nb-cli
 ```
 正确反馈应当如下，我这是已经下载好了，第一次下载应当会有下载的进度条
@@ -103,7 +103,7 @@ pip install -i https://mirrors.aliyun.com/pypi/simple nb-cli
 > ***不要和图中一样在`maim_message`下创建，这是错误的！***，不影响，但不建议
 
 1. 创建一个项目，并选择`Simple(插件开发者)`小键盘的上下键选择，回车确定
-```CMD
+```bash
 nb create
 ```
 ![nbcreate](https://vip.123pan.cn/1815727707/ymjew503t0m000d7w32xrobciv3w6hkrDIYPAIUvAwUOAvxvAdrxAa==.png)
@@ -124,7 +124,7 @@ nb create
 创建成功后应当如下
 ![创建成功](https://vip.123pan.cn/1815727707/ymjew503t0n000d7w32y6hptacjikj5jDIYPAIUvAwUOAvxvAdrxAa==.png)
 进入NoneBot项目，测试能否正常启动
-```CMD
+```bash
 cd 刚刚创建的项目名字
 nb run
 ```
@@ -139,7 +139,7 @@ nb run
 
 2. 找到`.env`这个文件，并打开，可以使用记事本打开，推荐使用`vscode`打开  
 3. 在第三行插入以下代码
-```CMD
+```bash
 ONEBOT_WS_URLS=["ws://127.0.0.1:7878"] #此处的7878可以改为自己喜欢的四位数端口
 ```
 ![.env](https://vip.123pan.cn/1815727707/yk6baz03t0m000d7w33g9msalh4isadiDIYPAIUvAwUOAvxvAdrxAa==.png)
@@ -164,7 +164,7 @@ ONEBOT_WS_URLS=["ws://127.0.0.1:7878"] #此处的7878可以改为自己喜欢的
 6. 登陆成功后先关闭程序，在当前文件夹用`vscode`或`记事本`等工具打开
 ![json](https://vip.123pan.cn/1815727707/yk6baz03t0m000d7w33g9msbho4itswbDIYPAIUvAwUOAvxvAdrxAa==.png)
 7. 打开后，我们只看最下面的代码
-```cmd
+```bash
     },
     "Implementations": [
         {
@@ -180,7 +180,7 @@ ONEBOT_WS_URLS=["ws://127.0.0.1:7878"] #此处的7878可以改为自己喜欢的
 }
 ```
 将上面的代码替换为以下代码
-```cmd
+```bash
     },
     "Implementations": [
         {
@@ -200,7 +200,7 @@ ONEBOT_WS_URLS=["ws://127.0.0.1:7878"] #此处的7878可以改为自己喜欢的
 ## 大功告成，启动Bot
 1. 回到我们最初创建的文件夹`Furprint`，根据之前的教程启用虚拟环境
 2. 然后依次使用以下命令
-```cmd
+```bash
 cd maibot
 python bot.py
 ```
@@ -214,9 +214,9 @@ python bot.py
 ![](https://vip.123pan.cn/1815727707/yk6baz03t0m000d7w33g9mscc64iueu1DIYPAIUvAwUOAvxvAdrxAa==.png)
 启动成功显示如下
 ![](https://vip.123pan.cn/1815727707/yk6baz03t0n000d7w33h277njmk57sf6DIYPAIUvAwUOAvxvAdrxAa==.png)
-6. 这个时候我们回到最初创建的文件夹目录下`Furprint`，重复操作启用一个虚拟环境
+6. 这个时候我们回到最初创建的文件夹目录下`Furprint`，重复操作启用一个虚拟环境  
 7. 然后再一次使用以下命令
-```cmd
+```bash
 cd 之前创建的Nonebot的项目名字
 nb run
 ```
