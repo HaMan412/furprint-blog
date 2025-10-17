@@ -42,7 +42,7 @@ site:
       text: 歌单
       href: /playlist
       svg: "material-symbols:library-music-outline"
-      target: _blank
+      target: _self
     - id: friend
       text: 友链
       href: /friend
