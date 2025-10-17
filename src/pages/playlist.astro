@@ -2,64 +2,16 @@
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import MainCard from "@/components/MainCard.astro";
 
+// 数据结构保持不变，APlayer 可以直接使用
 const songs = [
-  {
-    title: "Signals",
-    artist: "Lazer Boomerang",
-    cover: "https://vip.123pan.cn/1815727707/ymjew503t0l000d7w32x8raj9w2103y4DIYPAIUvAwUOAvxvAdrxAa==.png",
-    id: "2165763414",
-    audio: "https://maomaowo.cn/Signals.mp3",
-    duration: "4:26",
-  },
-  {
-    title: "Vortex",
-    artist: "SaliHai",
-    cover: "https://vip.123pan.cn/1815727707/yk6baz03t0m000d7w33g8y2s5gg9bi1wDIYPAIUvAwUOAvxvAdrxAa==.png",
-    audio: "https://maomaowo.cn/Vortex.mp3",
-    duration: "5:14",
-  },
-  {
-    title: "Speed of flow",
-    artist: "THE RODEO CARBURETTOR",
-    cover: "https://vip.123pan.cn/1815727707/ymjew503t0l000d7w32x8rak5m230enxDIYPAIUvAwUOAvxvAdrxAa==.png",
-    audio: "https://maomaowo.cn/Speed of flow.mp3",
-    duration: "3:47",
-  },
-  {
-    title: "His Theme",
-    artist: "Toby Fox",
-    cover: "https://vip.123pan.cn/1815727707/yk6baz03t0l000d7w33ff4yvsjn00yb3DIYPAIUvAwUOAvxvAdrxAa==.png",
-    audio: "https://maomaowo.cn/His Theme.mp3",
-    duration: "2:05",
-  },
-  {
-    title: "Secret Link (和泉紗霧角色歌)",
-    artist: "藤田茜",
-    cover: "https://vip.123pan.cn/1815727707/ymjew503t0l000d7w32x8raklc240qibDIYPAIUvAwUOAvxvAdrxAa==.png",
-    audio: "https://maomaowo.cn/Secret Link (和泉紗霧角色歌).mp3",
-    duration: "3:46",
-  },
-  {
-    title: "Sincerely",
-    artist: "TRUE - 唐沢美帆",
-    cover: "https://vip.123pan.cn/1815727707/yk6baz03t0m000d7w33g8y2uuxg9e6a1DIYPAIUvAwUOAvxvAdrxAa==.png",
-    audio: "https://maomaowo.cn/Sincerely.mp3",
-    duration: "4:35",
-  },
-  {
-    title: "Whatever It Takes",
-    artist: "Imagine Dragons",
-    cover: "https://vip.123pan.cn/1815727707/yk6baz03t0n000d7w33h1aornrvvryuhDIYPAIUvAwUOAvxvAdrxAa==.png",
-    audio: "https://maomaowo.cn/Whatever It Takes.mp3",
-    duration: "3:21",
-  },
-  {
-    title: "D.T.M.",
-    artist: "Simon Curtis",
-    cover: "https://vip.123pan.cn/1815727707/yk6baz03t0l000d7w33ff4ywmrn10rgiDIYPAIUvAwUOAvxvAdrxAa==.png",
-    audio: "https://maomaowo.cn/D.T.M..mp3",
-    duration: "3:17",
-  },
+  { title: "Signals", artist: "Lazer Boomerang", cover: "https://vip.123pan.cn/1815727707/ymjew503t0l000d7w32x8raj9w2103y4DIYPAIUvAwUOAvxvAdrxAa==.png", url: "https://maomaowo.cn/Signals.mp3" },
+  { title: "Vortex", artist: "SaliHai", cover: "https://vip.123pan.cn/1815727707/yk6baz03t0m000d7w33g8y2s5gg9bi1wDIYPAIUvAwUOAvxvAdrxAa==.png", url: "https://maomaowo.cn/Vortex.mp3" },
+  { title: "Speed of flow", artist: "THE RODEO CARBURETTOR", cover: "https://vip.123pan.cn/1815727707/ymjew503t0l000d7w32x8rak5m230enxDIYPAIUvAwUOAvxvAdrxAa==.png", url: "https://maomaowo.cn/Speed of flow.mp3" },
+  { title: "His Theme", artist: "Toby Fox", cover: "https://vip.123pan.cn/1815727707/yk6baz03t0l000d7w33ff4yvsjn00yb3DIYPAIUvAwUOAvxvAdrxAa==.png", url: "https://maomaowo.cn/His Theme.mp3" },
+  { title: "Secret Link (和泉紗霧角色歌)", artist: "藤田茜", cover: "https://vip.123pan.cn/1815727707/ymjew503t0l000d7w32x8raklc240qibDIYPAIUvAwUOAvxvAdrxAa==.png", url: "https://maomaowo.cn/Secret Link (和泉紗霧角色歌).mp3" },
+  { title: "Sincerely", artist: "TRUE - 唐沢美帆", cover: "https://vip.123pan.cn/1815727707/yk6baz03t0m000d7w33g8y2uuxg9e6a1DIYPAIUvAwUOAvxvAdrxAa==.png", url: "https://maomaowo.cn/Sincerely.mp3" },
+  { title: "Whatever It Takes", artist: "Imagine Dragons", cover: "https://vip.123pan.cn/1815727707/yk6baz03t0n000d7w33h1aornrvvryuhDIYPAIUvAwUOAvxvAdrxAa==.png", url: "https://maomaowo.cn/Whatever It Takes.mp3" },
+  { title: "D.T.M.", artist: "Simon Curtis", cover: "https://vip.123pan.cn/1815727707/yk6baz03t0l000d7w33ff4ywmrn10rgiDIYPAIUvAwUOAvxvAdrxAa==.png", url: "https://maomaowo.cn/D.T.M..mp3" },
 ];
 ---
 
@@ -70,55 +22,18 @@ const songs = [
     image="https://vip.123pan.cn/1815727707/yk6baz03t0n000d7w33h1aoqtpvvqz9gDIYPAIUvAwUOAvxvAdrxAa==.png"
     infoIcon="lucide:music"
   >
-    <div id="now-playing" class="now-playing">
-      <svg class="play-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <circle cx="12" cy="12" r="10" />
-        <polygon points="10 8 16 12 10 16" />
-      </svg>
-      <span id="now-playing-text">当前未播放歌曲</span>
-    </div>
+    <!-- 播放器容器，APlayer 会在这里生成播放器 -->
+    <div id="player" class="aplayer-container"></div>
 
-    <!-- 全局播放器 -->
-    <div id="global-player-container" class="audio-player-container">
-      <audio
-        id="global-audio-player"
-        controls
-        playsinline
-        class="audio-player"
-      ></audio>
-    </div>
-
+    <!-- 歌曲列表 -->
     <div class="playlist">
       {songs.map((song, index) => (
-        <div
-          class="song-item group"
-          data-index={index}
-          data-id={song.id}
-          data-audio={song.audio}
-        >
-          <div class="song-content">
-            <div class="song-basic">
-              <div class="song-cover">
-                <img src={song.cover} alt={song.title} loading="lazy" />
-                <!-- 播放状态指示器 -->
-                <div class="state-indicator">
-                  <svg class="play-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white">
-                    <polygon points="9,7 17,12 9,17" />
-                  </svg>
-                  <svg class="pause-icon hidden" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white">
-                    <rect x="8" y="5" width="4" height="14" />
-                    <rect x="14" y="5" width="4" height="14" />
-                  </svg>
-                </div>
-              </div>
-
-              <div class="song-info">
-                <h3 class="song-title">{song.title}</h3>
-                <p class="song-artist">{song.artist}</p>
-              </div>
-
-              <div class="song-duration">{song.duration}</div>
-            </div>
+        <div class="song-item" data-index={index}>
+          <div class="song-index">{index + 1}</div>
+          <img src={song.cover} alt={song.title} class="song-cover" loading="lazy" />
+          <div class="song-info">
+            <div class="song-title">{song.title}</div>
+            <div class="song-artist">{song.artist}</div>
           </div>
         </div>
       ))}
@@ -127,384 +42,132 @@ const songs = [
 </BaseLayout>
 
 <style>
-  /* 当前播放指示器 */
-  .now-playing {
-    display: flex;
-    align-items: center;
-    padding: 12px 16px;
-    background-color: rgba(59, 130, 246, 0.08);
-    border-radius: 8px;
-    margin-bottom: 20px;
-    font-size: 1rem;
-    color: #1e40af;
-    transition: all 0.3s ease;
-  }
-
-  .now-playing svg {
-    margin-right: 10px;
-    color: #3b82f6;
+  /* 播放器容器样式 */
+  .aplayer-container {
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 24px;
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
   }
 
   /* 歌曲列表 */
   .playlist {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 8px;
   }
 
-  /* 歌曲项样式 */
+  /* 歌曲项样式 - 实现毛玻璃效果 */
   .song-item {
     display: flex;
-    padding: 14px 16px;
+    align-items: center;
+    padding: 12px;
     border-radius: 12px;
-    background-color: #ffffff;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-    border: 1px solid rgba(229, 231, 235, 0.6);
-    transition: all 0.3s ease;
     cursor: pointer;
+    transition: background-color 0.3s ease;
+    
+    /* 毛玻璃效果关键代码 */
+    background: rgba(255, 255, 255, 0.1); /* 半透明背景 */
+    backdrop-filter: blur(10px); /* 模糊效果 */
+    -webkit-backdrop-filter: blur(10px); /* 兼容 Safari */
+    border: 1px solid rgba(255, 255, 255, 0.18); /* 细微边框增加质感 */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   }
 
-  .song-item:hover {
-    background-color: #f8fafc;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    border-color: rgba(191, 219, 254, 0.8);
+  .song-item:hover, .song-item.playing {
+    background: rgba(255, 255, 255, 0.25);
   }
 
-  /* 歌曲内容布局 */
-  .song-content {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-  }
-
-  .song-basic {
-    display: flex;
-    align-items: center;
-    width: 100%;
-  }
-
-  /* 状态指示器 */
-  .song-cover {
-    position: relative;
-    width: 56px;
-    height: 56px;
-    margin-right: 16px;
-    border-radius: 8px;
-    overflow: hidden;
+  .song-index {
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--theme-text-2);
+    width: 30px;
+    text-align: center;
     flex-shrink: 0;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   }
 
-  .song-cover img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.3s ease;
-  }
-
-  .song-item:hover .song-cover img {
-    transform: scale(1.05);
-  }
-
-  .state-indicator {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: rgba(0, 0, 0, 0.3);
-    opacity: 0;
-    transition: opacity 0.3s ease;
+  .song-cover {
+    width: 48px;
+    height: 48px;
     border-radius: 8px;
-  }
-
-  .song-item:hover .state-indicator {
-    opacity: 1;
-  }
-
-  .song-item.expanded .state-indicator {
-    opacity: 1;
-    background-color: rgba(0, 0, 0, 0.3);
-  }
-
-  .state-indicator svg {
-    width: 26px;
-    height: 26px;
-    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.4));
+    margin: 0 16px;
+    object-fit: cover;
+    flex-shrink: 0;
   }
 
   .song-info {
-    flex: 1;
+    flex-grow: 1;
     overflow: hidden;
   }
 
   .song-title {
-    font-weight: 600;
     font-size: 1.1rem;
-    color: #1e293b;
-    margin: 0;
+    font-weight: 600;
+    color: var(--theme-text);
+    white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    white-space: nowrap;
   }
 
   .song-artist {
-    font-size: 0.92rem;
-    color: #4b5563;
-    margin: 4px 0 0 0;
+    font-size: 0.9rem;
+    color: var(--theme-text-2);
+    white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  .song-duration {
-    color: #64748b;
-    font-size: 0.92rem;
-    margin: 0 16px;
-    flex-shrink: 0;
-    font-feature-settings: "tnum";
-  }
-
-  /* 全局播放器样式 */
-  .audio-player-container {
-    width: 100%;
-    margin-bottom: 20px;
-    border-radius: 8px;
-    overflow: hidden;
-  }
-
-  .audio-player {
-    width: 100%;
-    border-radius: 8px;
-  }
-
-  /* 响应式设计 */
-  @media (max-width: 768px) {
-    .song-item {
-      padding: 12px;
-    }
-
-    .song-cover {
-      width: 48px;
-      height: 48px;
-      margin-right: 14px;
-    }
-
-    .song-title {
-      font-size: 1.05rem;
-    }
-
-    .song-duration {
-      margin: 0 12px;
-    }
-  }
-
-  @media (max-width: 480px) {
-    .song-duration {
-      display: none;
-    }
-
-    .song-item {
-      padding: 10px 12px;
-    }
-
-    .song-cover {
-      width: 44px;
-      height: 44px;
-      margin-right: 12px;
-    }
-
-    .song-title {
-      font-size: 1rem;
-    }
-  }
-
-  /* 新增提示样式 */
-  .text-blue-500 {
-    color: #3b82f6;
-  }
-  .underline {
-    text-decoration: underline;
-  }
-  .cursor-pointer {
-    cursor: pointer;
   }
 </style>
 
-<script is:inline>
-  // 初始化播放器状态
-  let audioContextInitialized = false;
-  const nowPlayingText = document.getElementById("now-playing-text");
-  const globalAudioPlayer = document.getElementById('global-audio-player');
-  let currentSongItem = null;
+<script define:vars={{ songs }}>
+  // 告诉 TypeScript APlayer 是一个全局变量
+  declare const APlayer: any;
 
-  // 核心修复：Astro路由导航监听
-  if (window.Astro) {
-    window.Astro.on('page', () => {
-      initAudioContext();
-      initPlayer();
+  // 确保在页面加载和切换后都执行初始化
+  document.addEventListener('astro:page-load', () => {
+    // 格式化歌曲数据以适应 APlayer
+    const ap_songs = songs.map(song => ({
+      name: song.title,
+      artist: song.artist,
+      url: song.url,
+      cover: song.cover,
+    }));
+
+    // 初始化 APlayer
+    const ap = new APlayer({
+      container: document.getElementById('player'),
+      fixed: false, // false 表示不在页面底部固定，而是嵌入在卡片内
+      lrcType: 0, // 不显示歌词
+      audio: ap_songs
     });
-  }
 
-  // 主初始化函数
-  function initPlayer() {
-    document.querySelectorAll(".song-item").forEach(item => {
-      item.addEventListener("click", handleSongClick);
+    // 获取所有歌曲列表项
+    const songItems = document.querySelectorAll('.song-item');
+
+    // 点击列表项切换歌曲
+    songItems.forEach(item => {
+      item.addEventListener('click', () => {
+        const index = parseInt(item.dataset.index, 10);
+        ap.list.switch(index);
+        ap.play();
+      });
     });
 
-    // 事件监听
-    globalAudioPlayer.addEventListener('ended', handlePlaybackEnd);
-    globalAudioPlayer.addEventListener('error', handlePlaybackError);
-  }
-
-  // 音频上下文解锁（关键修复）
-  function initAudioContext() {
-    if (audioContextInitialized) return;
-
-    try {
-      const ctx = new (window.AudioContext || window.webkitAudioContext)();
-      const oscillator = ctx.createOscillator();
-      oscillator.connect(ctx.destination);
-      oscillator.start();
-      oscillator.stop(ctx.currentTime + 0.001);
-      audioContextInitialized = true;
-    } catch (e) {
-      console.log("音频上下文初始化失败:", e);
-    }
-  }
-
-  // 歌曲点击处理
-  function handleSongClick(e) {
-    if (e.target.closest('.audio-player')) return;
-    const item = this;
-    const audioSrc = item.dataset.audio;
-    const songTitle = item.querySelector('.song-title').textContent;
-    const songArtist = item.querySelector('.song-artist').textContent;
-
-    nowPlayingText.textContent = `正在播放: ${songTitle} - ${songArtist}`;
-    currentSongItem === item ? togglePlayback() : playNewSong(item, audioSrc);
-  }
-
-  // 播放/暂停切换
-  function togglePlayback() {
-    if (globalAudioPlayer.paused) {
-      playAudioSafely(globalAudioPlayer);
-      setPlayState(currentSongItem, 'playing');
-    } else {
-      globalAudioPlayer.pause();
-      setPlayState(currentSongItem, 'paused');
-    }
-  }
-
-  // 播放新歌曲
-  function playNewSong(item, audioSrc) {
-    // 关闭之前的播放
-    if (currentSongItem) {
-      setPlayState(currentSongItem, 'inactive');
-      currentSongItem.classList.remove('expanded');
-    }
-
-    // 更新当前歌曲
-    currentSongItem = item;
-
-    // 设置新歌曲播放
-    globalAudioPlayer.src = audioSrc;
-    item.classList.add('expanded');
-    setPlayState(item, 'playing');
-
-    // 安全播放
-    playAudioSafely(globalAudioPlayer);
-  }
-
-  // 安全播放函数，处理AbortError
-  function playAudioSafely(audioElement) {
-    // 确保音频已加载
-    if (audioElement.readyState < 3) {
-      audioElement.load();
-    }
-
-    const playPromise = audioElement.play();
-
-    if (playPromise !== undefined) {
-      playPromise
-        .then(() => {
-          // 播放成功
-        })
-        .catch(error => {
-          console.log("播放错误:", error);
-          if (error.name === 'AbortError') {
-            // 处理中断错误：等待短暂延迟后重试
-            setTimeout(() => {
-              audioElement.play().catch(e => console.log("重试播放失败:", e));
-            }, 300);
-          } else if (error.name === 'NotAllowedError') {
-            // 显示用户引导提示
-            showPlaybackHint();
-          } else {
-            audioElement.controls = true;
-          }
-        });
-    }
-  }
-
-  // 设置播放状态
-  function setPlayState(item, state) {
-    const indicator = item.querySelector('.state-indicator');
-    if (!indicator) return;
-
-    const playIcon = indicator.querySelector('.play-icon');
-    const pauseIcon = indicator.querySelector('.pause-icon');
-
-    if (state === 'playing') {
-      playIcon.classList.add('hidden');
-      pauseIcon.classList.remove('hidden');
-    } else if (state === 'paused') {
-      playIcon.classList.remove('hidden');
-      pauseIcon.classList.add('hidden');
-    } else if (state === 'inactive') {
-      playIcon.classList.remove('hidden');
-      pauseIcon.classList.add('hidden');
-      item.classList.remove('expanded');
-    }
-  }
-
-  // 播放结束处理
-  function handlePlaybackEnd() {
-    nowPlayingText.textContent = "播放结束，请选择其他歌曲";
-    if (currentSongItem) {
-      setPlayState(currentSongItem, 'inactive');
-      currentSongItem.classList.remove('expanded');
-      currentSongItem = null;
-    }
-  }
-
-  // 播放错误处理
-  function handlePlaybackError() {
-    nowPlayingText.textContent = "播放失败，请尝试其他歌曲";
-    if (currentSongItem) {
-      setPlayState(currentSongItem, 'inactive');
-      currentSongItem.classList.remove('expanded');
-      currentSongItem = null;
-    }
-  }
-
-  // 显示播放提示
-  function showPlaybackHint() {
-    nowPlayingText.innerHTML = `播放被阻止，请<span class="text-blue-500 underline cursor-pointer">点击此处</span>激活`;
-    nowPlayingText.querySelector('span').addEventListener('click', () => {
-      if (globalAudioPlayer.src) {
-        playAudioSafely(globalAudioPlayer);
-      }
+    // 监听播放事件，给当前播放的歌曲添加高亮样式
+    ap.on('play', () => {
+      const currentIndex = ap.list.index;
+      songItems.forEach((item, index) => {
+        if (index === currentIndex) {
+          item.classList.add('playing');
+        } else {
+          item.classList.remove('playing');
+        }
+      });
     });
-  }
-
-  // 初始加载执行
-  document.addEventListener("DOMContentLoaded", () => {
-    initAudioContext();
-    initPlayer();
+    
+    // 监听暂停事件，移除高亮
+    ap.on('pause', () => {
+        songItems.forEach(item => item.classList.remove('playing'));
+    });
   });
 </script>
