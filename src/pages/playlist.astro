@@ -24,14 +24,15 @@ const songs = [
     <div id="player" class="aplayer-container"></div>
     <div class="playlist">
       {songs.map((song, index) => (
-        <div class="song-item" data-index={index}>
+        <!-- 【关键修复】使用 a 标签包裹，并提供一个无意义的 href -->
+        <a href="javascript:void(0);" class="song-item" data-index={index}>
           <div class="song-index">{index + 1}</div>
           <img src={song.cover} alt={song.title} class="song-cover" loading="lazy" />
           <div class="song-info">
             <div class="song-title">{song.title}</div>
             <div class="song-artist">{song.artist}</div>
           </div>
-        </div>
+        </a>
       ))}
     </div>
   </MainCard>
@@ -39,81 +40,29 @@ const songs = [
 
 <style>
   /* 样式部分保持不变 */
-  .aplayer-container {
-    border-radius: 12px;
-    overflow: hidden;
-    margin-bottom: 24px;
-    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-  }
-  .playlist {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-  .song-item {
-    display: flex;
-    align-items: center;
-    padding: 12px;
-    border-radius: 12px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.18);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  }
-  .song-item:hover, .song-item.playing {
-    background: rgba(255, 255, 255, 0.25);
-  }
-  .song-index {
-    font-size: 1rem;
-    font-weight: 500;
-    color: var(--theme-text-2);
-    width: 30px;
-    text-align: center;
-    flex-shrink: 0;
-  }
-  .song-cover {
-    width: 48px;
-    height: 48px;
-    border-radius: 8px;
-    margin: 0 16px;
-    object-fit: cover;
-    flex-shrink: 0;
-  }
-  .song-info {
-    flex-grow: 1;
-    overflow: hidden;
-  }
-  .song-title {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: var(--theme-text);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  .song-artist {
-    font-size: 0.9rem;
-    color: var(--theme-text-2);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
+  .aplayer-container { border-radius: 12px; overflow: hidden; margin-bottom: 24px; box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37); }
+  .playlist { display: flex; flex-direction: column; gap: 8px; }
+  .song-item { display: flex; align-items: center; padding: 12px; border-radius: 12px; cursor: pointer; transition: background-color 0.3s ease; background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.18); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); text-decoration: none; }
+  .song-item:hover, .song-item.playing { background: rgba(255, 255, 255, 0.25); }
+  .song-index { font-size: 1rem; font-weight: 500; color: var(--theme-text-2); width: 30px; text-align: center; flex-shrink: 0; }
+  .song-cover { width: 48px; height: 48px; border-radius: 8px; margin: 0 16px; object-fit: cover; flex-shrink: 0; }
+  .song-info { flex-grow: 1; overflow: hidden; }
+  .song-title { font-size: 1.1rem; font-weight: 600; color: var(--theme-text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .song-artist { font-size: 0.9rem; color: var(--theme-text-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 </style>
 
-<!-- =============================================================== -->
-<!-- 【关键修复】第一步：单独提交“通行证”，让质检员盖章 -->
-<!-- 这个 script 标签没有特殊指令，所以会被 TypeScript 正常检查 -->
 <script>
   declare const APlayer: any;
 </script>
 
-<!-- 【关键修复】第二步：正常发送“加急快递” -->
-<!-- 这个 script 标签有 is:inline 和 define:vars，不会被 TypeScript 检查，但质检员已经认识 APlayer 了 -->
 <script is:inline define:vars={{ songs }}>
   document.addEventListener('astro:page-load', () => {
+    // 检查是否已存在播放器实例，防止重复初始化
+    if (document.getElementById('player').classList.contains('aplayer-ready')) {
+      return;
+    }
+    document.getElementById('player').classList.add('aplayer-ready');
+
     const ap_songs = songs.map(song => ({
       name: song.title,
       artist: song.artist,
@@ -131,7 +80,10 @@ const songs = [
     const songItems = document.querySelectorAll('.song-item');
 
     songItems.forEach(item => {
-      item.addEventListener('click', () => {
+      item.addEventListener('click', (event) => {
+        // 【关键修复】阻止 a 标签的默认跳转行为
+        event.preventDefault();
+        
         const index = parseInt(item.dataset.index, 10);
         ap.list.switch(index);
         ap.play();
@@ -141,17 +93,12 @@ const songs = [
     ap.on('play', () => {
       const currentIndex = ap.list.index;
       songItems.forEach((item, index) => {
-        if (index === currentIndex) {
-          item.classList.add('playing');
-        } else {
-          item.classList.remove('playing');
-        }
+        item.classList.toggle('playing', index === currentIndex);
       });
     });
     
     ap.on('pause', () => {
-        songItems.forEach(item => item.classList.remove('playing'));
+      songItems.forEach(item => item.classList.remove('playing'));
     });
   });
 </script>
-<!-- =============================================================== -->
