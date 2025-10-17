@@ -21,9 +21,13 @@ const { title, image, headings = [], showTOC = false } = Astro.props;
     <Header description={SITE_DESCRIPTION} favicon={SITE_FAVICON} image={image} />
     <title>{`${title} - ${SITE_TAB}`}</title>
 
+    {/* 灯箱插件 GLightbox 的 CSS */}
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" />
+    
+    {/* 【关键修改】添加 Plyr 播放器的 CSS */}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/plyr-react/dist/plyr.css" />
 
-    {/* Your theme script remains unchanged */}
+    {/* 主题切换脚本，保持不变 */}
     <script define:vars={{ SITE_THEME }} is:inline>
       (function () {
         const storedTheme = localStorage.getItem("theme");
@@ -51,10 +55,10 @@ const { title, image, headings = [], showTOC = false } = Astro.props;
     </script>
   </head>
   <body>
-    {/* Your body content remains unchanged */}
+    {/* 页面主体结构，保持不变 */}
     <Navbar />
     <div class="max-w-6xl mx-auto">
-      <div class="grid grid-cols-1 md-grid-cols-5 lg:grid-cols-4 gap-4 p-4">
+      <div class="grid grid-cols-1 md:grid-cols-5 lg:grid-cols-4 gap-4 p-4">
         <main class="col-span-1 md:col-span-4 lg:col-span-3 bg-transparent order-1 md:order-2 mt-16 md:mt-0">
           <div class="flex flex-col gap-4">
             <slot />
@@ -69,7 +73,7 @@ const { title, image, headings = [], showTOC = false } = Astro.props;
     </div>
     <MobileTOC headings={headings} showTOC={showTOC} />
 
-    {/* Your other scripts remain unchanged */}
+    {/* 其他脚本，保持不变 */}
     <script define:vars={{ SITE_THEME }} is:inline>
       document.addEventListener("astro:after-swap", () => {
         const storedTheme = localStorage.getItem("theme");
@@ -106,22 +110,23 @@ const { title, image, headings = [], showTOC = false } = Astro.props;
       });
     </script>
 
-    {/* GLightbox scripts */}
+    {/* 灯箱插件 GLightbox 的 JS */}
     <script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
     <script>
-      // ===============================================================
-      // 【THE FIX】This line tells TypeScript to assume GLightbox exists.
       declare const GLightbox: any;
-      // ===============================================================
-
       document.addEventListener("astro:page-load", () => {
-        const lightbox = GLightbox({
-          selector: '.glightbox'
-        });
+        // 增加一个检查，防止 GLightbox 重复初始化
+        if (window.glightboxInstance) {
+          window.glightboxInstance.reload();
+        } else {
+          window.glightboxInstance = GLightbox({
+            selector: '.glightbox'
+          });
+        }
       });
     </script>
 
-    {/* Your inline style remains unchanged */}
+    {/* 内联样式，保持不变 */}
     <style is:inline>
       .btn-copy {
         position: relative;

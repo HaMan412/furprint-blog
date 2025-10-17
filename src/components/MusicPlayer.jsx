@@ -1,22 +1,10 @@
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import Plyr from 'plyr-react';
-import 'plyr-react/dist/plyr.css';
+// 【关键修复】删除下面这行有问题的 import
+// import 'plyr-react/dist/plyr.css'; 
 
 const MusicPlayer = ({ songs }) => {
   const ref = useRef(null);
-
-  // 将我们的歌曲数据转换成 Plyr 需要的格式
-  const sources = songs.map(song => ({
-    type: 'audio',
-    title: song.title,
-    sources: [
-      {
-        src: song.url,
-        type: 'audio/mp3',
-      },
-    ],
-    poster: song.cover, // 封面
-  }));
 
   // 点击歌曲列表项时，切换播放器的歌曲
   const handleSongClick = (index) => {
@@ -27,24 +15,38 @@ const MusicPlayer = ({ songs }) => {
         title: songs[index].title,
         poster: songs[index].cover,
       };
-      ref.current.plyr.play();
+      // 检查播放器是否准备好，并尝试播放
+      ref.current.plyr.once('ready', () => {
+        ref.current.plyr.play();
+      });
+      // 如果已经准备好，直接播放
+      if(ref.current.plyr.ready) {
+        ref.current.plyr.play();
+      }
     }
   };
 
-  // 绑定点击事件到全局，因为 Astro 组件的特殊性
+  // 绑定点击事件到全局
   useEffect(() => {
     const songItems = document.querySelectorAll('.song-item');
+    
+    // 创建一个 AbortController 来管理事件监听器
+    const controller = new AbortController();
+    const signal = controller.signal;
+
     songItems.forEach((item, index) => {
-      // 清理旧的事件监听器，防止重复绑定
-      const newItem = item.cloneNode(true);
-      item.parentNode.replaceChild(newItem, item);
-      
-      newItem.addEventListener('click', () => handleSongClick(index));
+      item.addEventListener('click', () => handleSongClick(index), { signal });
     });
+
+    // 在组件卸载时，清理所有事件监听器
+    return () => {
+      controller.abort();
+    };
   }, [songs]);
 
   return (
     <div>
+      {/* 初始化时不加载任何音源，等待用户点击 */}
       <Plyr ref={ref} source={null} options={{}} />
       <div className="playlist">
         {songs.map((song, index) => (
