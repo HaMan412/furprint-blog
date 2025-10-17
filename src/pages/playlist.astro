@@ -1,9 +1,11 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import MainCard from "@/components/MainCard.astro";
+// 导入我们刚刚创建的播放器组件
+import MusicPlayer from "@/components/MusicPlayer.jsx";
 
 const songs = [
-  { title: "Signals", artist: "Lazer Boomerang", cover: "https://vip.12ap.cn/1815727707/ymjew503t0l000d7w32x8raj9w2103y4DIYPAIUvAwUOAvxvAdrxAa==.png", url: "https://maomaowo.cn/Signals.mp3" },
+  { title: "Signals", artist: "Lazer Boomerang", cover: "https://vip.123pan.cn/1815727707/ymjew503t0l000d7w32x8raj9w2103y4DIYPAIUvAwUOAvxvAdrxAa==.png", url: "https://maomaowo.cn/Signals.mp3" },
   { title: "Vortex", artist: "SaliHai", cover: "https://vip.123pan.cn/1815727707/yk6baz03t0m000d7w33g8y2s5gg9bi1wDIYPAIUvAwUOAvxvAdrxAa==.png", url: "https://maomaowo.cn/Vortex.mp3" },
   { title: "Speed of flow", artist: "THE RODEO CARBURETTOR", cover: "https://vip.123pan.cn/1815727707/ymjew503t0l000d7w32x8rak5m230enxDIYPAIUvAwUOAvxvAdrxAa==.png", url: "https://maomaowo.cn/Speed of flow.mp3" },
   { title: "His Theme", artist: "Toby Fox", cover: "https://vip.123pan.cn/1815727707/yk6baz03t0l000d7w33ff4yvsjn00yb3DIYPAIUvAwUOAvxvAdrxAa==.png", url: "https://maomaowo.cn/His Theme.mp3" },
@@ -21,92 +23,100 @@ const songs = [
     image="https://vip.123pan.cn/1815727707/yk6baz03t0n000d7w33h1aoqtpvvqz9gDIYPAIUvAwUOAvxvAdrxAa==.png"
     infoIcon="lucide:music"
   >
-    <div id="player" class="aplayer-container"></div>
-    <div class="playlist">
-      {songs.map((song, index) => (
-        <a href="javascript:void(0);" class="song-item" data-index={index}>
-          <div class="song-index">{index + 1}</div>
-          <img src={song.cover} alt={song.title} class="song-cover" loading="lazy" />
-          <div class="song-info">
-            <div class="song-title">{song.title}</div>
-            <div class="song-artist">{song.artist}</div>
-          </div>
-        </a>
-      ))}
-    </div>
+    <!-- 
+      直接使用我们的组件，并把歌曲数据传进去 
+      client:load 指令告诉 Astro 立即加载并运行这个组件的 JS
+    -->
+    <MusicPlayer songs={songs} client:load />
   </MainCard>
 </BaseLayout>
 
-<style>
-  /* 样式部分保持不变 */
-  .aplayer-container { border-radius: 12px; overflow: hidden; margin-bottom: 24px; box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37); min-height: 66px; }
-  .playlist { display: flex; flex-direction: column; gap: 8px; }
-  .song-item { display: flex; align-items: center; padding: 12px; border-radius: 12px; cursor: pointer; transition: background-color 0.3s ease; background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.18); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); text-decoration: none; }
-  .song-item:hover, .song-item.playing { background: rgba(255, 255, 255, 0.25); }
-  .song-index { font-size: 1rem; font-weight: 500; color: var(--theme-text-2); width: 30px; text-align: center; flex-shrink: 0; }
-  .song-cover { width: 48px; height: 48px; border-radius: 8px; margin: 0 16px; object-fit: cover; flex-shrink: 0; }
-  .song-info { flex-grow: 1; overflow: hidden; }
-  .song-title { font-size: 1.1rem; font-weight: 600; color: var(--theme-text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .song-artist { font-size: 0.9rem; color: var(--theme-text-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-</style>
+<style is:global>
+  /* 
+    我们需要一些全局样式来定制 Plyr 播放器和我们的列表
+    is:global 意味着这里的样式会应用到全局
+  */
 
-<script>
-  declare const APlayer: any;
-</script>
-
-<script is:inline define:vars={{ songs }}>
-  // 【关键修复】将播放器初始化逻辑封装成一个函数
-  function initAPlayer() {
-    const container = document.getElementById('player');
-    
-    // 如果找不到容器，或者播放器已经初始化，就直接退出，防止出错
-    if (!container || container.classList.contains('aplayer-ready')) {
-      return;
-    }
-    
-    console.log('APlayer 初始化开始...');
-    container.classList.add('aplayer-ready');
-
-    const ap_songs = songs.map(song => ({
-      name: song.title,
-      artist: song.artist,
-      url: song.url,
-      cover: song.cover,
-    }));
-
-    const ap = new APlayer({
-      container: container,
-      fixed: false,
-      lrcType: 0,
-      audio: ap_songs
-    });
-
-    const songItems = document.querySelectorAll('.song-item');
-
-    songItems.forEach(item => {
-      item.addEventListener('click', (event) => {
-        event.preventDefault();
-        const index = parseInt(item.dataset.index, 10);
-        ap.list.switch(index);
-        ap.play();
-      });
-    });
-
-    ap.on('play', () => {
-      const currentIndex = ap.list.index;
-      songItems.forEach((item, index) => {
-        item.classList.toggle('playing', index === currentIndex);
-      });
-    });
-    
-    ap.on('pause', () => {
-      songItems.forEach(item => item.classList.remove('playing'));
-    });
-    
-    console.log('APlayer 初始化成功!');
+  /* Plyr 播放器毛玻璃效果 */
+  .plyr {
+    border-radius: 12px;
+    margin-bottom: 24px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   }
 
-  // 【关键修复】同时监听两个事件，确保在任何情况下都能触发初始化
-  document.addEventListener('astro:page-load', initAPlayer);
-  document.addEventListener('DOMContentLoaded', initAPlayer);
-</script>
+  /* 自定义 Plyr 控件颜色 */
+  :root {
+    --plyr-color-main: #a78bfa; /* 紫罗兰色，你可以换成你喜欢的主题色 */
+  }
+
+  /* 歌曲列表 */
+  .playlist {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  /* 歌曲项毛玻璃效果 */
+  .song-item {
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    text-decoration: none;
+  }
+
+  .song-item:hover {
+    background: rgba(255, 255, 255, 0.25);
+  }
+
+  .song-index {
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--theme-text-2);
+    width: 30px;
+    text-align: center;
+    flex-shrink: 0;
+  }
+
+  .song-cover {
+    width: 48px;
+    height: 48px;
+    border-radius: 8px;
+    margin: 0 16px;
+    object-fit: cover;
+    flex-shrink: 0;
+  }
+
+  .song-info {
+    flex-grow: 1;
+    overflow: hidden;
+  }
+
+  .song-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--theme-text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .song-artist {
+    font-size: 0.9rem;
+    color: var(--theme-text-2);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+</style>
