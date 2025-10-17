@@ -21,14 +21,10 @@ const { title, image, headings = [], showTOC = false } = Astro.props;
     <Header description={SITE_DESCRIPTION} favicon={SITE_FAVICON} image={image} />
     <title>{`${title} - ${SITE_TAB}`}</title>
 
-    <!-- =============================================================== -->
-    <!-- 【新增】GLightbox 灯箱插件的 CSS 样式文件 -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" />
-    <!-- =============================================================== -->
 
-    <!-- Initial theme setup on first load -->
+    {/* Your theme script remains unchanged */}
     <script define:vars={{ SITE_THEME }} is:inline>
-      // ... (你原有的主题切换脚本，保持不变)
       (function () {
         const storedTheme = localStorage.getItem("theme");
         const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
@@ -55,11 +51,10 @@ const { title, image, headings = [], showTOC = false } = Astro.props;
     </script>
   </head>
   <body>
-    <!-- Mobile Navbar - Hidden on desktop -->
+    {/* Your body content remains unchanged */}
     <Navbar />
-
     <div class="max-w-6xl mx-auto">
-      <div class="grid grid-cols-1 md:grid-cols-5 lg:grid-cols-4 gap-4 p-4">
+      <div class="grid grid-cols-1 md-grid-cols-5 lg:grid-cols-4 gap-4 p-4">
         <main class="col-span-1 md:col-span-4 lg:col-span-3 bg-transparent order-1 md:order-2 mt-16 md:mt-0">
           <div class="flex flex-col gap-4">
             <slot />
@@ -72,13 +67,10 @@ const { title, image, headings = [], showTOC = false } = Astro.props;
         </aside>
       </div>
     </div>
-
-    <!-- Mobile TOC Button (only visible on mobile) -->
     <MobileTOC headings={headings} showTOC={showTOC} />
 
-    <!-- Theme persistence during client-side navigation -->
+    {/* Your other scripts remain unchanged */}
     <script define:vars={{ SITE_THEME }} is:inline>
-      // ... (你原有的主题持久化脚本，保持不变)
       document.addEventListener("astro:after-swap", () => {
         const storedTheme = localStorage.getItem("theme");
         if (storedTheme) {
@@ -88,10 +80,7 @@ const { title, image, headings = [], showTOC = false } = Astro.props;
         }
       });
     </script>
-
-    <!-- Code copy functionality -->
     <script is:inline>
-      // ... (你原有的代码复制脚本，保持不变)
       document.addEventListener("astro:page-load", () => {
         document.querySelectorAll(".btn-copy").forEach((button) => {
           button.addEventListener("click", async () => {
@@ -117,21 +106,23 @@ const { title, image, headings = [], showTOC = false } = Astro.props;
       });
     </script>
 
-    <!-- =============================================================== -->
-    <!-- 【新增】GLightbox 灯箱插件的 JS 脚本文件和初始化代码 -->
+    {/* GLightbox scripts */}
     <script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
     <script>
-      // 这个事件监听器确保灯箱在页面加载和客户端导航后都能正常工作
+      // ===============================================================
+      // 【THE FIX】This line tells TypeScript to assume GLightbox exists.
+      declare const GLightbox: any;
+      // ===============================================================
+
       document.addEventListener("astro:page-load", () => {
         const lightbox = GLightbox({
           selector: '.glightbox'
         });
       });
     </script>
-    <!-- =============================================================== -->
 
+    {/* Your inline style remains unchanged */}
     <style is:inline>
-      /* ... (你原有的内联样式，保持不变) */
       .btn-copy {
         position: relative;
         overflow: hidden;
