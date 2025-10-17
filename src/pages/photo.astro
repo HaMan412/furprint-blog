@@ -3,24 +3,26 @@
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import MainCard from "@/components/MainCard.astro";
 
-// 定义照片数据
+// 【重要】数据结构已优化，为每张图片添加了 alt 和 title
+// alt 是图片无法显示时的替代文本，对SEO和无障碍访问很重要
+// title 会在灯箱效果中作为图片的标题显示
 const images = [
-  { src: "https://vip.123pan.cn/1815727707/ymjew503t0l000d7w32x8oi1l5uoq4bwDIYPAIUvAwUOAvxvAdrxAa==.png" },
-  { src: "https://vip.123pan.cn/1815727707/yk6baz03t0m000d7w33g8skz6pavw19iDIYPAIUvAwUOAvxvAdrxAa==.png" },
-  { src: "https://vip.123pan.cn/1815727707/yk6baz03t0l000d7w33feu0ai5v9hf1mDIYPAIUvAwUOAvxvAdrxAa==.png" },
-  { src: "https://vip.123pan.cn/1815727707/ymjew503t0n000d7w32y5zprtupxhh21DIYPAIUvAwUOAvxvAdrxAa==.png" },
-  { src: "https://vip.123pan.cn/1815727707/ymjew503t0m000d7w32xqwituvab43blDIYPAIUvAwUOAvxvAdrxAa==.png" },
-  { src: "https://vip.123pan.cn/1815727707/yk6baz03t0n000d7w33h145xk9qi8v0kDIYPAIUvAwUOAvxvAdrxAa==.png" },
-  { src: "https://vip.123pan.cn/1815727707/yk6baz03t0m000d7w33g8skw8lavvjroDIYPAIUvAwUOAvxvAdrxAa==.png" },
-  { src: "https://vip.123pan.cn/1815727707/yk6baz03t0l000d7w33feu09msv9ggglDIYPAIUvAwUOAvxvAdrxAa==.png" },
-  { src: "https://vip.123pan.cn/1815727707/yk6baz03t0n000d7w33h145worqi7258DIYPAIUvAwUOAvxvAdrxAa==.PNG" },
-  { src: "https://vip.123pan.cn/1815727707/yk6baz03t0m000d7w33g8sl235aw03mnDIYPAIUvAwUOAvxvAdrxAa==.png" },
-  { src: "https://vip.123pan.cn/1815727707/yk6baz03t0l000d7w33feu0e6ov9loj0DIYPAIUvAwUOAvxvAdrxAa==.png" },
-  { src: "https://vip.123pan.cn/1815727707/yk6baz03t0n000d7w33h14611qqic5jcDIYPAIUvAwUOAvxvAdrxAa==.png" },
-  { src: "https://vip.123pan.cn/1815727707/ymjew503t0m000d7w32xqwivusab8rniDIYPAIUvAwUOAvxvAdrxAa==.png" },
-  { src: "https://vip.123pan.cn/1815727707/ymjew503t0m000d7w32xqwivdmab7lr6DIYPAIUvAwUOAvxvAdrxAa==.png" },
-  { src: "https://vip.123pan.cn/1815727707/ymjew503t0n000d7w32y5zpt97pxktazDIYPAIUvAwUOAvxvAdrxAa==.png" },
-  { src: "https://vip.123pan.cn/1815727707/yk6baz03t0m000d7w33g8sl1d8avzdoeDIYPAIUvAwUOAvxvAdrxAa==.png" },
+  { src: "https://vip.123pan.cn/1815727707/ymjew503t0l000d7w32x8oi1l5uoq4bwDIYPAIUvAwUOAvxvAdrxAa==.png", alt: "照片描述1", title: "照片标题1" },
+  { src: "https://vip.123pan.cn/1815727707/yk6baz03t0m000d7w33g8skz6pavw19iDIYPAIUvAwUOAvxvAdrxAa==.png", alt: "照片描述2", title: "照片标题2" },
+  { src: "https://vip.123pan.cn/1815727707/yk6baz03t0l000d7w33feu0ai5v9hf1mDIYPAIUvAwUOAvxvAdrxAa==.png", alt: "照片描述3", title: "照片标题3" },
+  { src: "https://vip.123pan.cn/1815727707/ymjew503t0n000d7w32y5zprtupxhh21DIYPAIUvAwUOAvxvAdrxAa==.png", alt: "照片描述4", title: "照片标题4" },
+  { src: "https://vip.123pan.cn/1815727707/ymjew503t0m000d7w32xqwituvab43blDIYPAIUvAwUOAvxvAdrxAa==.png", alt: "照片描述5", title: "照片标题5" },
+  { src: "https://vip.123pan.cn/1815727707/yk6baz03t0n000d7w33h145xk9qi8v0kDIYPAIUvAwUOAvxvAdrxAa==.png", alt: "照片描述6", title: "照片标题6" },
+  { src: "https://vip.123pan.cn/1815727707/yk6baz03t0m000d7w33g8skw8lavvjroDIYPAIUvAwUOAvxvAdrxAa==.png", alt: "照片描述7", title: "照片标题7" },
+  { src: "https://vip.123pan.cn/1815727707/yk6baz03t0l000d7w33feu09msv9ggglDIYPAIUvAwUOAvxvAdrxAa==.png", alt: "照片描述8", title: "照片标题8" },
+  { src: "https://vip.123pan.cn/1815727707/yk6baz03t0n000d7w33h145worqi7258DIYPAIUvAwUOAvxvAdrxAa==.PNG", alt: "照片描述9", title: "照片标题9" },
+  { src: "https://vip.123pan.cn/1815727707/yk6baz03t0m000d7w33g8sl235aw03mnDIYPAIUvAwUOAvxvAdrxAa==.png", alt: "照片描述10", title: "照片标题10" },
+  { src: "https://vip.123pan.cn/1815727707/yk6baz03t0l000d7w33feu0e6ov9loj0DIYPAIUvAwUOAvxvAdrxAa==.png", alt: "照片描述11", title: "照片标题11" },
+  { src: "https://vip.123pan.cn/1815727707/yk6baz03t0n000d7w33h14611qqic5jcDIYPAIUvAwUOAvxvAdrxAa==.png", alt: "照片描述12", title: "照片标题12" },
+  { src: "https://vip.123pan.cn/1815727707/ymjew503t0m000d7w32xqwivusab8rniDIYPAIUvAwUOAvxvAdrxAa==.png", alt: "照片描述13", title: "照片标题13" },
+  { src: "https://vip.123pan.cn/1815727707/ymjew503t0m000d7w32xqwivdmab7lr6DIYPAIUvAwUOAvxvAdrxAa==.png", alt: "照片描述14", title: "照片标题14" },
+  { src: "https://vip.123pan.cn/1815727707/ymjew503t0n000d7w32y5zpt97pxktazDIYPAIUvAwUOAvxvAdrxAa==.png", alt: "照片描述15", title: "照片标题15" },
+  { src: "https://vip.123pan.cn/1815727707/yk6baz03t0m000d7w33g8sl1d8avzdoeDIYPAIUvAwUOAvxvAdrxAa==.png", alt: "照片描述16", title: "照片标题16" },
 ];
 ---
 
@@ -34,11 +36,10 @@ const images = [
     <div class="gallery-container">
       {
         images.map((image) => (
-          <div class="photo-card group">
-            <a href={image.src} target="_blank" rel="noopener noreferrer" class="photo-link">
-              <div class="photo-wrapper">
-                <img src={image.src} alt="照片" loading="lazy" class="gallery-image" />
-              </div>
+          <div class="photo-card">
+            {/* 【重要】a 标签已修改以支持灯箱，class="glightbox" 是关键 */}
+            <a href={image.src} class="glightbox" data-gallery="gallery-main" data-title={image.title}>
+              <img src={image.src} alt={image.alt} loading="lazy" class="gallery-image" />
             </a>
           </div>
         ))
@@ -48,54 +49,50 @@ const images = [
 </BaseLayout>
 
 <style>
-  /* 响应式网格布局 */
+  /* 瀑布流容器 */
   .gallery-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-    gap: 12px;
+    /* 定义列数，浏览器会根据宽度自动调整 */
+    column-count: 4; /* 大屏幕上显示4列 */
+    column-gap: 15px; /* 列之间的间距 */
     padding: 15px;
   }
 
-  /* 自适应图片容器 */
-  .photo-wrapper {
-    position: relative;
-    width: 100%;
-    padding-top: 75%; /* 3:4 比例容器 */
-    overflow: hidden;
-    border-radius: 8px;
+  /* 每个照片卡片 */
+  .photo-card {
+    margin-bottom: 15px; /* 卡片下方的间距 */
+    break-inside: avoid; /* 防止卡片在列中断开 */
+    border-radius: 8px; /* 轻微的圆角 */
+    overflow: hidden; /* 隐藏超出圆角的部分 */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* 添加细微的阴影增加立体感 */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
   }
 
-  /* 图片填充优化 */
+  .photo-card:hover {
+    transform: translateY(-5px); /* 悬停时轻微上浮 */
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2); /* 悬停时阴影加深 */
+  }
+
+  /* 图片样式 */
   .gallery-image {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover; /* 覆盖式填充 */
-    transition: transform 0.3s ease;
-  }
-
-  /* 悬停效果 */
-  .photo-card:hover .gallery-image {
-    transform: scale(1.03);
-    filter: brightness(1.05);
+    width: 100%; /* 宽度撑满卡片 */
+    height: auto; /* 高度自适应 */
+    display: block; /* 消除图片底部的微小空隙 */
   }
 
   /* 响应式调整 */
   @media (max-width: 1024px) {
     .gallery-container {
-      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      column-count: 3; /* 中等屏幕3列 */
     }
   }
 
   @media (max-width: 768px) {
     .gallery-container {
-      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      column-count: 2; /* 小屏幕2列 */
     }
   }
 </style>
 
 <script is:inline>
-  // 移除分页相关脚本
+  // 这里不再需要任何脚本
 </script>
