@@ -2,7 +2,6 @@
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import MainCard from "@/components/MainCard.astro";
 
-// 数据结构保持不变，APlayer 可以直接使用
 const songs = [
   { title: "Signals", artist: "Lazer Boomerang", cover: "https://vip.123pan.cn/1815727707/ymjew503t0l000d7w32x8raj9w2103y4DIYPAIUvAwUOAvxvAdrxAa==.png", url: "https://maomaowo.cn/Signals.mp3" },
   { title: "Vortex", artist: "SaliHai", cover: "https://vip.123pan.cn/1815727707/yk6baz03t0m000d7w33g8y2s5gg9bi1wDIYPAIUvAwUOAvxvAdrxAa==.png", url: "https://maomaowo.cn/Vortex.mp3" },
@@ -22,10 +21,7 @@ const songs = [
     image="https://vip.123pan.cn/1815727707/yk6baz03t0n000d7w33h1aoqtpvvqz9gDIYPAIUvAwUOAvxvAdrxAa==.png"
     infoIcon="lucide:music"
   >
-    <!-- 播放器容器，APlayer 会在这里生成播放器 -->
     <div id="player" class="aplayer-container"></div>
-
-    <!-- 歌曲列表 -->
     <div class="playlist">
       {songs.map((song, index) => (
         <div class="song-item" data-index={index}>
@@ -42,22 +38,18 @@ const songs = [
 </BaseLayout>
 
 <style>
-  /* 播放器容器样式 */
+  /* 样式部分保持不变 */
   .aplayer-container {
     border-radius: 12px;
     overflow: hidden;
     margin-bottom: 24px;
     box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
   }
-
-  /* 歌曲列表 */
   .playlist {
     display: flex;
     flex-direction: column;
     gap: 8px;
   }
-
-  /* 歌曲项样式 - 实现毛玻璃效果 */
   .song-item {
     display: flex;
     align-items: center;
@@ -65,19 +57,15 @@ const songs = [
     border-radius: 12px;
     cursor: pointer;
     transition: background-color 0.3s ease;
-    
-    /* 毛玻璃效果关键代码 */
-    background: rgba(255, 255, 255, 0.1); /* 半透明背景 */
-    backdrop-filter: blur(10px); /* 模糊效果 */
-    -webkit-backdrop-filter: blur(10px); /* 兼容 Safari */
-    border: 1px solid rgba(255, 255, 255, 0.18); /* 细微边框增加质感 */
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.18);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   }
-
   .song-item:hover, .song-item.playing {
     background: rgba(255, 255, 255, 0.25);
   }
-
   .song-index {
     font-size: 1rem;
     font-weight: 500;
@@ -86,7 +74,6 @@ const songs = [
     text-align: center;
     flex-shrink: 0;
   }
-
   .song-cover {
     width: 48px;
     height: 48px;
@@ -95,12 +82,10 @@ const songs = [
     object-fit: cover;
     flex-shrink: 0;
   }
-
   .song-info {
     flex-grow: 1;
     overflow: hidden;
   }
-
   .song-title {
     font-size: 1.1rem;
     font-weight: 600;
@@ -109,7 +94,6 @@ const songs = [
     overflow: hidden;
     text-overflow: ellipsis;
   }
-
   .song-artist {
     font-size: 0.9rem;
     color: var(--theme-text-2);
@@ -119,13 +103,17 @@ const songs = [
   }
 </style>
 
-<script define:vars={{ songs }}>
-  // 告诉 TypeScript APlayer 是一个全局变量
+<!-- =============================================================== -->
+<!-- 【关键修复】第一步：单独提交“通行证”，让质检员盖章 -->
+<!-- 这个 script 标签没有特殊指令，所以会被 TypeScript 正常检查 -->
+<script>
   declare const APlayer: any;
+</script>
 
-  // 确保在页面加载和切换后都执行初始化
+<!-- 【关键修复】第二步：正常发送“加急快递” -->
+<!-- 这个 script 标签有 is:inline 和 define:vars，不会被 TypeScript 检查，但质检员已经认识 APlayer 了 -->
+<script is:inline define:vars={{ songs }}>
   document.addEventListener('astro:page-load', () => {
-    // 格式化歌曲数据以适应 APlayer
     const ap_songs = songs.map(song => ({
       name: song.title,
       artist: song.artist,
@@ -133,18 +121,15 @@ const songs = [
       cover: song.cover,
     }));
 
-    // 初始化 APlayer
     const ap = new APlayer({
       container: document.getElementById('player'),
-      fixed: false, // false 表示不在页面底部固定，而是嵌入在卡片内
-      lrcType: 0, // 不显示歌词
+      fixed: false,
+      lrcType: 0,
       audio: ap_songs
     });
 
-    // 获取所有歌曲列表项
     const songItems = document.querySelectorAll('.song-item');
 
-    // 点击列表项切换歌曲
     songItems.forEach(item => {
       item.addEventListener('click', () => {
         const index = parseInt(item.dataset.index, 10);
@@ -153,7 +138,6 @@ const songs = [
       });
     });
 
-    // 监听播放事件，给当前播放的歌曲添加高亮样式
     ap.on('play', () => {
       const currentIndex = ap.list.index;
       songItems.forEach((item, index) => {
@@ -165,9 +149,9 @@ const songs = [
       });
     });
     
-    // 监听暂停事件，移除高亮
     ap.on('pause', () => {
         songItems.forEach(item => item.classList.remove('playing'));
     });
   });
 </script>
+<!-- =============================================================== -->
