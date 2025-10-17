@@ -87,8 +87,8 @@ importers:
         specifier: ^4.1.4
         version: 4.1.4
       plyr-react:
-        specifier: ^5.3.0
-        version: 5.3.0(plyr@3.8.3)(react@19.2.0)
+        specifier: 5.1.0
+        version: 5.1.0(plyr@3.8.3)(react@19.2.0)
       prop-types:
         specifier: ^15.8.1
         version: 15.8.1
@@ -5617,11 +5617,11 @@ packages:
     resolution: {integrity: sha512-Nc3IT5yHzflTfbjgqWcCPpo7DaKy4FnpB0l/zCAW0Tc7jxAiuqSxHasntB3D7887LSrA93kDJ9IXovxJYxyLCA==}
     engines: {node: '>=4'}
 
-  plyr-react@5.3.0:
-    resolution: {integrity: sha512-m36/HrpHwg1N2rq3E31E8/kpAH55vk6qHUg17MG4uu9jbWYxnkN39lLmZQwxW7/qpDPfW5aGUJ6R3u23V0R3zA==}
-    engines: {node: '>=16'}
+  plyr-react@5.1.0:
+    resolution: {integrity: sha512-N0qIuN1wZZzpKUXngtNeZwTiWqvOb6qAzqcfMI48rLkRJGM5xM5MRWILd3hW1PWPbVBKsAH4Ged32ZZhkJVbXA==}
+    engines: {node: '>=12.7.0'}
     peerDependencies:
-      plyr: ^3.7.7
+      plyr: ^3.7.2
       react: '>=16.8'
     peerDependenciesMeta:
       react:
@@ -14399,7 +14399,7 @@ snapshots:
 
   pluralize@8.0.0: {}
 
-  plyr-react@5.3.0(plyr@3.8.3)(react@19.2.0):
+  plyr-react@5.1.0(plyr@3.8.3)(react@19.2.0):
     dependencies:
       plyr: 3.8.3
       react-aptor: 2.0.0(react@19.2.0)
