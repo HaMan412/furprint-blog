@@ -1,12 +1,9 @@
-// 【关键修复】我们不再直接导入 React，因为它在新的 JSX 转换中不再是必需的
 import { useState, useRef } from 'react';
-// 【关键修复】我们先导入整个“信封”
 import Player from 'react-h5-audio-player';
 import 'react-h5-audio-player/lib/styles.css';
 
-// 【关键修复】在这里“拆信封”：如果 Player 是一个带 default 属性的对象，就用它的 default，否则就用它本身。
-// (window as any) 这种技巧是告诉 TypeScript 不要检查这行，因为我们知道自己在做什么。
-const AudioPlayer = (Player as any).default || Player;
+// 【关键修复】移除 TypeScript 的 `as any` 语法，使用纯 JavaScript 的方式来处理模块导入
+const AudioPlayer = Player.default || Player;
 
 const MusicPlayer = ({ songs }) => {
   const [currentTrack, setCurrentTrack] = useState(0);
@@ -28,7 +25,6 @@ const MusicPlayer = ({ songs }) => {
     setCurrentTrack(index);
   };
 
-  // 确保歌曲数组不为空
   if (!songs || songs.length === 0) {
     return <div>暂无歌曲</div>;
   }
