@@ -1,56 +1,49 @@
-import { useEffect, useRef } from 'react';
-import Plyr from 'plyr-react';
-// 【关键修复】删除下面这行有问题的 import
-// import 'plyr-react/dist/plyr.css'; 
+import React, { useState, useRef } from 'react';
+import AudioPlayer from 'react-h5-audio-player';
+// 我们需要手动导入它的 CSS 文件
+import 'react-h5-audio-player/lib/styles.css';
 
 const MusicPlayer = ({ songs }) => {
-  const ref = useRef(null);
+  const [currentTrack, setCurrentTrack] = useState(0);
+  const playerRef = useRef(null);
 
-  // 点击歌曲列表项时，切换播放器的歌曲
-  const handleSongClick = (index) => {
-    if (ref.current && ref.current.plyr) {
-      ref.current.plyr.source = {
-        type: 'audio',
-        sources: [{ src: songs[index].url, type: 'audio/mp3' }],
-        title: songs[index].title,
-        poster: songs[index].cover,
-      };
-      // 检查播放器是否准备好，并尝试播放
-      ref.current.plyr.once('ready', () => {
-        ref.current.plyr.play();
-      });
-      // 如果已经准备好，直接播放
-      if(ref.current.plyr.ready) {
-        ref.current.plyr.play();
-      }
-    }
+  const handleClickNext = () => {
+    setCurrentTrack((currentTrack) => (currentTrack + 1) % songs.length);
   };
 
-  // 绑定点击事件到全局
-  useEffect(() => {
-    const songItems = document.querySelectorAll('.song-item');
-    
-    // 创建一个 AbortController 来管理事件监听器
-    const controller = new AbortController();
-    const signal = controller.signal;
+  const handleClickPrevious = () => {
+    setCurrentTrack((currentTrack) => (currentTrack - 1 + songs.length) % songs.length);
+  };
 
-    songItems.forEach((item, index) => {
-      item.addEventListener('click', () => handleSongClick(index), { signal });
-    });
+  const handleEnd = () => {
+    handleClickNext();
+  };
 
-    // 在组件卸载时，清理所有事件监听器
-    return () => {
-      controller.abort();
-    };
-  }, [songs]);
+  const handleSongClick = (index) => {
+    setCurrentTrack(index);
+  };
 
   return (
     <div>
-      {/* 初始化时不加载任何音源，等待用户点击 */}
-      <Plyr ref={ref} source={null} options={{}} />
+      <AudioPlayer
+        ref={playerRef}
+        autoPlayAfterSrcChange={true}
+        src={songs[currentTrack].url}
+        onEnded={handleEnd}
+        showSkipControls={true}
+        showJumpControls={false}
+        onClickNext={handleClickNext}
+        onClickPrevious={handleClickPrevious}
+        header={`${songs[currentTrack].title} - ${songs[currentTrack].artist}`}
+      />
       <div className="playlist">
         {songs.map((song, index) => (
-          <a href="javascript:void(0);" key={index} className="song-item" data-index={index}>
+          <a
+            href="javascript:void(0);"
+            key={index}
+            className={`song-item ${index === currentTrack ? 'playing' : ''}`}
+            onClick={() => handleSongClick(index)}
+          >
             <div className="song-index">{index + 1}</div>
             <img src={song.cover} alt={song.title} className="song-cover" loading="lazy" />
             <div className="song-info">

@@ -32,91 +32,47 @@ const songs = [
 </BaseLayout>
 
 <style is:global>
-  /* 
-    我们需要一些全局样式来定制 Plyr 播放器和我们的列表
-    is:global 意味着这里的样式会应用到全局
-  */
-
-  /* Plyr 播放器毛玻璃效果 */
-  .plyr {
-    border-radius: 12px;
-    margin-bottom: 24px;
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.18);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  /* 播放器毛玻璃效果 */
+  .rhap_container {
+    border-radius: 12px !important;
+    margin-bottom: 24px !important;
+    background: rgba(255, 255, 255, 0.1) !important;
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.18) !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+    padding: 15px !important;
   }
 
-  /* 自定义 Plyr 控件颜色 */
-  :root {
-    --plyr-color-main: #a78bfa; /* 紫罗兰色，你可以换成你喜欢的主题色 */
+  /* 调整播放器内部元素颜色以适应深色主题 */
+  .rhap_container .rhap_time,
+  .rhap_container .rhap_current-time,
+  .rhap_container .rhap_total-time,
+  .rhap_container .rhap_header {
+    color: var(--theme-text) !important;
+  }
+  
+  .rhap_container .rhap_progress-indicator,
+  .rhap_container .rhap_volume-indicator {
+    background: var(--theme-accent) !important;
   }
 
-  /* 歌曲列表 */
-  .playlist {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
+  .rhap_container .rhap_progress-filled,
+  .rhap_container .rhap_volume-bar {
+    background-color: var(--theme-accent) !important;
   }
 
-  /* 歌曲项毛玻璃效果 */
-  .song-item {
-    display: flex;
-    align-items: center;
-    padding: 12px;
-    border-radius: 12px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.18);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    text-decoration: none;
+  .rhap_container svg {
+    color: var(--theme-accent) !important;
   }
 
-  .song-item:hover {
-    background: rgba(255, 255, 255, 0.25);
-  }
-
-  .song-index {
-    font-size: 1rem;
-    font-weight: 500;
-    color: var(--theme-text-2);
-    width: 30px;
-    text-align: center;
-    flex-shrink: 0;
-  }
-
-  .song-cover {
-    width: 48px;
-    height: 48px;
-    border-radius: 8px;
-    margin: 0 16px;
-    object-fit: cover;
-    flex-shrink: 0;
-  }
-
-  .song-info {
-    flex-grow: 1;
-    overflow: hidden;
-  }
-
-  .song-title {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: var(--theme-text);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .song-artist {
-    font-size: 0.9rem;
-    color: var(--theme-text-2);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
+  /* 歌曲列表样式保持不变，但增加 .playing 状态 */
+  .playlist { display: flex; flex-direction: column; gap: 8px; }
+  .song-item { display: flex; align-items: center; padding: 12px; border-radius: 12px; cursor: pointer; transition: background-color 0.3s ease; background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.18); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); text-decoration: none; }
+  .song-item:hover, .song-item.playing { background: rgba(255, 255, 255, 0.25); }
+  .song-index { font-size: 1rem; font-weight: 500; color: var(--theme-text-2); width: 30px; text-align: center; flex-shrink: 0; }
+  .song-cover { width: 48px; height: 48px; border-radius: 8px; margin: 0 16px; object-fit: cover; flex-shrink: 0; }
+  .song-info { flex-grow: 1; overflow: hidden; }
+  .song-title { font-size: 1.1rem; font-weight: 600; color: var(--theme-text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .song-artist { font-size: 0.9rem; color: var(--theme-text-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 </style>
