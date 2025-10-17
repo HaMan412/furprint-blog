@@ -24,7 +24,7 @@ const { title, image, headings = [], showTOC = false } = Astro.props;
     {/* 灯箱插件 GLightbox 的 CSS */}
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" />
     
-    {/* 【关键修改】添加 Plyr 播放器的 CSS */}
+    {/* Plyr 播放器的 CSS */}
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/plyr-react/dist/plyr.css" />
 
     {/* 主题切换脚本，保持不变 */}
@@ -115,11 +115,11 @@ const { title, image, headings = [], showTOC = false } = Astro.props;
     <script>
       declare const GLightbox: any;
       document.addEventListener("astro:page-load", () => {
-        // 增加一个检查，防止 GLightbox 重复初始化
-        if (window.glightboxInstance) {
-          window.glightboxInstance.reload();
+        // 【关键修复】使用 (window as any) 来告诉 TypeScript 我们知道自己在做什么
+        if ((window as any).glightboxInstance) {
+          (window as any).glightboxInstance.reload();
         } else {
-          window.glightboxInstance = GLightbox({
+          (window as any).glightboxInstance = GLightbox({
             selector: '.glightbox'
           });
         }
