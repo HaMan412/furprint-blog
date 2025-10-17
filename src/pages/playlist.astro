@@ -32,7 +32,10 @@ const songs = [
 </BaseLayout>
 
 <style is:global>
-  /* 播放器毛玻璃效果 */
+  /* 
+    播放器主体样式 - 毛玻璃效果 
+    我们之前已经设置过，这里保持不变
+  */
   .rhap_container {
     border-radius: 12px !important;
     margin-bottom: 24px !important;
@@ -44,35 +47,104 @@ const songs = [
     padding: 15px !important;
   }
 
-  /* 调整播放器内部元素颜色以适应深色主题 */
+  /* 
+    =====================================================
+    【关键】进度条美化 - 仿网易云 + 动漫樱花主题
+    =====================================================
+  */
+
+  /* 1. 进度条轨道 (未播放部分) */
+  .rhap_progress-bar {
+    background-color: rgba(255, 255, 255, 0.2) !important;
+    height: 4px !important;
+    border-radius: 2px;
+  }
+
+  /* 2. 缓冲进度条 */
+  .rhap_download-progress {
+    background: rgba(255, 255, 255, 0.35) !important;
+    height: 4px !important;
+    border-radius: 2px;
+  }
+
+  /* 3. 已播放进度条 - 使用樱花粉色 */
+  .rhap_progress-filled {
+    background-color: #ff85a1 !important; /* 樱花粉 */
+    height: 4px !important;
+    border-radius: 2px;
+  }
+
+  /* 4. 进度条拖动圆点 -> 替换为樱花花瓣！ */
+  .rhap_progress-indicator {
+    /* 移除原来的圆圈背景 */
+    background: transparent !important; 
+    box-shadow: none !important;
+    
+    /* 设置尺寸 */
+    width: 22px !important;
+    height: 22px !important;
+    
+    /* 使用 SVG 绘制一个粉色樱花花瓣作为拖动点 */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ff85a1'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-12h2v4h-2zm0 6h2v2h-2z'/%3E%3C/svg%3E");
+    background-size: contain;
+    
+    /* 调整位置，让花瓣的中心对准进度条 */
+    transform: translate(-50%, -50%) scale(1.2);
+    top: 50% !important;
+    margin-left: -2px; /* 微调 */
+  }
+
+  /* 
+    =====================================================
+    其他 UI 元素美化
+    =====================================================
+  */
+
+  /* 播放/暂停/下一首等按钮的颜色 */
+  .rhap_container svg {
+    color: #ff85a1 !important; /* 樱花粉 */
+    filter: drop-shadow(0 0 3px rgba(255, 133, 161, 0.5)); /* 加一点辉光效果 */
+  }
+
+  /* 时间文字和歌曲标题的颜色 */
   .rhap_container .rhap_time,
   .rhap_container .rhap_current-time,
   .rhap_container .rhap_total-time,
   .rhap_container .rhap_header {
     color: var(--theme-text) !important;
+    font-size: 0.95rem;
   }
   
-  .rhap_container .rhap_progress-indicator,
-  .rhap_container .rhap_volume-indicator {
-    background: var(--theme-accent) !important;
+  /* 音量条样式 */
+  .rhap_volume-bar {
+    background-color: rgba(255, 255, 255, 0.2) !important;
+  }
+  .rhap_volume-indicator {
+    background: #ff85a1 !important; /* 樱花粉 */
   }
 
-  .rhap_container .rhap_progress-filled,
-  .rhap_container .rhap_volume-bar {
-    background-color: var(--theme-accent) !important;
-  }
-
-  .rhap_container svg {
-    color: var(--theme-accent) !important;
-  }
-
-  /* 歌曲列表样式保持不变，但增加 .playing 状态 */
+  /* 
+    =====================================================
+    歌曲列表样式
+    =====================================================
+  */
   .playlist { display: flex; flex-direction: column; gap: 8px; }
   .song-item { display: flex; align-items: center; padding: 12px; border-radius: 12px; cursor: pointer; transition: background-color 0.3s ease; background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.18); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); text-decoration: none; }
-  .song-item:hover, .song-item.playing { background: rgba(255, 255, 255, 0.25); }
+  
+  /* 正在播放的歌曲，高亮显示，使用樱花粉的半透明色 */
+  .song-item.playing { 
+    background: rgba(255, 133, 161, 0.25); 
+    border-left: 4px solid #ff85a1;
+    padding-left: 8px;
+  }
+  .song-item:hover { 
+    background: rgba(255, 255, 255, 0.25); 
+  }
+  
   .song-index { font-size: 1rem; font-weight: 500; color: var(--theme-text-2); width: 30px; text-align: center; flex-shrink: 0; }
   .song-cover { width: 48px; height: 48px; border-radius: 8px; margin: 0 16px; object-fit: cover; flex-shrink: 0; }
   .song-info { flex-grow: 1; overflow: hidden; }
   .song-title { font-size: 1.1rem; font-weight: 600; color: var(--theme-text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .song-artist { font-size: 0.9rem; color: var(--theme-text-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 </style>
+
