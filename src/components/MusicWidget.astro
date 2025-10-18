@@ -1,63 +1,60 @@
 ---
-// 无需修改
-const API_ENDPOINT = "https://music.furprint.cn";
+const { apiEndpoint } = Astro.props;
 ---
 
-<div id="music-widget-container" class="text-sm mt-4">
-  <h2 class="text-lg font-bold mb-2">哈曼正在听的歌</h2>
+<div id="music-widget-container" class="text-sm mt-2" data-api-endpoint={apiEndpoint}>
   <div id="music-widget-content">
     <p>正在加载音乐信息...</p>
   </div>
 </div>
 
-<script define:vars={{ API_ENDPOINT }}>
-  // 【核心修改 1】定义音乐数据类型接口
-  interface MusicData {
-    playing: boolean;
-    song?: { // song 属性是可选的
-      name: string;
-      artist: string;
-      album: string;
-      album_art_url: string;
-    };
-  }
+<script is:inline>
+  function musicWidgetScript() {
+    const widgetContainer = document.querySelector('#music-widget-container');
+    if (!widgetContainer) return;
 
-  const musicContainer = document.getElementById('music-widget-content');
-  const refreshIcon = document.getElementById('widget-refresh-icon');
+    function updateMusicWidget(data) {
+      const musicContainer = widgetContainer.querySelector('#music-widget-content');
+      if (!musicContainer) return;
 
-  // 【核心修改 2】为 data 参数指定类型
-  function updateMusicWidget(data: MusicData) {
-    if (data && data.playing && data.song) {
-      musicContainer.innerHTML = `
-        <div class="flex items-center gap-3">
-          <img src="${data.song.album_art_url}" alt="${data.song.album} cover" class="w-10 h-10 rounded-md shadow">
-          <div>
-            <p class="font-semibold text-base-content truncate" title="${data.song.name}">${data.song.name}</p>
-            <p class="text-xs text-base-content/70 truncate" title="${data.song.artist} - ${data.song.album}">${data.song.artist} - ${data.song.album}</p>
+      if (data && data.playing && typeof data.song === 'string' && data.song.trim() !== '') {
+        const parts = data.song.split(' - ');
+        const name = parts[0] || '未知歌曲';
+        const artist = parts.slice(1).join(' - ') || '未知艺术家';
+        
+        const CUSTOM_ICON_URL = "https://vip.123pan.cn/1815727707/yk6baz03t0l000d7w33fsavgcc6j1mkoDIYPAIUvAwUOAvxvAdrxAa==.png"; // 别忘了这里是您的链接
+
+        musicContainer.innerHTML = `
+          <div class="flex items-center gap-3 overflow-hidden">
+            <!-- ▼▼▼ 核心修改：将 w-8 h-8 修改为 w-10 h-10 ▼▼▼ -->
+            <img src="${CUSTOM_ICON_URL}" alt="Music Icon" class="flex-shrink-0 w-10 h-10 rounded-md shadow object-cover">
+            <div class="overflow-hidden">
+              <p class="font-semibold text-sm text-base-content truncate" title="${name}">${name}</p>
+              <p class="text-sm text-base-content/70 truncate" title="${artist}">${artist}</p>
+            </div>
           </div>
-        </div>
-      `;
-    } else {
-      musicContainer.innerHTML = '<p>当前没有在听歌</p>';
-    }
-  }
-
-  async function fetchMusicData() {
-    try {
-      const response = await fetch(API_ENDPOINT);
-      if (!response.ok) throw new Error('Network response was not ok');
-      const data = await response.json();
-      updateMusicWidget(data);
-    } catch (error) {
-      console.error("Failed to fetch music data:", error);
-      musicContainer.innerHTML = '<p class="text-error">获取音乐信息失败</p>';
-    } finally {
-      if (refreshIcon) {
-        refreshIcon.classList.remove('animate-spin');
+        `;
+      } else {
+        musicContainer.innerHTML = '<p>当前没有在听歌</p>';
       }
     }
-  }
 
-  document.addEventListener('astro:page-load', fetchMusicData);
-  document.addEventListener('refresh-widgets', fetchMusicData);
+    async function fetchMusicData() {
+      const apiEndpoint = widgetContainer.dataset.apiEndpoint;
+      if (!apiEndpoint) return;
+      try {
+        const response = await fetch(apiEndpoint);
+        const data = await response.json();
+        updateMusicWidget(data);
+      } catch (error) {
+        console.error("Failed to fetch music data:", error);
+        const musicContainer = widgetContainer.querySelector('#music-widget-content');
+        if (musicContainer) musicContainer.innerHTML = '<p class="text-error">获取音乐信息失败</p>';
+      }
+    }
+    
+    document.addEventListener('astro:page-load', fetchMusicData);
+    document.addEventListener('refresh-widgets', fetchMusicData);
+  }
+  musicWidgetScript();
 </script>

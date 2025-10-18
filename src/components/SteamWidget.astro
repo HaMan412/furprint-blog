@@ -1,63 +1,60 @@
 ---
-// 无需修改
-const API_ENDPOINT = "https://steam.furprint.cn"; 
+const { apiEndpoint } = Astro.props;
 ---
 
-<div id="steam-widget-container" class="text-sm">
-  <h2 class="text-lg font-bold mb-2">哈曼最近玩的游戏</h2>
-  <div id="steam-widget-content">
+<div id="steam-widget-container" class="text-sm" data-api-endpoint={apiEndpoint}>
+  <!-- ▼▼▼ 核心修改：将 space-y-4 修改为 space-y-2 ▼▼▼ -->
+  <div id="steam-widget-content" class="space-y-2">
     <p>正在加载 Steam 信息...</p>
   </div>
 </div>
 
-<script define:vars={{ API_ENDPOINT }}>
-  // 【核心修改 1】定义数据类型接口
-  interface SteamData {
-    playing: boolean;
-    game?: { // game 属性是可选的，因为不玩的时候它不存在
-      name: string;
-      playtime_2weeks: number;
-      icon_url: string;
-    };
-  }
+<script is:inline>
+  function steamWidgetScript() {
+    const widgetContainer = document.querySelector('#steam-widget-container');
+    if (!widgetContainer) return;
 
-  const steamContainer = document.getElementById('steam-widget-content');
-  const refreshIcon = document.getElementById('widget-refresh-icon');
+    function updateSteamWidget(data) {
+      const steamContainer = widgetContainer.querySelector('#steam-widget-content');
+      if (!steamContainer) return;
 
-  // 【核心修改 2】为 data 参数指定我们刚刚定义的类型
-  function updateSteamWidget(data: SteamData) {
-    if (data && data.playing && data.game) {
-      const playtimeHours = (data.game.playtime_2weeks / 60).toFixed(1);
-      steamContainer.innerHTML = `
-        <div class="flex items-center gap-3">
-          <img src="${data.game.icon_url}" alt="${data.game.name} icon" class="w-10 h-10 rounded-md shadow">
-          <div>
-            <p class="font-semibold text-base-content">${data.game.name}</p>
-            <p class="text-xs text-base-content/70">近两周: ${playtimeHours} 小时</p>
-          </div>
-        </div>
-      `;
-    } else {
-      steamContainer.innerHTML = '<p>当前没有在玩游戏</p>';
-    }
-  }
+      if (data && data.recentlyPlayed && data.recentlyPlayed.length > 0) {
+        
+        const gamesHtml = data.recentlyPlayed.map(game => {
+          const playtimeHours = (game.playtime_2weeks / 60).toFixed(1);
+          return `
+            <div class="flex items-center gap-3 overflow-hidden">
+              <img src="${game.icon_url}" alt="${game.name} icon" class="flex-shrink-0 w-8 h-8 rounded-md shadow object-cover">
+              <div class="overflow-hidden">
+                <p class="font-semibold text-base-content truncate" title="${game.name}">${game.name}</p>
+                <p class="text-xs text-base-content/70 truncate">近两周: ${playtimeHours} 小时</p>
+              </div>
+            </div>
+          `;
+        }).join('');
 
-  async function fetchSteamData() {
-    try {
-      const response = await fetch(API_ENDPOINT);
-      if (!response.ok) throw new Error('Network response was not ok');
-      const data = await response.json();
-      updateSteamWidget(data);
-    } catch (error) {
-      console.error("Failed to fetch Steam data:", error);
-      steamContainer.innerHTML = '<p class="text-error">获取 Steam 信息失败</p>';
-    } finally {
-      if (refreshIcon) {
-        refreshIcon.classList.remove('animate-spin');
+        steamContainer.innerHTML = gamesHtml;
+      } else {
+        steamContainer.innerHTML = '<p>当前没有在玩游戏</p>';
       }
     }
-  }
 
-  document.addEventListener('astro:page-load', fetchSteamData);
-  document.addEventListener('refresh-widgets', fetchSteamData);
+    async function fetchSteamData() {
+      const apiEndpoint = widgetContainer.dataset.apiEndpoint;
+      if (!apiEndpoint) return;
+      try {
+        const response = await fetch(apiEndpoint);
+        const data = await response.json();
+        updateSteamWidget(data);
+      } catch (error) {
+        console.error("Failed to fetch Steam data:", error);
+        const steamContainer = widgetContainer.querySelector('#steam-widget-content');
+        if(steamContainer) steamContainer.innerHTML = '<p class="text-error">获取 Steam 信息失败</p>';
+      }
+    }
+    
+    document.addEventListener('astro:page-load', fetchSteamData);
+    document.addEventListener('refresh-widgets', fetchSteamData);
+a  }
+  steamWidgetScript();
 </script>

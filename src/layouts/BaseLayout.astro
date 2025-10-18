@@ -54,6 +54,7 @@ const { title, image, headings = [], showTOC = false } = Astro.props;
     <Navbar />
     <div class="max-w-6xl mx-auto">
       <div class="grid grid-cols-1 md:grid-cols-5 lg:grid-cols-4 gap-4 p-4">
+        
         <main class="col-span-1 md:col-span-4 lg:col-span-3 bg-transparent order-1 md:order-2 mt-16 md:mt-0">
           <div class="flex flex-col gap-4">
             <slot />
@@ -68,17 +69,22 @@ const { title, image, headings = [], showTOC = false } = Astro.props;
             </div>
             
             <div class="bg-base-100/70 backdrop-blur-xl rounded-2xl shadow-lg overflow-hidden p-4 relative">
-              <button id="widget-refresh-button" aria-label="刷新小组件" class="absolute top-3 right-3 p-1 rounded-full text-base-content/50 hover:bg-base-content/10 transition-colors duration-200 focus:outline-none">
-                <svg id="widget-refresh-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.3"/>
-                </svg>
-              </button>
-
-              <SteamWidget />
-              <MusicWidget />
+              
+              <div class="flex justify-between items-center mb-2">
+                <h2 class="text-lg font-bold">哈曼最近玩的游戏</h2>
+                <div id="widget-refresh-button" class="cursor-pointer text-base-content/60 hover:text-base-content">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M3 21v-5h5"/></svg>
+                </div>
+              </div>
+              
+              <!-- ▼▼▼ 核心修复：将 45.207.193.20 修正为 45.207.193.240 ▼▼▼ -->
+              <SteamWidget apiEndpoint="http://45.207.193.240:8000/api/steam/recent" />
+              
+              <h2 class="text-lg font-bold mt-4">哈曼正在听的歌</h2>
+              <MusicWidget apiEndpoint="https://music.furprint.cn" />
+              
               <slot name="sidebar" />
             </div>
-
           </div>
         </aside>
 
@@ -86,30 +92,20 @@ const { title, image, headings = [], showTOC = false } = Astro.props;
     </div>
     <MobileTOC headings={headings} showTOC={showTOC} />
 
-    <script>
+    <script is:inline>
       document.addEventListener('astro:page-load', () => {
         const refreshButton = document.getElementById('widget-refresh-button');
-        const refreshIcon = document.getElementById('widget-refresh-icon');
-
-        if (refreshButton && refreshIcon) {
-          refreshButton.addEventListener('click', () => {
-            // 如果已经在旋转，则不执行任何操作，防止重复点击
-            if (refreshIcon.classList.contains('animate-spin')) {
-              return;
-            }
-            
-            // 添加旋转动画
-            refreshIcon.classList.add('animate-spin');
-            
-            // 发送一个全局的“刷新”信号
+        if (!refreshButton) return;
+        const svg = refreshButton.querySelector('svg');
+        refreshButton.addEventListener('click', () => {
+          if (svg && !svg.classList.contains('animate-spin')) {
+            svg.classList.add('animate-spin');
             document.dispatchEvent(new CustomEvent('refresh-widgets'));
-
-            // 1.5秒后无论如何都移除动画，防止出错卡住
             setTimeout(() => {
-              refreshIcon.classList.remove('animate-spin');
+              svg.classList.remove('animate-spin');
             }, 1500);
-          });
-        }
+          }
+        });
       });
     </script>
   </body>
