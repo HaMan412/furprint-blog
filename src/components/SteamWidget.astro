@@ -20,7 +20,7 @@ try {
 
 {data && data.recentlyPlayed && Array.isArray(data.recentlyPlayed) && data.recentlyPlayed.length > 0 && (
   <div class="steam-widget-transparent">
-    <h4 class="text-sm font-bold mb-3 text-base-content/80">最近玩过的游戏</h4>
+    <h4 class="text-sm font-bold mb-3 text-base-content/80">哈曼最近玩的游戏</h4>
     <ul>
       {/* 【修复】在这里告诉 .map()，每个 game 都符合我们写的 Game "说明书" */}
       {data.recentlyPlayed.slice(0, 3).map((game: Game) => (

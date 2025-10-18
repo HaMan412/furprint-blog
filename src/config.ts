@@ -34,6 +34,7 @@ export const USER_SITE = config.user.site;
 export const USER_AVATAR = config.user.avatar;
 
 // 社交图标配置（侧边栏和页脚）
+export const MUSIC_ICON_URL = "https://vip.123pan.cn/1815727707/yk6baz03t0l000d7w33fsavgcc6j1mkoDIYPAIUvAwUOAvxvAdrxAa==.png";
 export const USER_SIDEBAR_SOCIAL_ICONS = config.user.sidebar.social;
 export const USER_FOOTER_SOCIAL_ICONS = config.user.footer.social;
 

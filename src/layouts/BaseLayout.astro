@@ -1,5 +1,6 @@
 ---
 import SteamWidget from '../components/SteamWidget.astro'; 
+import MusicWidget from '../components/MusicWidget.astro';
 import { SITE_TAB, SITE_DESCRIPTION, SITE_FAVICON, SITE_LANGUAGE, SITE_THEME } from "@config";
 import { ClientRouter } from "astro:transitions";
 import ElementCrossing from "astro-vtbot/components/ElementCrossing.astro";
@@ -16,7 +17,6 @@ const { title, image, headings = [], showTOC = false } = Astro.props;
 <!doctype html>
 <html lang={SITE_LANGUAGE} class="bg-base-300" data-theme={SITE_THEME.light} data-theme-type="light">
   <head>
-    {/* Head 内容保持不变 */}
     <ClientRouter />
     <ElementCrossing />
     <PointerOnNavigation />
@@ -62,13 +62,13 @@ const { title, image, headings = [], showTOC = false } = Astro.props;
         </main>
         
         <aside class="col-span-1 bg-transparent order-2 md:order-1 md:top-4">
-          {/* 【核心修改】将 gap-4 减小为 gap-2，缩小间距 */}
           <div class="sticky top-4 flex flex-col gap-2">
             <div class="bg-base-100/70 backdrop-blur-xl rounded-2xl shadow-lg overflow-hidden">
               <Sidebar headings={headings} showTOC={showTOC} />
             </div>
             <div class="bg-base-100/70 backdrop-blur-xl rounded-2xl shadow-lg overflow-hidden p-4">
               <SteamWidget />
+              <MusicWidget />
               <slot name="sidebar" />
             </div>
           </div>
@@ -77,8 +77,5 @@ const { title, image, headings = [], showTOC = false } = Astro.props;
       </div>
     </div>
     <MobileTOC headings={headings} showTOC={showTOC} />
-
-    {/* Scripts 和 Style 保持不变 */}
-    {/* ... (省略了未改变的 script 和 style 标签) ... */}
   </body>
 </html>

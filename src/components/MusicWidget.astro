@@ -1,0 +1,168 @@
+---
+import { MUSIC_ICON_URL } from '@config';
+---
+
+<div 
+  id="music-widget-container" 
+  class="music-widget-transparent" 
+  data-icon-url={MUSIC_ICON_URL}
+>
+  <h4 class="text-sm font-bold mb-3 text-base-content/80">哈曼正在听</h4>
+  <div id="music-widget-content">
+    <div class="placeholder-item">
+      <div class="animated-background"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Script 部分完全不变
+  interface SongData {
+    playing: boolean;
+    song: string | null;
+  }
+
+  const API_ENDPOINT = "http://45.207.193.240:1633/now-playing";
+  const container = document.getElementById('music-widget-container');
+  const musicIconUrl = container?.dataset.iconUrl;
+
+  function updateMusicWidget(data: SongData) {
+    const contentDiv = document.getElementById('music-widget-content');
+    if (!contentDiv) return;
+
+    let html = '';
+    if (data && data.playing && data.song) {
+      const parts = data.song.split(' - ');
+      const songName = parts[0];
+      const artist = parts.length > 1 ? parts.slice(1).join(' - ') : '未知艺术家';
+
+      const iconHtml = musicIconUrl
+        ? `<img src="${musicIconUrl}" alt="Music Icon" class="custom-music-icon">`
+        : `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9 18V5l12-2v13"></path>
+              <circle cx="6" cy="18" r="3"></circle>
+              <circle cx="18" cy="16" r="3"></circle>
+            </svg>`;
+
+      html = `
+        <div class="song-item">
+          <div class="music-icon">
+            ${iconHtml}
+          </div>
+          <div class="song-info">
+            <strong>${songName || '未知歌曲'}</strong>
+            <span>${artist}</span>
+          </div>
+        </div>
+      `;
+    } else {
+      html = `
+        <div class="no-song">
+          <p>当前没有在听歌</p>
+        </div>
+      `;
+    }
+    contentDiv.innerHTML = html;
+  }
+
+  async function fetchMusicData() {
+    try {
+      const response = await fetch(API_ENDPOINT);
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const data: SongData = await response.json();
+      updateMusicWidget(data);
+    } catch (error) {
+      console.error("无法获取音乐数据:", error);
+      updateMusicWidget({ playing: false, song: null });
+    }
+  }
+
+  document.addEventListener('astro:page-load', fetchMusicData);
+</script>
+
+<style>
+  .music-widget-transparent {
+    padding-top: 1rem;
+    margin-top: 1rem;
+    border-top: 1px solid oklch(var(--b2));
+  }
+  :global(.song-item) {
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px;
+  }
+  /* 【核心修正 1】将图标容器的宽高从 40px 改为 32px */
+  :global(.music-icon) {
+    width: 32px !important;
+    height: 32px !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: oklch(var(--b2));
+    border-radius: 6px; /* 圆角也适当减小一点 */
+    flex-shrink: 0;
+    overflow: hidden;
+  }
+  :global(.music-icon svg) {
+    width: 18px; /* SVG 图标也适当缩小 */
+    height: 18px;
+    color: oklch(var(--bc) / 0.8);
+  }
+  :global(.music-icon .custom-music-icon) {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+  }
+  :global(.song-info) {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-width: 0;
+  }
+  :global(.song-info strong) {
+    font-size: 0.9em;
+    font-weight: 600;
+    color: var(--fallback-bc, oklch(var(--bc) / 1));
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+  :global(.song-info span) {
+    font-size: 0.8em;
+    color: var(--fallback-bc, oklch(var(--bc) / 0.6));
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  :global(.no-song p) {
+    font-size: 0.85em;
+    color: var(--fallback-bc, oklch(var(--bc) / 0.7));
+  }
+  /* 【核心修正 2】将占位符的高度也从 40px 改为 32px */
+  .placeholder-item {
+    height: 32px;
+    width: 100%;
+    background-color: oklch(var(--b2));
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  .animated-background {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      oklch(var(--b3)),
+      transparent
+    );
+    background-size: 200% 100%;
+    animation: loadingAnimation 1.5s infinite linear;
+  }
+  @keyframes loadingAnimation {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+</style>
