@@ -1,48 +1,159 @@
 ---
-let data = null;
-
-// 【新增】定义一个类型（说明书），告诉 TypeScript game 对象长什么样
-interface Game {
-  name: string;
-  playtime_2weeks: number;
-  icon_url: string;
-}
-
-try {
-  const response = await fetch('http://45.207.193.240:8000/api/steam/recent');
-  if (response.ok) {
-    data = await response.json();
-  }
-} catch (error) {
-  console.error("无法获取 Steam 数据:", error);
-}
+// Frontmatter 现在是空的，因为所有数据获取都移到了客户端脚本中
 ---
 
-{data && data.recentlyPlayed && Array.isArray(data.recentlyPlayed) && data.recentlyPlayed.length > 0 && (
-  <div class="steam-widget-transparent">
-    <h4 class="text-sm font-bold mb-3 text-base-content/80">哈曼最近玩的游戏</h4>
-    <ul>
-      {/* 【修复】在这里告诉 .map()，每个 game 都符合我们写的 Game "说明书" */}
-      {data.recentlyPlayed.slice(0, 3).map((game: Game) => (
-        <li>
-          <img src={game.icon_url} alt={game.name} width="32" height="32" loading="lazy" />
-          <div class="game-info">
-            <strong>{game.name}</strong>
-            <span>近两周: {game.playtime_2weeks} 小时</span>
-          </div>
-        </li>
-      ))}
-    </ul>
+<div id="steam-widget-container" class="steam-widget-transparent">
+  <h4 class="text-sm font-bold mb-3 text-base-content/80">哈曼最近玩的游戏</h4>
+  <div id="steam-widget-content">
+    <!-- 初始状态，显示加载占位符 -->
+    <div class="placeholder-list">
+      <div class="placeholder-item"><div class="animated-background"></div></div>
+      <div class="placeholder-item"><div class="animated-background"></div></div>
+      <div class="placeholder-item"><div class="animated-background"></div></div>
+    </div>
   </div>
-)}
+</div>
+
+<script>
+  interface Game {
+    name: string;
+    playtime_2weeks: number;
+    icon_url: string;
+  }
+
+  // API 端点
+  const API_ENDPOINT = 'http://45.207.193.240:8000/api/steam/recent';
+
+  // 获取关键 DOM 元素
+  const contentDiv = document.getElementById('steam-widget-content');
+  const placeholderHtml = contentDiv ? contentDiv.innerHTML : '';
+
+  // 封装显示加载状态的函数
+  function showLoadingState() {
+    if (contentDiv) {
+      contentDiv.innerHTML = placeholderHtml;
+    }
+  }
+
+  // 更新 UI 的函数
+  function updateSteamWidget(data) {
+    if (!contentDiv) return;
+
+    let html = '';
+    if (data && data.recentlyPlayed && Array.isArray(data.recentlyPlayed) && data.recentlyPlayed.length > 0) {
+      // 如果有数据，构建游戏列表
+      const gamesHtml = data.recentlyPlayed
+        .slice(0, 3)
+        .map((game: Game) => `
+          <li>
+            <img src="${game.icon_url}" alt="${game.name}" width="32" height="32" loading="lazy" />
+            <div class="game-info">
+              <strong>${game.name}</strong>
+              <span>近两周: ${game.playtime_2weeks} 小时</span>
+            </div>
+          </li>
+        `).join('');
+      html = `<ul>${gamesHtml}</ul>`;
+    } else {
+      // 如果没有数据或出错，显示提示信息
+      html = `<p class="no-data-message">暂无最近游戏记录</p>`;
+    }
+    contentDiv.innerHTML = html;
+  }
+
+  // 获取数据的核心函数
+  async function fetchSteamData() {
+    showLoadingState(); // 每次获取前先显示加载动画
+    try {
+      const response = await fetch(API_ENDPOINT);
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const data = await response.json();
+      updateSteamWidget(data);
+    } catch (error) {
+      console.error("无法获取 Steam 数据:", error);
+      updateSteamWidget(null); // 出错时也更新 UI，显示提示信息
+    }
+  }
+
+  // 页面加载和事件监听
+  document.addEventListener('astro:page-load', () => {
+    // 1. 页面加载时获取一次数据
+    fetchSteamData();
+    // 2. 监听全局刷新信号
+    document.addEventListener('refresh-widgets', fetchSteamData);
+  });
+</script>
 
 <style>
-  /* 样式保持不变 */
-  .steam-widget-transparent ul { list-style: none; padding: 0; margin: 0; }
-  .steam-widget-transparent li { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
-  .steam-widget-transparent li:last-child { margin-bottom: 0; }
-  .steam-widget-transparent img { border-radius: 4px; }
-  .steam-widget-transparent .game-info { display: flex; flex-direction: column; justify-content: center; }
-  .steam-widget-transparent .game-info strong { font-size: 0.9em; color: var(--fallback-bc, oklch(var(--bc) / 1)); }
-  .steam-widget-transparent .game-info span { font-size: 0.8em; color: var(--fallback-bc, oklch(var(--bc) / 0.6)); }
+  /* 【核心修改】所有样式都用 :global() 包裹，以应用到动态生成的元素上 */
+  :global(.steam-widget-transparent ul) { 
+    list-style: none; 
+    padding: 0; 
+    margin: 0; 
+  }
+  :global(.steam-widget-transparent li) { 
+    display: flex; 
+    align-items: center; 
+    gap: 12px; 
+    margin-bottom: 10px; 
+  }
+  :global(.steam-widget-transparent li:last-child) { 
+    margin-bottom: 0; 
+  }
+  :global(.steam-widget-transparent img) { 
+    border-radius: 4px; 
+  }
+  :global(.steam-widget-transparent .game-info) { 
+    display: flex; 
+    flex-direction: column; 
+    justify-content: center; 
+    min-width: 0; /* 防止文字过长撑开布局 */
+  }
+  :global(.steam-widget-transparent .game-info strong) { 
+    font-size: 0.9em; 
+    color: var(--fallback-bc, oklch(var(--bc) / 1));
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  :global(.steam-widget-transparent .game-info span) { 
+    font-size: 0.8em; 
+    color: var(--fallback-bc, oklch(var(--bc) / 0.6)); 
+  }
+  :global(.no-data-message) {
+    font-size: 0.85em;
+    color: var(--fallback-bc, oklch(var(--bc) / 0.7));
+  }
+
+  /* 加载占位符的样式 */
+  .placeholder-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .placeholder-item {
+    height: 32px;
+    width: 100%;
+    background-color: oklch(var(--b2));
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  .animated-background {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      oklch(var(--b3)),
+      transparent
+    );
+    background-size: 200% 100%;
+    animation: loadingAnimation 1.5s infinite linear;
+  }
+  @keyframes loadingAnimation {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
 </style>

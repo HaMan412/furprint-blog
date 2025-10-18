@@ -7,7 +7,7 @@ import { MUSIC_ICON_URL } from '@config';
   class="music-widget-transparent" 
   data-icon-url={MUSIC_ICON_URL}
 >
-  <h4 class="text-sm font-bold mb-3 text-base-content/80">哈曼正在听</h4>
+  <h4 class="text-sm font-bold mb-3 text-base-content/80">哈曼正在听的歌</h4>
   <div id="music-widget-content">
     <div class="placeholder-item">
       <div class="animated-background"></div>
@@ -16,18 +16,30 @@ import { MUSIC_ICON_URL } from '@config';
 </div>
 
 <script>
-  // Script 部分完全不变
   interface SongData {
     playing: boolean;
     song: string | null;
   }
 
   const API_ENDPOINT = "http://45.207.193.240:1633/now-playing";
+  
+  // 将关键的 DOM 元素选择器放在外面，方便复用
   const container = document.getElementById('music-widget-container');
+  const contentDiv = document.getElementById('music-widget-content');
   const musicIconUrl = container?.dataset.iconUrl;
+  
+  // 在脚本加载时，立即保存初始的加载动画HTML
+  const placeholderHtml = contentDiv ? contentDiv.innerHTML : '';
 
+  // 封装一个独立的函数，用于显示加载状态
+  function showLoadingState() {
+    if (contentDiv) {
+      contentDiv.innerHTML = placeholderHtml;
+    }
+  }
+
+  // 更新UI的函数，保持不变
   function updateMusicWidget(data: SongData) {
-    const contentDiv = document.getElementById('music-widget-content');
     if (!contentDiv) return;
 
     let html = '';
@@ -38,11 +50,7 @@ import { MUSIC_ICON_URL } from '@config';
 
       const iconHtml = musicIconUrl
         ? `<img src="${musicIconUrl}" alt="Music Icon" class="custom-music-icon">`
-        : `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M9 18V5l12-2v13"></path>
-              <circle cx="6" cy="18" r="3"></circle>
-              <circle cx="18" cy="16" r="3"></circle>
-            </svg>`;
+        : `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>`;
 
       html = `
         <div class="song-item">
@@ -65,7 +73,10 @@ import { MUSIC_ICON_URL } from '@config';
     contentDiv.innerHTML = html;
   }
 
+  // 获取数据的核心函数
   async function fetchMusicData() {
+    // 【核心修改 1】每次获取数据前，先调用函数显示加载动画
+    showLoadingState();
     try {
       const response = await fetch(API_ENDPOINT);
       if (!response.ok) {
@@ -79,10 +90,18 @@ import { MUSIC_ICON_URL } from '@config';
     }
   }
 
-  document.addEventListener('astro:page-load', fetchMusicData);
+  // 【核心修改 2】重构页面加载和事件监听的逻辑
+  document.addEventListener('astro:page-load', () => {
+    // 1. 页面首次加载时，获取一次数据
+    fetchMusicData();
+    
+    // 2. 监听来自 BaseLayout 的全局刷新信号
+    document.addEventListener('refresh-widgets', fetchMusicData);
+  });
 </script>
 
 <style>
+  /* 样式部分与您提供的完全一致，无需改动 */
   .music-widget-transparent {
     padding-top: 1rem;
     margin-top: 1rem;
@@ -93,7 +112,6 @@ import { MUSIC_ICON_URL } from '@config';
     align-items: center !important;
     gap: 12px;
   }
-  /* 【核心修正 1】将图标容器的宽高从 40px 改为 32px */
   :global(.music-icon) {
     width: 32px !important;
     height: 32px !important;
@@ -101,12 +119,12 @@ import { MUSIC_ICON_URL } from '@config';
     align-items: center;
     justify-content: center;
     background-color: oklch(var(--b2));
-    border-radius: 6px; /* 圆角也适当减小一点 */
+    border-radius: 6px;
     flex-shrink: 0;
     overflow: hidden;
   }
   :global(.music-icon svg) {
-    width: 18px; /* SVG 图标也适当缩小 */
+    width: 18px;
     height: 18px;
     color: oklch(var(--bc) / 0.8);
   }
@@ -141,7 +159,6 @@ import { MUSIC_ICON_URL } from '@config';
     font-size: 0.85em;
     color: var(--fallback-bc, oklch(var(--bc) / 0.7));
   }
-  /* 【核心修正 2】将占位符的高度也从 40px 改为 32px */
   .placeholder-item {
     height: 32px;
     width: 100%;
