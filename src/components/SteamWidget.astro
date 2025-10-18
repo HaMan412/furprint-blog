@@ -1,0 +1,48 @@
+---
+let data = null;
+
+// 【新增】定义一个类型（说明书），告诉 TypeScript game 对象长什么样
+interface Game {
+  name: string;
+  playtime_2weeks: number;
+  icon_url: string;
+}
+
+try {
+  const response = await fetch('http://45.207.193.240:8000/api/steam/recent');
+  if (response.ok) {
+    data = await response.json();
+  }
+} catch (error) {
+  console.error("无法获取 Steam 数据:", error);
+}
+---
+
+{data && data.recentlyPlayed && Array.isArray(data.recentlyPlayed) && data.recentlyPlayed.length > 0 && (
+  <div class="steam-widget-transparent">
+    <h4 class="text-sm font-bold mb-3 text-base-content/80">最近玩过的游戏</h4>
+    <ul>
+      {/* 【修复】在这里告诉 .map()，每个 game 都符合我们写的 Game "说明书" */}
+      {data.recentlyPlayed.slice(0, 3).map((game: Game) => (
+        <li>
+          <img src={game.icon_url} alt={game.name} width="32" height="32" loading="lazy" />
+          <div class="game-info">
+            <strong>{game.name}</strong>
+            <span>近两周: {game.playtime_2weeks} 小时</span>
+          </div>
+        </li>
+      ))}
+    </ul>
+  </div>
+)}
+
+<style>
+  /* 样式保持不变 */
+  .steam-widget-transparent ul { list-style: none; padding: 0; margin: 0; }
+  .steam-widget-transparent li { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+  .steam-widget-transparent li:last-child { margin-bottom: 0; }
+  .steam-widget-transparent img { border-radius: 4px; }
+  .steam-widget-transparent .game-info { display: flex; flex-direction: column; justify-content: center; }
+  .steam-widget-transparent .game-info strong { font-size: 0.9em; color: var(--fallback-bc, oklch(var(--bc) / 1)); }
+  .steam-widget-transparent .game-info span { font-size: 0.8em; color: var(--fallback-bc, oklch(var(--bc) / 0.6)); }
+</style>

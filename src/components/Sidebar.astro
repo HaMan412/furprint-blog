@@ -17,13 +17,12 @@ interface Props {
 const { headings = [], showTOC = true } = Astro.props as Props;
 ---
 
-<div class="relative mb-4">
-  <ProfileBar />
-</div>
-<div class="relative mb-4">
-  <SearchBar />
-</div>
-<div class="md:sticky md:top-4">
-  <ToolBar />
-  <TOCBar headings={headings} showTOC={showTOC} />
-</div>
+{/* 
+  我们移除了外层的 div 包装和 mb-4 间距，
+  因为现在所有组件都住在 BaseLayout.astro 的同一个玻璃容器里，
+  不再需要独立的间距了。
+*/}
+<ProfileBar />
+<SearchBar />
+<ToolBar />
+<TOCBar headings={headings} showTOC={showTOC} />
