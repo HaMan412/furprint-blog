@@ -7,157 +7,29 @@ import FriendCard from "@/components/mdx/FriendCard.astro";
 ---
 
 <BaseLayout title="友链">
+  {/* ✨ 关键改动点: 使用 image 属性，而不是 bgImage ✨ */}
   <MainCard
-    title="Friends & Resources"
-    description="A collection of links to friends, technologies, and contributors to the Frosti project."
+    title="dalao们"
+    description="大佬不在我就是无敌的哈哈！"
     textOverlay="FRIENDS"
     infoIcon="lucide:link"
+    image="https://vip.123pan.cn/1815727707/yk6baz03t0n000d7w33hdqlcz4xly40cDIYPAIUvAwUOAvxvAdrxAa==.png"
   >
     <div class="space-y-10">
       <!-- Friends Section -->
       <section>
         <h2 class="text-2xl font-bold mb-6 flex items-center gap-2">
           <Icon name="lucide:users" class="w-6 h-6 text-primary" />
-          <span>Friends</span>
+          <span>友链</span>
         </h2>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
           <FriendCard
-            name="Lyme Blurred"
-            avatar="https://github.com/lymeblurred.png"
-            description="Building, breaking, and learning daily | A copy of EveSunMaple"
-            url="https://github.com/lymeblurred"
-            type="friend"
-          />
-          <FriendCard
-            name="梦凌汐"
-            avatar="https://github.com/MeowLynxSea.png"
-            description="来自星辰边缘的猫猫~爱好是睡觉awa"
-            url="https://github.com/MeowLynxSea"
-            type="friend"
-          />
-          <FriendCard
-            name="颜涂楷睿"
-            avatar="https://github.com/SnowFoxqwq.png"
-            description="你好，我是雪狐~"
-            url="https://github.com/SnowFoxqwq"
-            type="friend"
-          />
-        </div>
-      </section>
-
-      <!-- Contributors Section -->
-      <section>
-        <h2 class="text-2xl font-bold mb-6 flex items-center gap-2">
-          <Icon name="lucide:git-pull-request" class="w-6 h-6 text-primary" />
-          <span>Contributors</span>
-        </h2>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-          <FriendCard
-            name="EveSunMaple"
-            avatar="https://github.com/EveSunMaple.png"
-            description="Coding is my hobby, not my career."
-            url="https://github.com/EveSunMaple"
-            type="contributor"
-          />
-          <FriendCard
-            name="Loping151"
-            avatar="https://github.com/Loping151.png"
-            description="Loping151"
-            url="https://github.com/Loping151"
-            type="contributor"
-          />
-          <FriendCard
-            name="Tianxiang Roxiyater"
-            avatar="https://github.com/TNXG.png"
-            description="明日尚未到来，希望凝于心上"
-            url="https://github.com/TNXG"
-            type="contributor"
-          />
-          <FriendCard
-            name="Yaoqx"
-            avatar="https://github.com/YaoqxCN.png"
-            description="A lazy junior high school student who likes coding!"
-            url="https://github.com/YaoqxCN"
-            type="contributor"
-          />
-          <FriendCard
-            name="Yao Tutu"
-            avatar="https://github.com/yaotutu.png"
-            description="Graduated student of SHMTU, CS major."
-            url="https://github.com/yaotutu"
-            type="contributor"
-          />
-          <FriendCard
-            name="WRXinYue"
-            avatar="https://github.com/WRXinYue.png"
-            description="Technology is not just a tool; it is a joy and an art."
-            url="https://github.com/WRXinYue"
-            type="contributor"
-          />
-          <FriendCard
-            name="龙一"
-            avatar="https://github.com/linglilongyi.png"
-            description="linglilongyi"
-            url="https://github.com/linglilongyi"
-            type="contributor"
-          />
-          <FriendCard
-            name="Youngestar"
-            avatar="https://github.com/youngestar.png"
-            description="Just go ahead!"
-            url="https://github.com/youngestar"
-            type="contributor"
-          />
-          <FriendCard
-            name="NaN"
-            avatar="https://github.com/NaN.png"
-            description="Waiting for your contribution"
-            url="https://github.com/"
-            type="contributor"
-          />
-        </div>
-      </section>
-
-      <!-- Useful Resources Section -->
-      <section>
-        <h2 class="text-2xl font-bold mb-6 flex items-center gap-2">
-          <Icon name="lucide:bookmark" class="w-6 h-6 text-primary" />
-          <span>Useful Resources</span>
-        </h2>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <LinkCard
-            title="Astro Documentation"
-            desc="The official documentation for Astro, covering everything from getting started to advanced techniques."
-            url="https://docs.astro.build"
-            icon="simple-icons:astro"
-            categories={["Docs", "Learning", "Reference"]}
-          />
-
-          <LinkCard
-            title="Tailwind CSS Documentation"
-            desc="Learn how to use Tailwind's utility classes to style your website without writing CSS."
-            url="https://tailwindcss.com/docs"
-            icon="simple-icons:tailwindcss"
-            categories={["Docs", "CSS", "Reference"]}
-          />
-
-          <LinkCard
-            title="DaisyUI Components"
-            desc="Browse DaisyUI's component library and learn how to use them in your project."
-            url="https://daisyui.com/components/"
-            icon="simple-icons:daisyui"
-            categories={["Components", "UI", "Reference"]}
-          />
-
-          <LinkCard
-            title="TypeScript Handbook"
-            desc="The TypeScript Handbook is a comprehensive guide to the TypeScript language."
-            url="https://www.typescriptlang.org/docs/handbook/intro.html"
-            icon="simple-icons:typescript"
-            categories={["Docs", "TypeScript", "Reference"]}
+            name="Mo的记事簿"
+            avatar="https://blog.xiowo.net/img/avatar.png"
+            description="万年鸽王，哈哈OvO"
+            url="https://blog.xiowo.net/"
+            bgImage="https://bu.dusays.com/2025/06/17/685044d6bca69.png"
           />
         </div>
       </section>

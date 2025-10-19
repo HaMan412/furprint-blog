@@ -1,18 +1,18 @@
 ---
+import { Image } from "astro:assets";
+import { Icon } from "astro-icon/components";
+
 export interface FriendCardProps {
   name: string;
   avatar: string;
   description: string;
   url: string;
+  bgImage?: string;
   type?: "friend" | "tech" | "contributor";
 }
 
-const { name, avatar, description, url, type = "friend" } = Astro.props as FriendCardProps;
+const { name, avatar, description, url, bgImage, type = "friend" } = Astro.props as FriendCardProps;
 
-import { Image } from "astro:assets";
-import { Icon } from "astro-icon/components";
-
-// Define type-based styling
 const typeConfig = {
   friend: {
     bgClass: "bg-gradient-to-br from-primary/20 to-base-100",
@@ -34,38 +34,76 @@ const typeConfig = {
 const { bgClass, iconName, borderClass } = typeConfig[type];
 ---
 
-<div
-  class={`card bg-base-100 shadow-md hover:shadow-xl transition-all duration-300 ease-in-out hover:-translate-y-1.5 border ${borderClass} overflow-hidden animate-fade-in-up`}
->
-  <a href={url} target="_blank" rel="noopener noreferrer">
-    <div class={`${bgClass} p-4 flex flex-col items-center`}>
-      <div class="avatar mb-3">
-        <div class="w-16 h-16 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2 overflow-hidden">
-          {
-            avatar ? (
-              <Image src={avatar} width={64} height={64} format="webp" alt={name} loading="lazy" class="object-cover" />
-            ) : (
-              <div class="flex items-center justify-center w-full h-full bg-primary">
-                <span class="text-xl font-bold text-primary-content">{name.charAt(0)}</span>
+{
+  bgImage ? (
+    <!-- 最终正确版: 修正了 CSS 选择器 -->
+    <div class="relative p-1 rounded-2xl solid-border-wrapper animate-fade-in-up">
+      <div
+        class="card group h-full shadow-md hover:shadow-xl transition-shadow duration-300 ease-in-out overflow-hidden rounded-xl"
+        style={`--bg-image: url(${bgImage})`}
+      >
+        <a href={url} target="_blank" rel="noopener noreferrer" class="relative z-10 block w-full h-full">
+          <!-- 内容层 -->
+          <div class="flex flex-col items-center justify-center h-full text-center p-4 text-white">
+            <!-- 头像 -->
+            <div class="avatar mb-4">
+              <div class="w-20 h-20 rounded-full ring-4 ring-white/30 group-hover:ring-white/60 transition-all duration-300">
+                <Image src={avatar} width={80} height={80} format="webp" alt={name} loading="lazy" class="object-cover" />
               </div>
-            )
-          }
-        </div>
-      </div>
-      <h3 class="font-bold text-center">{name}</h3>
-      <div class="divider my-1"></div>
-      <p class="text-sm text-center text-base-content/70 line-clamp-2 leading-normal h-[3em]">{description}</p>
-    </div>
-    <div class="card-footer p-2 flex justify-center border-t border-base-200">
-      <div class="flex items-center gap-1 text-primary text-xs">
-        <Icon name={iconName} class="w-3.5 h-3.5" />
-        <span>Visit</span>
-      </div>
-    </div>
-  </a>
-</div>
+            </div>
 
-<style>
+            <!-- 名称 -->
+            <h3 class="font-bold text-xl text-shadow">{name}</h3>
+
+            <!-- 描述 -->
+            <p class="text-sm text-white/90 mt-1 text-shadow-sm">{description}</p>
+
+            <!-- 访问按钮 -->
+            <div class="inline-flex items-center gap-2 text-white/90 text-xs px-3 py-1.5 mt-4 border border-white/30 rounded-full group-hover:bg-white/20 transition-colors duration-300">
+              <Icon name="lucide:link" class="w-3.5 h-3.5" />
+              <span>Visit Site</span>
+            </div>
+          </div>
+        </a>
+      </div>
+    </div>
+  ) : (
+    <!-- 原始的渐变色卡片 (保持不变) -->
+    <div
+      class={`card bg-base-100 shadow-md hover:shadow-xl transition-all duration-300 ease-in-out hover:-translate-y-1.5 border ${borderClass} overflow-hidden animate-fade-in-up`}
+    >
+      <a href={url} target="_blank" rel="noopener noreferrer">
+        <div class={`${bgClass} p-4 flex flex-col items-center`}>
+          <div class="avatar mb-3">
+            <div class="w-16 h-16 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2 overflow-hidden">
+              {
+                avatar ? (
+                  <Image src={avatar} width={64} height={64} format="webp" alt={name} loading="lazy" class="object-cover" />
+                ) : (
+                  <div class="flex items-center justify-center w-full h-full bg-primary">
+                    <span class="text-xl font-bold text-primary-content">{name.charAt(0)}</span>
+                  </div>
+                )
+              }
+            </div>
+          </div>
+          <h3 class="font-bold text-center">{name}</h3>
+          <div class="divider my-1" />
+          <p class="text-sm text-center text-base-content/70 line-clamp-2 leading-normal h-[3em]">{description}</p>
+        </div>
+        <div class="card-footer p-2 flex justify-center border-t border-base-200">
+          <div class="flex items-center gap-1 text-primary text-xs">
+            <Icon name={iconName} class="w-3.5 h-3.5" />
+            <span>Visit</span>
+          </div>
+        </div>
+      </a>
+    </div>
+  )
+}
+
+<style is:global>
+  /* 动画 */
   @keyframes fadeInUp {
     from {
       opacity: 0;
@@ -79,5 +117,46 @@ const { bgClass, iconName, borderClass } = typeConfig[type];
 
   .animate-fade-in-up {
     animation: fadeInUp 0.3s ease-out forwards;
+  }
+
+  /* 纯色边框实现 */
+  .solid-border-wrapper {
+    background: #c2d5f7;
+  }
+
+  /* 文字阴影 */
+  .text-shadow {
+    text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.5);
+  }
+  .text-shadow-sm {
+    text-shadow: 0px 1px 3px rgba(0, 0, 0, 0.6);
+  }
+
+  /* --- filter:blur 实现 --- */
+  .card.group {
+    background-color: rgba(0, 0, 0, 0.4);
+    transition: background-color 0.3s ease-in-out;
+  }
+
+  .card.group::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background-image: var(--bg-image);
+    background-size: cover;
+    background-position: center;
+    filter: blur(8px);
+    border-radius: inherit;
+    transition: filter 0.3s ease-in-out;
+  }
+
+  /* ✨ 关键改动点: 修正了 CSS 选择器 ✨ */
+  .card.group:hover {
+    background-color: transparent;
+  }
+
+  .card.group:hover::before {
+    filter: blur(2px);
   }
 </style>
