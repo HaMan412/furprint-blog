@@ -49,25 +49,46 @@ const { title, image, headings = [], showTOC = false } = Astro.props;
         });
       })();
     </script>
+
+    <style is:global>
+      #steam-widget-content .text-base.text-base-content.truncate {
+        font-weight: 600;
+      }
+      #music-widget-content .font-semibold.text-base {
+        font-size: 0.875rem;
+        line-height: 1.25rem;
+      }
+      #music-widget-content .text-xs.text-base-content\/70 {
+        font-size: 0.875rem;
+        line-height: 1.25rem;
+      }
+    </style>
+
   </head>
-  <body>
+  <body data-steam-api-endpoint="https://steam.furprint.cn/api/steam/recent">
     <Navbar />
-    <div class="max-w-6xl mx-auto">
-      <div class="grid grid-cols-1 md:grid-cols-5 lg:grid-cols-4 gap-4 p-4">
+    <!-- ▼▼▼ 核心修改：使用任意值将总宽度微调至 1400px ▼▼▼ -->
+    <div class="max-w-[1400px] mx-auto">
+      <!-- 内部的 2:7:2 比例和网格系统保持不变 -->
+      <div class="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-11 gap-4 p-4">
         
-        <main class="col-span-1 md:col-span-4 lg:col-span-3 bg-transparent order-1 md:order-2 mt-16 md:mt-0">
+        <main class="col-span-1 md:col-span-3 lg:col-span-7 bg-transparent order-1 md:order-2 mt-16 md:mt-0">
           <div class="flex flex-col gap-4">
             <slot />
             <Footer />
           </div>
         </main>
         
-        <aside class="col-span-1 bg-transparent order-2 md:order-1 md:top-4">
+        <aside class="col-span-1 md:col-span-1 lg:col-span-2 bg-transparent order-2 md:order-1 md:top-4">
           <div class="sticky top-4 flex flex-col gap-2">
             <div class="bg-base-100/70 backdrop-blur-xl rounded-2xl shadow-lg overflow-hidden">
               <Sidebar headings={headings} showTOC={showTOC} />
             </div>
-            
+          </div>
+        </aside>
+
+        <aside class="hidden lg:block lg:col-span-2 bg-transparent order-3">
+          <div class="sticky top-4 flex flex-col gap-2">
             <div class="bg-base-100/70 backdrop-blur-xl rounded-2xl shadow-lg overflow-hidden p-4 relative">
               
               <div class="flex justify-between items-center mb-2">
@@ -77,10 +98,9 @@ const { title, image, headings = [], showTOC = false } = Astro.props;
                 </div>
               </div>
               
-              <!-- ▼▼▼ 核心修复：将 45.207.193.20 修正为 45.207.193.240 ▼▼▼ -->
-              <SteamWidget apiEndpoint="http://45.207.193.240:8000/api/steam/recent" />
+              <SteamWidget />
               
-              <h2 class="text-lg font-bold mt-4">哈曼正在听的歌</h2>
+              <h2 class="text-lg font-bold mt-2">哈曼正在听的歌</h2>
               <MusicWidget apiEndpoint="https://music.furprint.cn" />
               
               <slot name="sidebar" />

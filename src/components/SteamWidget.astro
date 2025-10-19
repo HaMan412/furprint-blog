@@ -1,9 +1,7 @@
 ---
-const { apiEndpoint } = Astro.props;
+// src/components/SteamWidget.astro
 ---
-
-<div id="steam-widget-container" class="text-sm" data-api-endpoint={apiEndpoint}>
-  <!-- ▼▼▼ 核心修改：将 space-y-4 修改为 space-y-2 ▼▼▼ -->
+<div id="steam-widget-container" class="text-sm">
   <div id="steam-widget-content" class="space-y-2">
     <p>正在加载 Steam 信息...</p>
   </div>
@@ -11,28 +9,28 @@ const { apiEndpoint } = Astro.props;
 
 <script is:inline>
   function steamWidgetScript() {
-    const widgetContainer = document.querySelector('#steam-widget-container');
-    if (!widgetContainer) return;
+    // ▼▼▼ 核心修改 1：将 widgetContainer 的查找移到 fetch 函数内部 ▼▼▼
+    // const widgetContainer = document.querySelector('#steam-widget-container');
+    // if (!widgetContainer) return;
 
-    function updateSteamWidget(data) {
-      const steamContainer = widgetContainer.querySelector('#steam-widget-content');
+    function updateSteamWidget(data, steamContainer) { // 接收 steamContainer 作为参数
       if (!steamContainer) return;
 
-      if (data && data.recentlyPlayed && data.recentlyPlayed.length > 0) {
-        
+      const condition = data && data.recentlyPlayed && data.recentlyPlayed.length > 0;
+
+      if (condition) {
         const gamesHtml = data.recentlyPlayed.map(game => {
           const playtimeHours = (game.playtime_2weeks / 60).toFixed(1);
           return `
             <div class="flex items-center gap-3 overflow-hidden">
               <img src="${game.icon_url}" alt="${game.name} icon" class="flex-shrink-0 w-8 h-8 rounded-md shadow object-cover">
               <div class="overflow-hidden">
-                <p class="font-semibold text-base-content truncate" title="${game.name}">${game.name}</p>
+                <p class="text-base text-base-content truncate" title="${game.name}">${game.name}</p>
                 <p class="text-xs text-base-content/70 truncate">近两周: ${playtimeHours} 小时</p>
               </div>
             </div>
           `;
         }).join('');
-
         steamContainer.innerHTML = gamesHtml;
       } else {
         steamContainer.innerHTML = '<p>当前没有在玩游戏</p>';
@@ -40,21 +38,33 @@ const { apiEndpoint } = Astro.props;
     }
 
     async function fetchSteamData() {
-      const apiEndpoint = widgetContainer.dataset.apiEndpoint;
-      if (!apiEndpoint) return;
+      // ▼▼▼ 核心修改 2：在每次 fetch 时都重新获取最新的 DOM 元素 ▼▼▼
+      const widgetContainer = document.querySelector('#steam-widget-container');
+      if (!widgetContainer) return;
+      const steamContentContainer = widgetContainer.querySelector('#steam-widget-content');
+      if (!steamContentContainer) return;
+
+      // 显示加载状态
+      steamContentContainer.innerHTML = '<p>正在加载 Steam 信息...</p>';
+
+      const apiEndpoint = document.querySelector('[data-steam-api-endpoint]')?.dataset.steamApiEndpoint;
+      if (!apiEndpoint) {
+        console.error("Steam API Endpoint is missing!");
+        return;
+      }
+
       try {
         const response = await fetch(apiEndpoint);
         const data = await response.json();
-        updateSteamWidget(data);
+        updateSteamWidget(data, steamContentContainer); // 将容器传给更新函数
       } catch (error) {
         console.error("Failed to fetch Steam data:", error);
-        const steamContainer = widgetContainer.querySelector('#steam-widget-content');
-        if(steamContainer) steamContainer.innerHTML = '<p class="text-error">获取 Steam 信息失败</p>';
+        if(steamContentContainer) steamContentContainer.innerHTML = '<p class="text-error">获取 Steam 信息失败</p>';
       }
     }
     
     document.addEventListener('astro:page-load', fetchSteamData);
     document.addEventListener('refresh-widgets', fetchSteamData);
-a  }
+  }
   steamWidgetScript();
 </script>
