@@ -2,12 +2,11 @@
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import { Icon } from "astro-icon/components";
 import MainCard from "@/components/MainCard.astro";
-import LinkCard from "@/components/mdx/LinkCard.astro";
 import FriendCard from "@/components/mdx/FriendCard.astro";
+import { friends } from "@/data/friends"; // 导入友链数据
 ---
 
 <BaseLayout title="友链">
-  {/* ✨ 关键改动点: 使用 image 属性，而不是 bgImage ✨ */}
   <MainCard
     title="dalao们"
     description="大佬不在我就是无敌的哈哈！"
@@ -24,13 +23,16 @@ import FriendCard from "@/components/mdx/FriendCard.astro";
         </h2>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-          <FriendCard
-            name="Mo的记事簿"
-            avatar="https://blog.xiowo.net/img/avatar.png"
-            description="万年鸽王，哈哈OvO"
-            url="https://blog.xiowo.net/"
-            bgImage="https://bu.dusays.com/2025/06/17/685044d6bca69.png"
-          />
+          {/* 使用 map 循环从数据文件渲染友链 */}
+          {friends.map(friend => (
+            <FriendCard
+              name={friend.name}
+              avatar={friend.avatar}
+              description={friend.description}
+              url={friend.url}
+              bgImage={friend.bgImage}
+            />
+          ))}
         </div>
       </section>
 
@@ -38,20 +40,28 @@ import FriendCard from "@/components/mdx/FriendCard.astro";
         <Icon name="lucide:heart" class="w-10 h-10 text-primary" />
       </div>
 
-      <div class="text-center">
-        <p class="text-base-content/80 mb-4">
-          Want to be featured on this page? Feel free to reach out or contribute to the project!
+      <!-- Add Friend Link Section -->
+      <section class="text-center">
+        <h2 class="text-2xl font-bold mb-4">互换友链吗喵喵喵？</h2>
+        <p class="text-base-content/80 mb-6 max-w-2xl mx-auto">
+        欢迎通过GitHub提交PR的方式互换友链，也可以通过邮件1805659145@qq.com联系我添加
         </p>
-        <a
-          href="https://github.com/EveSunMaple/Frosti"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="btn btn-primary gap-2"
-        >
-          <Icon name="lucide:github" class="w-5 h-5" />
-          <span>Contribute on GitHub</span>
-        </a>
-      </div>
+        <div class="flex flex-wrap justify-center gap-4">
+          <a
+            href="https://github.com/HaMan412/furprint-blog/src/data/friends.ts"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="btn btn-primary gap-2"
+          >
+            <Icon name="lucide:github" class="w-5 h-5" />
+            <span>通过 GitHub 添加</span>
+          </a>
+          <a href="mailto:1805659145@qq.com" class="btn btn-outline gap-2">
+            <Icon name="lucide:mail" class="w-5 h-5" />
+            <span>邮件联系</span>
+          </a>
+        </div>
+      </section>
     </div>
   </MainCard>
 </BaseLayout>
