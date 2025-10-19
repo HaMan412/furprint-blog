@@ -14,12 +14,12 @@ export const friends: Friend[] = [
     url: "https://blog.xiowo.net/",
     bgImage: "https://bu.dusays.com/2025/06/17/685044d6bca69.png",
   },
-  // 以后新的友链都添加在这里
+  // 请按照以下格式添加友链
   // {
-  //   name: "朋友B",
-  //   avatar: "...",
-  //   description: "...",
-  //   url: "...",
-  //   bgImage: "...",
+  //   name: "xxx",
+  //   avatar: "https://...",
+  //   description: "this is my blog",
+  //   url: "https://myblog.com",
+  //   bgImage: "https://...", // 卡片背景
   // },
 ];
