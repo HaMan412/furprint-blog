@@ -25,7 +25,7 @@ site:
       target: _self
     - id: blog
       text: 文章
-      href: /blog
+      href: /blog/page/1
       svg: "material-symbols:book-2-outline-rounded"
       target: _self # 子菜单项配置
     - id: project
