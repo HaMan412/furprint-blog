@@ -1,7 +1,8 @@
 ---
 title: Clash Verge的基础使用与配置git代理
 description: Clash Verge的基础使用与配置git代理
-pubDate: 06 13 2025
+pubDate: "2025-06-13"
+draft: false
 image: "https://vip.123pan.cn/1815727707/yk6baz03t0m000d7w33g8skw8lavvjroDIYPAIUvAwUOAvxvAdrxAa==.png"
 categories:
   - Documentation
