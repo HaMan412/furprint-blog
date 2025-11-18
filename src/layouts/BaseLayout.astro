@@ -1,7 +1,7 @@
 ---
 // 导入 Steam 和 Music 组件
-import SteamWidget from '../components/SteamWidget.astro'; 
-import MusicWidget from '../components/MusicWidget.astro';
+import SteamWidget from "../components/SteamWidget.astro";
+import MusicWidget from "../components/MusicWidget.astro";
 
 // 导入基础布局组件
 import { SITE_TAB, SITE_DESCRIPTION, SITE_FAVICON, SITE_LANGUAGE, SITE_THEME } from "@config";
@@ -63,23 +63,30 @@ const { title, image, headings = [], showTOC = false } = Astro.props;
       });
     </script>
     <style is:global>
-      #steam-widget-content .text-base.text-base-content.truncate { font-weight: 600; }
-      #music-widget-content .font-semibold.text-base { font-size: 0.875rem; line-height: 1.25rem; }
-      #music-widget-content .text-xs.text-base-content\/70 { font-size: 0.875rem; line-height: 1.25rem; }
+      #steam-widget-content .text-base.text-base-content.truncate {
+        font-weight: 600;
+      }
+      #music-widget-content .font-semibold.text-base {
+        font-size: 0.875rem;
+        line-height: 1.25rem;
+      }
+      #music-widget-content .text-xs.text-base-content\/70 {
+        font-size: 0.875rem;
+        line-height: 1.25rem;
+      }
     </style>
   </head>
   <body data-steam-api-endpoint="https://steam.furprint.cn/api/steam/recent">
     <Navbar />
     <div class="max-w-[1400px] mx-auto">
       <div class="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-11 gap-4 p-4">
-        
         <main class="col-span-1 md:col-span-3 lg:col-span-7 bg-transparent order-1 md:order-2 mt-16 md:mt-0">
           <div class="flex flex-col gap-4">
             <slot />
             <Footer />
           </div>
         </main>
-        
+
         <aside class="col-span-1 md:col-span-1 lg:col-span-2 bg-transparent order-2 md:order-1 md-top-4">
           <div class="sticky top-4 flex flex-col">
             <div class="bg-base-100/70 backdrop-blur-xl rounded-2xl shadow-lg">
@@ -114,21 +121,67 @@ const { title, image, headings = [], showTOC = false } = Astro.props;
             </div>
           </div>
         </aside>
-
       </div>
     </div>
     <MobileTOC headings={headings} showTOC={showTOC} />
     <script is:inline>
-      document.addEventListener('astro:page-load', () => {
-        const refreshButton = document.getElementById('widget-refresh-button');
-        if (!refreshButton) return;
-        const svg = refreshButton.querySelector('svg');
-        refreshButton.addEventListener('click', () => {
-          if (svg && !svg.classList.contains('animate-spin')) {
-            svg.classList.add('animate-spin');
-            document.dispatchEvent(new CustomEvent('refresh-widgets'));
-            setTimeout(() => { svg.classList.remove('animate-spin'); }, 1500);
-          }
+      document.addEventListener("astro:page-load", () => {
+        // Widget Refresh Logic
+        const refreshButton = document.getElementById("widget-refresh-button");
+        if (refreshButton) {
+          const svg = refreshButton.querySelector("svg");
+          refreshButton.addEventListener("click", () => {
+            if (svg && !svg.classList.contains("animate-spin")) {
+              svg.classList.add("animate-spin");
+              document.dispatchEvent(new CustomEvent("refresh-widgets"));
+              setTimeout(() => {
+                svg.classList.remove("animate-spin");
+              }, 1500);
+            }
+          });
+        }
+
+        // Copy Button Logic
+        const copyButtons = document.querySelectorAll(".btn-copy");
+        copyButtons.forEach((btn) => {
+          btn.addEventListener("click", async () => {
+            const codeBlock = btn.closest(".frosti-code");
+            if (!codeBlock) return;
+
+            const codeContent = codeBlock.querySelector("code");
+            if (!codeContent) return;
+
+            let text = "";
+            // Handle line numbers if present (remove them from copied text)
+            const lines = codeContent.querySelectorAll(".line");
+            if (lines.length > 0) {
+              text = Array.from(lines)
+                .map((line) => line.textContent)
+                .join("\n");
+            } else {
+              text = codeContent.textContent;
+            }
+
+            try {
+              await navigator.clipboard.writeText(text);
+
+              // Toggle icons
+              const copyIcon = btn.querySelector(".frosti-code-toolbar-copy-icon");
+              const successIcon = btn.querySelector(".frosti-code-toolbar-copy-success");
+
+              if (copyIcon && successIcon) {
+                copyIcon.classList.add("hidden");
+                successIcon.classList.remove("hidden");
+
+                setTimeout(() => {
+                  copyIcon.classList.remove("hidden");
+                  successIcon.classList.add("hidden");
+                }, 2000);
+              }
+            } catch (err) {
+              console.error("Failed to copy:", err);
+            }
+          });
         });
       });
     </script>
