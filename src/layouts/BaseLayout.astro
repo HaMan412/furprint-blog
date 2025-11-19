@@ -33,7 +33,7 @@ const { title, image, headings = [], showTOC = false } = Astro.props;
     <PointerOnNavigation />
     <Header description={SITE_DESCRIPTION} favicon={SITE_FAVICON} image={image} />
     <title>{`${title} - ${SITE_TAB}`}</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" />
+    <title>{`${title} - ${SITE_TAB}`}</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/plyr-react/dist/plyr.css" />
     <script define:vars={{ SITE_THEME }} is:inline>
       function applyTheme() {
@@ -60,7 +60,14 @@ const { title, image, headings = [], showTOC = false } = Astro.props;
         }
       });
     </script>
-    <style is:global></style>
+    <style is:global>
+      .medium-zoom-overlay {
+        z-index: 9998 !important;
+      }
+      .medium-zoom-image--opened {
+        z-index: 9999 !important;
+      }
+    </style>
   </head>
   <body data-steam-api-endpoint="https://steam.furprint.cn/api/steam/recent">
     <Navbar />
@@ -101,8 +108,52 @@ const { title, image, headings = [], showTOC = false } = Astro.props;
       </div>
     </div>
     <MobileTOC headings={headings} showTOC={showTOC} />
-    <script is:inline>
+    <script>
+      import mediumZoom from "medium-zoom";
+
       document.addEventListener("astro:page-load", () => {
+        // Lightbox Logic using medium-zoom
+        const zoom = mediumZoom(".gallery-image, #content img", {
+          background: "rgba(0, 0, 0, 0.8)",
+          margin: 24,
+        });
+
+        // 修复相册图片被遮挡的问题
+        zoom.on("open", (event) => {
+          const target = event.target;
+          if (target instanceof HTMLElement) {
+            const card = target.closest(".photo-card");
+            if (card instanceof HTMLElement) {
+              console.log("Zoom open: adjusting z-index for card", card);
+              card.style.zIndex = "9999";
+              card.style.overflow = "visible";
+              card.style.transform = "none";
+              // Ensure the image itself has high z-index relative to the card
+              target.style.zIndex = "10000";
+              target.style.position = "relative";
+            }
+          }
+        });
+
+        zoom.on("close", (event) => {
+          const target = event.target;
+          if (target instanceof HTMLElement) {
+            const card = target.closest(".photo-card");
+            if (card instanceof HTMLElement) {
+              console.log("Zoom close: restoring styles for card", card);
+              // Use setTimeout to wait for the animation to finish before resetting z-index
+              // This prevents the image from snapping behind others during the close animation
+              setTimeout(() => {
+                card.style.zIndex = "";
+                card.style.overflow = "";
+                card.style.transform = "";
+                target.style.zIndex = "";
+                target.style.position = "";
+              }, 300);
+            }
+          }
+        });
+
         // Copy Button Logic
         const copyButtons = document.querySelectorAll(".btn-copy");
         copyButtons.forEach((btn) => {

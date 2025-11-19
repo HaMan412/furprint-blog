@@ -7,22 +7,86 @@ import MainCard from "@/components/MainCard.astro";
 // alt 是图片无法显示时的替代文本，对SEO和无障碍访问很重要
 // title 会在灯箱效果中作为图片的标题显示
 const images = [
-  { src: "https://vip.123pan.cn/1815727707/ymjew503t0l000d7w32x8oi1l5uoq4bwDIYPAIUvAwUOAvxvAdrxAa==.png", alt: "照片描述1", title: "照片标题1" },
-  { src: "https://vip.123pan.cn/1815727707/yk6baz03t0m000d7w33g8skz6pavw19iDIYPAIUvAwUOAvxvAdrxAa==.png", alt: "照片描述2", title: "照片标题2" },
-  { src: "https://vip.123pan.cn/1815727707/yk6baz03t0l000d7w33feu0ai5v9hf1mDIYPAIUvAwUOAvxvAdrxAa==.png", alt: "照片描述3", title: "照片标题3" },
-  { src: "https://vip.123pan.cn/1815727707/ymjew503t0n000d7w32y5zprtupxhh21DIYPAIUvAwUOAvxvAdrxAa==.png", alt: "照片描述4", title: "照片标题4" },
-  { src: "https://vip.123pan.cn/1815727707/ymjew503t0m000d7w32xqwituvab43blDIYPAIUvAwUOAvxvAdrxAa==.png", alt: "照片描述5", title: "照片标题5" },
-  { src: "https://vip.123pan.cn/1815727707/yk6baz03t0n000d7w33h145xk9qi8v0kDIYPAIUvAwUOAvxvAdrxAa==.png", alt: "照片描述6", title: "照片标题6" },
-  { src: "https://vip.123pan.cn/1815727707/yk6baz03t0m000d7w33g8skw8lavvjroDIYPAIUvAwUOAvxvAdrxAa==.png", alt: "照片描述7", title: "照片标题7" },
-  { src: "https://vip.123pan.cn/1815727707/yk6baz03t0l000d7w33feu09msv9ggglDIYPAIUvAwUOAvxvAdrxAa==.png", alt: "照片描述8", title: "照片标题8" },
-  { src: "https://vip.123pan.cn/1815727707/yk6baz03t0n000d7w33h145worqi7258DIYPAIUvAwUOAvxvAdrxAa==.PNG", alt: "照片描述9", title: "照片标题9" },
-  { src: "https://vip.123pan.cn/1815727707/yk6baz03t0m000d7w33g8sl235aw03mnDIYPAIUvAwUOAvxvAdrxAa==.png", alt: "照片描述10", title: "照片标题10" },
-  { src: "https://vip.123pan.cn/1815727707/yk6baz03t0l000d7w33feu0e6ov9loj0DIYPAIUvAwUOAvxvAdrxAa==.png", alt: "照片描述11", title: "照片标题11" },
-  { src: "https://vip.123pan.cn/1815727707/yk6baz03t0n000d7w33h14611qqic5jcDIYPAIUvAwUOAvxvAdrxAa==.png", alt: "照片描述12", title: "照片标题12" },
-  { src: "https://vip.123pan.cn/1815727707/ymjew503t0m000d7w32xqwivusab8rniDIYPAIUvAwUOAvxvAdrxAa==.png", alt: "照片描述13", title: "照片标题13" },
-  { src: "https://vip.123pan.cn/1815727707/ymjew503t0m000d7w32xqwivdmab7lr6DIYPAIUvAwUOAvxvAdrxAa==.png", alt: "照片描述14", title: "照片标题14" },
-  { src: "https://vip.123pan.cn/1815727707/ymjew503t0n000d7w32y5zpt97pxktazDIYPAIUvAwUOAvxvAdrxAa==.png", alt: "照片描述15", title: "照片标题15" },
-  { src: "https://vip.123pan.cn/1815727707/yk6baz03t0m000d7w33g8sl1d8avzdoeDIYPAIUvAwUOAvxvAdrxAa==.png", alt: "照片描述16", title: "照片标题16" },
+  {
+    src: "https://vip.123pan.cn/1815727707/ymjew503t0l000d7w32x8oi1l5uoq4bwDIYPAIUvAwUOAvxvAdrxAa==.png",
+    alt: "照片描述1",
+    title: "照片标题1",
+  },
+  {
+    src: "https://vip.123pan.cn/1815727707/yk6baz03t0m000d7w33g8skz6pavw19iDIYPAIUvAwUOAvxvAdrxAa==.png",
+    alt: "照片描述2",
+    title: "照片标题2",
+  },
+  {
+    src: "https://vip.123pan.cn/1815727707/yk6baz03t0l000d7w33feu0ai5v9hf1mDIYPAIUvAwUOAvxvAdrxAa==.png",
+    alt: "照片描述3",
+    title: "照片标题3",
+  },
+  {
+    src: "https://vip.123pan.cn/1815727707/ymjew503t0n000d7w32y5zprtupxhh21DIYPAIUvAwUOAvxvAdrxAa==.png",
+    alt: "照片描述4",
+    title: "照片标题4",
+  },
+  {
+    src: "https://vip.123pan.cn/1815727707/ymjew503t0m000d7w32xqwituvab43blDIYPAIUvAwUOAvxvAdrxAa==.png",
+    alt: "照片描述5",
+    title: "照片标题5",
+  },
+  {
+    src: "https://vip.123pan.cn/1815727707/yk6baz03t0n000d7w33h145xk9qi8v0kDIYPAIUvAwUOAvxvAdrxAa==.png",
+    alt: "照片描述6",
+    title: "照片标题6",
+  },
+  {
+    src: "https://vip.123pan.cn/1815727707/yk6baz03t0m000d7w33g8skw8lavvjroDIYPAIUvAwUOAvxvAdrxAa==.png",
+    alt: "照片描述7",
+    title: "照片标题7",
+  },
+  {
+    src: "https://vip.123pan.cn/1815727707/yk6baz03t0l000d7w33feu09msv9ggglDIYPAIUvAwUOAvxvAdrxAa==.png",
+    alt: "照片描述8",
+    title: "照片标题8",
+  },
+  {
+    src: "https://vip.123pan.cn/1815727707/yk6baz03t0n000d7w33h145worqi7258DIYPAIUvAwUOAvxvAdrxAa==.PNG",
+    alt: "照片描述9",
+    title: "照片标题9",
+  },
+  {
+    src: "https://vip.123pan.cn/1815727707/yk6baz03t0m000d7w33g8sl235aw03mnDIYPAIUvAwUOAvxvAdrxAa==.png",
+    alt: "照片描述10",
+    title: "照片标题10",
+  },
+  {
+    src: "https://vip.123pan.cn/1815727707/yk6baz03t0l000d7w33feu0e6ov9loj0DIYPAIUvAwUOAvxvAdrxAa==.png",
+    alt: "照片描述11",
+    title: "照片标题11",
+  },
+  {
+    src: "https://vip.123pan.cn/1815727707/yk6baz03t0n000d7w33h14611qqic5jcDIYPAIUvAwUOAvxvAdrxAa==.png",
+    alt: "照片描述12",
+    title: "照片标题12",
+  },
+  {
+    src: "https://vip.123pan.cn/1815727707/ymjew503t0m000d7w32xqwivusab8rniDIYPAIUvAwUOAvxvAdrxAa==.png",
+    alt: "照片描述13",
+    title: "照片标题13",
+  },
+  {
+    src: "https://vip.123pan.cn/1815727707/ymjew503t0m000d7w32xqwivdmab7lr6DIYPAIUvAwUOAvxvAdrxAa==.png",
+    alt: "照片描述14",
+    title: "照片标题14",
+  },
+  {
+    src: "https://vip.123pan.cn/1815727707/ymjew503t0n000d7w32y5zpt97pxktazDIYPAIUvAwUOAvxvAdrxAa==.png",
+    alt: "照片描述15",
+    title: "照片标题15",
+  },
+  {
+    src: "https://vip.123pan.cn/1815727707/yk6baz03t0m000d7w33g8sl1d8avzdoeDIYPAIUvAwUOAvxvAdrxAa==.png",
+    alt: "照片描述16",
+    title: "照片标题16",
+  },
 ];
 ---
 
@@ -32,15 +96,14 @@ const images = [
     description="有生活的，有风景的，有二次元的，也有毛绒绒的！"
     image="https://vip.123pan.cn/1815727707/ymjew503t0m000d7w32xqwiubxab5e81DIYPAIUvAwUOAvxvAdrxAa==.webp"
     infoIcon="lucide:camera"
+    extraClasses="!overflow-visible"
   >
     <div class="gallery-container">
       {
         images.map((image) => (
           <div class="photo-card">
             {/* 【重要】a 标签已修改以支持灯箱，class="glightbox" 是关键 */}
-            <a href={image.src} class="glightbox" data-gallery="gallery-main" data-title={image.title}>
-              <img src={image.src} alt={image.alt} loading="lazy" class="gallery-image" />
-            </a>
+            <img src={image.src} alt={image.alt} title={image.title} loading="lazy" class="gallery-image" />
           </div>
         ))
       }
@@ -63,13 +126,16 @@ const images = [
     break-inside: avoid; /* 防止卡片在列中断开 */
     border-radius: 8px; /* 轻微的圆角 */
     overflow: hidden; /* 隐藏超出圆角的部分 */
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* 添加细微的阴影增加立体感 */
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 添加细微的阴影增加立体感 */
+    transition:
+      transform 0.3s ease,
+      box-shadow 0.3s ease;
+    position: relative; /* 确保 z-index 生效 */
   }
 
   .photo-card:hover {
     transform: translateY(-5px); /* 悬停时轻微上浮 */
-    box-shadow: 0 8px 16px rgba(0,0,0,0.2); /* 悬停时阴影加深 */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* 悬停时阴影加深 */
   }
 
   /* 图片样式 */
