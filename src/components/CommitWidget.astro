@@ -1,0 +1,74 @@
+---
+import { Icon } from "astro-icon/components";
+
+interface Commit {
+  sha: string;
+  commit: {
+    message: string;
+    author: {
+      date: string;
+      name: string;
+    };
+  };
+  html_url: string;
+}
+
+let commits: Commit[] = [];
+let error = "";
+
+try {
+  const response = await fetch("https://api.github.com/repos/HaMan412/furprint-blog/commits?per_page=5");
+  if (!response.ok) {
+    throw new Error("Failed to fetch commits");
+  }
+  commits = await response.json();
+} catch (e) {
+  console.error("Error fetching commits:", e);
+  error = "无法获取日志";
+}
+
+function formatDate(dateString: string) {
+  const date = new Date(dateString);
+  return new Intl.DateTimeFormat("zh-CN", {
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+  }).format(date);
+}
+---
+
+<div class="flex flex-col gap-2">
+  <div class="flex items-center gap-2 mb-0.5">
+    <Icon name="lucide:git-branch" class="w-5 h-5 text-primary" />
+    <h2 class="text-lg font-bold">更新日志</h2>
+  </div>
+
+  {
+    error ? (
+      <div class="text-sm text-error">{error}</div>
+    ) : (
+      <div class="flex flex-col gap-1">
+        {commits.map((commit) => (
+          <a
+            href={commit.html_url}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="flex flex-col gap-0.5 p-1.5 rounded-lg hover:bg-base-200/50 transition-colors group"
+          >
+            <div class="flex items-start gap-2">
+              <div class="mt-1.5 min-w-[5px] h-[5px] rounded-full bg-primary/60 group-hover:bg-primary transition-colors" />
+              <span class="text-sm font-medium leading-snug line-clamp-2 text-base-content/90 group-hover:text-primary transition-colors">
+                {commit.commit.message}
+              </span>
+            </div>
+            <div class="flex justify-between items-center pl-3">
+              <span class="text-xs text-base-content/50 font-mono">{commit.sha.substring(0, 7)}</span>
+              <span class="text-xs text-base-content/50">{formatDate(commit.commit.author.date)}</span>
+            </div>
+          </a>
+        ))}
+      </div>
+    )
+  }
+</div>

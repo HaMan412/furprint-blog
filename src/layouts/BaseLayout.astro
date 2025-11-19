@@ -1,7 +1,5 @@
 ---
-// 导入 Steam 和 Music 组件
-import SteamWidget from "../components/SteamWidget.astro";
-import MusicWidget from "../components/MusicWidget.astro";
+import CommitWidget from "../components/CommitWidget.astro";
 
 // 导入基础布局组件
 import { SITE_TAB, SITE_DESCRIPTION, SITE_FAVICON, SITE_LANGUAGE, SITE_THEME } from "@config";
@@ -62,19 +60,7 @@ const { title, image, headings = [], showTOC = false } = Astro.props;
         }
       });
     </script>
-    <style is:global>
-      #steam-widget-content .text-base.text-base-content.truncate {
-        font-weight: 600;
-      }
-      #music-widget-content .font-semibold.text-base {
-        font-size: 0.875rem;
-        line-height: 1.25rem;
-      }
-      #music-widget-content .text-xs.text-base-content\/70 {
-        font-size: 0.875rem;
-        line-height: 1.25rem;
-      }
-    </style>
+    <style is:global></style>
   </head>
   <body data-steam-api-endpoint="https://steam.furprint.cn/api/steam/recent">
     <Navbar />
@@ -107,16 +93,7 @@ const { title, image, headings = [], showTOC = false } = Astro.props;
         <aside class="hidden lg:block lg:col-span-2 bg-transparent order-3">
           <div class="sticky top-4 flex flex-col gap-2">
             <div class="bg-base-100/70 backdrop-blur-xl rounded-2xl shadow-lg overflow-hidden p-4 relative">
-              <div class="flex justify-between items-center mb-2">
-                <h2 class="text-lg font-bold">哈曼最近玩的游戏</h2>
-                <div id="widget-refresh-button" class="cursor-pointer text-base-content/60 hover:text-base-content">
-                  {/* ▼▼▼ 核心修改 2：用 Icon 组件替换整个 <svg> 块 ▼▼▼ */}
-                  <Icon name="lucide:refresh-cw" class="w-[18px] h-[18px]" />
-                </div>
-              </div>
-              <SteamWidget />
-              <h2 class="text-lg font-bold mt-2">哈曼正在听的歌</h2>
-              <MusicWidget apiEndpoint="https://music.furprint.cn" />
+              <CommitWidget />
               <slot name="sidebar" />
             </div>
           </div>
@@ -126,21 +103,6 @@ const { title, image, headings = [], showTOC = false } = Astro.props;
     <MobileTOC headings={headings} showTOC={showTOC} />
     <script is:inline>
       document.addEventListener("astro:page-load", () => {
-        // Widget Refresh Logic
-        const refreshButton = document.getElementById("widget-refresh-button");
-        if (refreshButton) {
-          const svg = refreshButton.querySelector("svg");
-          refreshButton.addEventListener("click", () => {
-            if (svg && !svg.classList.contains("animate-spin")) {
-              svg.classList.add("animate-spin");
-              document.dispatchEvent(new CustomEvent("refresh-widgets"));
-              setTimeout(() => {
-                svg.classList.remove("animate-spin");
-              }, 1500);
-            }
-          });
-        }
-
         // Copy Button Logic
         const copyButtons = document.querySelectorAll(".btn-copy");
         copyButtons.forEach((btn) => {
