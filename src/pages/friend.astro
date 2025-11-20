@@ -7,13 +7,7 @@ import { friends } from "@/data/friends"; // 导入友链数据
 ---
 
 <BaseLayout title="友链">
-  <MainCard
-    title="dalao们"
-    description="大佬不在我就是无敌的哈哈！"
-    textOverlay="FRIENDS"
-    infoIcon="lucide:link"
-    image="https://vip.123pan.cn/1815727707/ymjew503t0l000d7w32x8oi2h7uosf6vDIYPAIUvAwUOAvxvAdrxAa==.webp"
-  >
+  <MainCard>
     <div class="space-y-10">
       <!-- Friends Section -->
       <section>
@@ -24,15 +18,17 @@ import { friends } from "@/data/friends"; // 导入友链数据
 
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
           {/* 使用 map 循环从数据文件渲染友链 */}
-          {friends.map(friend => (
-            <FriendCard
-              name={friend.name}
-              avatar={friend.avatar}
-              description={friend.description}
-              url={friend.url}
-              bgImage={friend.bgImage}
-            />
-          ))}
+          {
+            friends.map((friend) => (
+              <FriendCard
+                name={friend.name}
+                avatar={friend.avatar}
+                description={friend.description}
+                url={friend.url}
+                bgImage={friend.bgImage}
+              />
+            ))
+          }
         </div>
       </section>
 
@@ -44,7 +40,7 @@ import { friends } from "@/data/friends"; // 导入友链数据
       <section class="text-center">
         <h2 class="text-2xl font-bold mb-4">互换友链吗喵喵喵？</h2>
         <p class="text-base-content/80 mb-6 max-w-2xl mx-auto">
-        欢迎通过GitHub提交PR的方式互换友链，也可以通过邮件1805659145@qq.com联系我添加
+          欢迎通过GitHub提交PR的方式互换友链，也可以通过邮件1805659145@qq.com联系我添加
         </p>
         <div class="flex flex-wrap justify-center gap-4">
           <a

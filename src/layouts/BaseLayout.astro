@@ -2,37 +2,33 @@
 import CommitWidget from "../components/CommitWidget.astro";
 
 // 导入基础布局组件
-import { SITE_TAB, SITE_DESCRIPTION, SITE_FAVICON, SITE_LANGUAGE, SITE_THEME } from "@config";
+import { SITE_TAB, SITE_TITLE, SITE_DESCRIPTION, SITE_FAVICON, SITE_LANGUAGE, SITE_THEME } from "@config";
 import { ClientRouter } from "astro:transitions";
 import ElementCrossing from "astro-vtbot/components/ElementCrossing.astro";
 import PointerOnNavigation from "astro-vtbot/components/PointerOnNavigation.astro";
 import Header from "@components/Header.astro";
 import Footer from "@components/Footer.astro";
-import Navbar from "@components/Navbar.astro";
+import TopNav from "@components/TopNav.astro";
+import HeroSection from "@components/HeroSection.astro";
 import MobileTOC from "@components/widgets/MobileTOC.astro";
 import ScrollToTop from "@components/widgets/ScrollToTop.astro";
+import SnowEffect from "@components/widgets/SnowEffect.astro";
 
 // 导入所有侧边栏子组件
 import ProfileBar from "@components/sidebar/ProfileBar.astro";
-import SearchBar from "@components/sidebar/SearchBar.astro";
 import ToolBar from "@components/sidebar/ToolBar.astro";
 import TOCBar from "@components/sidebar/TOCBar.astro";
 
-// ▼▼▼ 核心修改 1：导入 Icon 组件 ▼▼▼
-import { Icon } from "astro-icon/components";
-
-const { title, image, headings = [], showTOC = false } = Astro.props;
+const { title, description, image, headings = [], showTOC = false } = Astro.props;
 ---
 
 <!doctype html>
 <html lang={SITE_LANGUAGE} class="bg-base-300" data-theme={SITE_THEME.light} data-theme-type="light">
   <head>
-    {/* Head 内容保持不变 */}
     <ClientRouter />
     <ElementCrossing />
     <PointerOnNavigation />
     <Header description={SITE_DESCRIPTION} favicon={SITE_FAVICON} image={image} />
-    <title>{`${title} - ${SITE_TAB}`}</title>
     <title>{`${title} - ${SITE_TAB}`}</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/plyr-react/dist/plyr.css" />
     <script define:vars={{ SITE_THEME }} is:inline>
@@ -61,23 +57,42 @@ const { title, image, headings = [], showTOC = false } = Astro.props;
       });
     </script>
     <style is:global>
-      .medium-zoom-overlay {
-        z-index: 9998 !important;
-      }
-      .medium-zoom-image--opened {
-        z-index: 9999 !important;
-      }
-      /* 使用 :has 选择器处理层级问题，比 JS 更稳定 */
-      .photo-card:has(.medium-zoom-image--opened) {
-        z-index: 10000 !important;
-        overflow: visible !important;
-        transform: none !important;
+      /* 自定义灯箱样式 */
+      #image-lightbox {
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
       }
     </style>
   </head>
   <body data-steam-api-endpoint="https://steam.furprint.cn/api/steam/recent">
-    <Navbar />
-    <div class="max-w-[1400px] mx-auto">
+    <SnowEffect />
+
+    <!-- Top Navigation (Floating) -->
+    <div class="fixed top-0 left-0 right-0 z-50 px-4 pt-4 transition-all duration-300" id="top-nav-container">
+      <TopNav />
+    </div>
+
+    <!-- Global Hero Section -->
+    <HeroSection
+      title={title || SITE_TITLE}
+      description={description || "It wraps me in the sparkling twilight."}
+      image={image || "https://vip.123pan.cn/1815727707/yk6baz03t0n000d7w33hdqlcz4xly40cDIYPAIUvAwUOAvxvAdrxAa==.png"}
+    />
+
+    <!-- 全局灯箱容器 -->
+    <div
+      id="image-lightbox"
+      class="fixed inset-0 z-[99999] bg-black/90 hidden opacity-0 transition-opacity duration-300 flex items-center justify-center cursor-zoom-out"
+    >
+      <img
+        id="lightbox-image"
+        src=""
+        alt="Lightbox"
+        class="max-w-[90vw] max-h-[90vh] object-contain shadow-2xl rounded-lg transform scale-95 transition-transform duration-300 select-none"
+      />
+    </div>
+
+    <div class="max-w-[1400px] mx-auto relative z-10 -mt-20 md:-mt-32" id="content">
       <div class="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-11 gap-4 p-4">
         <main class="col-span-1 md:col-span-3 lg:col-span-7 bg-transparent order-1 md:order-2 mt-16 md:mt-0">
           <div class="flex flex-col gap-4">
@@ -86,14 +101,12 @@ const { title, image, headings = [], showTOC = false } = Astro.props;
           </div>
         </main>
 
-        <aside class="col-span-1 md:col-span-1 lg:col-span-2 bg-transparent order-2 md:order-1 md-top-4">
-          <div class="sticky top-4 flex flex-col">
+        <aside class="col-span-1 md:col-span-1 lg:col-span-2 bg-transparent order-2 md:order-1">
+          <div class="sticky top-24 flex flex-col">
             <div class="bg-base-100/70 backdrop-blur-xl rounded-2xl shadow-lg">
               <ProfileBar />
             </div>
-            <div class="bg-base-100/70 backdrop-blur-xl rounded-2xl shadow-lg overflow-hidden mt-4">
-              <SearchBar />
-            </div>
+
             <div class="bg-base-100/70 backdrop-blur-xl rounded-2xl shadow-lg overflow-hidden mt-4">
               <ToolBar />
             </div>
@@ -104,7 +117,7 @@ const { title, image, headings = [], showTOC = false } = Astro.props;
         </aside>
 
         <aside class="hidden lg:block lg:col-span-2 bg-transparent order-3">
-          <div class="sticky top-4 flex flex-col gap-2">
+          <div class="sticky top-24 flex flex-col gap-2">
             <div class="bg-base-100/70 backdrop-blur-xl rounded-2xl shadow-lg overflow-hidden p-4 relative">
               <CommitWidget />
               <slot name="sidebar" />
@@ -115,13 +128,68 @@ const { title, image, headings = [], showTOC = false } = Astro.props;
     </div>
     <MobileTOC headings={headings} showTOC={showTOC} />
     <script>
-      import mediumZoom from "medium-zoom";
-
+      // 自定义灯箱逻辑 - 彻底解决层级和刷新问题
       document.addEventListener("astro:page-load", () => {
-        // Lightbox Logic using medium-zoom
-        mediumZoom(".gallery-image, #content img", {
-          background: "rgba(0, 0, 0, 0.8)",
-          margin: 24,
+        const lightbox = document.getElementById("image-lightbox");
+        const lightboxImg = document.getElementById("lightbox-image");
+
+        if (!lightbox || !lightboxImg) return;
+
+        // 获取所有需要点击放大的图片
+        const images = document.querySelectorAll(".prose img, .gallery-image, #content img:not(.no-zoom)");
+
+        images.forEach((img) => {
+          // 强制设置鼠标样式
+          (img as HTMLElement).style.cursor = "zoom-in";
+
+          img.addEventListener("click", (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+
+            const target = e.target as HTMLImageElement;
+            const lightboxImgElement = lightboxImg as HTMLImageElement;
+
+            // 设置灯箱图片源
+            lightboxImgElement.src = target.src;
+            lightboxImgElement.alt = target.alt || "";
+
+            // 显示灯箱
+            lightbox.classList.remove("hidden");
+            // 使用 RAF 确保 transition 生效
+            requestAnimationFrame(() => {
+              lightbox.classList.remove("opacity-0");
+              lightboxImgElement.classList.remove("scale-95");
+              lightboxImgElement.classList.add("scale-100");
+            });
+
+            // 禁止背景滚动
+            document.body.style.overflow = "hidden";
+          });
+        });
+
+        // 关闭灯箱的方法
+        const closeLightbox = () => {
+          const lightboxImgElement = lightboxImg as HTMLImageElement;
+          lightbox.classList.add("opacity-0");
+          lightboxImgElement.classList.remove("scale-100");
+          lightboxImgElement.classList.add("scale-95");
+
+          // 等待动画结束后隐藏
+          setTimeout(() => {
+            lightbox.classList.add("hidden");
+            lightboxImgElement.src = ""; // 清空图片源
+            document.body.style.overflow = "";
+          }, 300);
+        };
+
+        // 点击灯箱背景或图片关闭
+        lightbox.addEventListener("click", closeLightbox);
+
+        // ESC 键关闭
+        document.addEventListener("keydown", (e) => {
+          if (e.key === "Escape" && !lightbox.classList.contains("hidden")) {
+            closeLightbox();
+          }
         });
 
         // Copy Button Logic
@@ -135,7 +203,6 @@ const { title, image, headings = [], showTOC = false } = Astro.props;
             if (!codeContent) return;
 
             let text = "";
-            // Handle line numbers if present (remove them from copied text)
             const lines = codeContent.querySelectorAll(".line");
             if (lines.length > 0) {
               text = Array.from(lines)
@@ -147,8 +214,6 @@ const { title, image, headings = [], showTOC = false } = Astro.props;
 
             try {
               await navigator.clipboard.writeText(text);
-
-              // Toggle icons
               const copyIcon = btn.querySelector(".frosti-code-toolbar-copy-icon");
               const successIcon = btn.querySelector(".frosti-code-toolbar-copy-success");
 

@@ -1,18 +1,16 @@
 ---
 import Card from "../temple/Card.astro";
-import ScrollToTop from "../widgets/ScrollToTop.astro";
-import ThemeToggle from "../widgets/ThemeToggle.astro";
 import { Icon } from "astro-icon/components";
 import { t } from "@config";
 ---
 
 <Card>
   <div class="toolbar-container p-4">
-    <div class="grid grid-cols-4 md:grid-cols-2 lg:grid-cols-4 justify-center items-center gap-2 flex-wrap">
+    <div class="flex justify-around items-center gap-4">
       <!-- Navigation Buttons -->
       <a
         href="/blog/tags"
-        class="btn btn-circle btn-md border-base-content/20 bg-base-100 shadow-sm hover:scale-110"
+        class="btn btn-circle btn-md border-base-content/20 bg-base-100 shadow-sm hover:scale-110 transition-transform duration-300 text-primary"
         aria-label={t("label.tagPage")}
         title={t("label.tagPage")}
       >
@@ -21,7 +19,7 @@ import { t } from "@config";
 
       <a
         href="/blog/categories"
-        class="btn btn-circle btn-md border-base-content/20 bg-base-100 shadow-sm hover:scale-110"
+        class="btn btn-circle btn-md border-base-content/20 bg-base-100 shadow-sm hover:scale-110 transition-transform duration-300 text-secondary"
         aria-label={t("label.categoryPage")}
         title={t("label.categoryPage")}
       >
@@ -30,18 +28,14 @@ import { t } from "@config";
 
       <a
         href="/blog/archives"
-        class="btn btn-circle btn-md border-base-content/20 bg-base-100 shadow-sm hover:scale-110"
+        class="btn btn-circle btn-md border-base-content/20 bg-base-100 shadow-sm hover:scale-110 transition-transform duration-300 text-accent"
         aria-label={t("label.archivePage")}
         title={t("label.archivePage")}
       >
         <Icon name="lucide:archive" class="w-5 h-5" />
       </a>
 
-      <ThemeToggle className="sidebar-theme" />
-
       <slot />
     </div>
   </div>
 </Card>
-
-<!-- ScrollToTop is placed outside the Card to be fixed at the bottom of the screen -->

@@ -1,0 +1,123 @@
+---
+import { SITE_TITLE, SITE_MENU, t } from "../config";
+import { Icon } from "astro-icon/components";
+import ThemeToggle from "./widgets/ThemeToggle.astro";
+
+const currentPath = Astro.url.pathname;
+
+// Type safely process SITE_MENU before rendering
+type SubMenuItem = {
+  id: string;
+  text: string;
+  href: string;
+  svg: string;
+  target?: string;
+};
+
+type MenuItem = {
+  id: string;
+  text: string;
+  href: string;
+  svg: string;
+  target?: string;
+  subItems?: SubMenuItem[];
+};
+
+const typedMenu = SITE_MENU as MenuItem[];
+---
+
+<div id="top-nav" class="hidden md:flex justify-between items-center px-8 py-4 transition-all duration-300 w-full">
+  <div class="flex items-center gap-4">
+    <a href="/" class="text-xl font-black tracking-wider text-white hover:opacity-80 transition-opacity drop-shadow-md">
+      {SITE_TITLE}
+    </a>
+  </div>
+
+  <div class="flex items-center gap-1">
+    {
+      typedMenu.map((item) => (
+        <div class="relative group">
+          {item.subItems ? (
+            <div class="dropdown dropdown-hover dropdown-end">
+              <div
+                tabindex="0"
+                role="button"
+                class={`flex items-center gap-2 px-4 py-2 rounded-full transition-all duration-300 cursor-pointer text-white/90 hover:bg-white/10 hover:text-white font-medium drop-shadow-sm
+                  ${currentPath.startsWith(item.href) ? "bg-white/20 font-bold" : ""}`}
+              >
+                <Icon name={item.svg} class="w-5 h-5" />
+                <span class="tracking-wide">{item.text}</span>
+                <Icon
+                  name="lucide:chevron-down"
+                  class="w-3.5 h-3.5 opacity-70 group-hover:rotate-180 transition-transform duration-300"
+                />
+              </div>
+              <ul
+                tabindex="0"
+                class="dropdown-content z-[1] menu p-2 shadow-[0_8px_30px_rgb(0,0,0,0.12)] bg-base-100/80 backdrop-blur-xl rounded-2xl w-56 mt-4 border border-white/10"
+              >
+                {item.subItems.map((subItem) => (
+                  <li>
+                    <a
+                      href={subItem.href}
+                      target={subItem.target || "_self"}
+                      class={`flex items-center gap-3 py-3 px-4 rounded-xl transition-all duration-200 text-base-content/80 hover:bg-base-200/50 hover:text-primary hover:pl-6 font-medium
+                        ${currentPath === subItem.href ? "bg-primary/10 text-primary font-bold" : ""}`}
+                    >
+                      <Icon name={subItem.svg} class="w-4 h-4" />
+                      {subItem.text}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ) : (
+            <a
+              href={item.href}
+              target={item.target || "_self"}
+              class={`flex items-center gap-2 px-4 py-2 rounded-full transition-all duration-300 text-white/90 hover:bg-white/10 hover:text-white font-medium drop-shadow-sm
+                ${currentPath === item.href ? "bg-white/20 font-bold" : ""}`}
+            >
+              <Icon name={item.svg} class="w-5 h-5" />
+              <span class="tracking-wide">{item.text}</span>
+            </a>
+          )}
+        </div>
+      ))
+    }
+  </div>
+
+  <div class="flex items-center gap-3">
+    <form action="/blog/search" method="get" class="relative group" data-astro-reload>
+      <div class="relative flex items-center">
+        <input
+          type="text"
+          name="q"
+          placeholder={t("label.search") || "Search..."}
+          class="input input-sm rounded-full bg-white/10 border border-white/20 text-white placeholder-white/60 focus:bg-white/20 focus:border-white/40 w-40 focus:w-56 transition-all duration-300 pl-9 pr-4 text-sm shadow-inner"
+          aria-label={t("label.search") || "Search"}
+        />
+        <div class="absolute left-3 text-white/60 group-focus-within:text-white transition-colors">
+          <Icon name="lucide:search" class="w-4 h-4" />
+        </div>
+      </div>
+    </form>
+
+    <ThemeToggle />
+  </div>
+</div>
+
+<script>
+  // Scroll listener removed to keep TopNav static and transparent
+
+  document.addEventListener("keydown", (e) => {
+    const target = e.target as HTMLElement;
+    if (e.key === "/" && target && target.tagName !== "INPUT" && target.tagName !== "TEXTAREA") {
+      e.preventDefault();
+      const searchInput = document.querySelector('input[name="q"]');
+      if (searchInput) {
+        (searchInput as HTMLInputElement).focus();
+      }
+    }
+  });
+</script>

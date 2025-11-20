@@ -33,11 +33,7 @@ site:
       href: /project
       svg: "material-symbols:code-blocks-outline"
       target: _self
-    - id: photo
-      text: 相册
-      href: /photo
-      svg: "material-symbols:wallpaper-rounded"
-      target: _self
+
     - id: playlist
       text: 歌单
       href: /playlist

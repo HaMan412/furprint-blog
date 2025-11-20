@@ -5,13 +5,8 @@ import MainCard from "@/components/MainCard.astro";
 import FeatureCard from "@/components/mdx/FeatureCard.astro";
 ---
 
-<BaseLayout title="首页">
-  <MainCard
-    title="HaMan's Blog"
-    description="It wraps me in the sparkling twilight."
-    image="https://vip.123pan.cn/1815727707/yk6baz03t0n000d7w33hdqlcz4xly40cDIYPAIUvAwUOAvxvAdrxAa==.png"
-    infoIcon="lucide:info"
-  >
+<BaseLayout title="HaMan's Blog">
+  <MainCard>
     <div class="space-y-8">
       <!-- Hero Section -->
       <section class="py-6">
@@ -21,9 +16,7 @@ import FeatureCard from "@/components/mdx/FeatureCard.astro";
           >
             ⭐️ 哈曼の赛博小窝
           </h1>
-          <p class="text-xl text-base-content/80 max-w-3xl mb-8">
-            来者皆为客，祝君武运昌隆
-          </p>
+          <p class="text-xl text-base-content/80 max-w-3xl mb-8">来者皆为客，祝君武运昌隆</p>
           <div class="flex flex-wrap gap-4 justify-center">
             <a href="/blog" class="btn btn-primary gap-2 btn-shine-effect">
               <Icon name="lucide:book-open" class="w-5 h-5" />

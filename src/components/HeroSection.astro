@@ -1,0 +1,82 @@
+---
+import { Icon } from "astro-icon/components";
+import { Image } from "astro:assets";
+import AnimatedWave from "./widgets/AnimatedWave.astro";
+
+interface Props {
+  title: string;
+  description?: string;
+  image: string;
+}
+
+const { title, description, image } = Astro.props;
+---
+
+<div
+  class="relative w-full h-[60vh] min-h-[400px] md:h-[70vh] pb-[80px] md:pb-[150px] flex items-center justify-center overflow-hidden"
+>
+  <!-- Background Image -->
+  <div class="absolute inset-0 z-0">
+    <Image
+      src={image}
+      alt={title}
+      width={1920}
+      height={1080}
+      format="webp"
+      loading="eager"
+      class="w-full h-full object-cover"
+      style="object-position: center 35%;"
+    />
+    <!-- Gradient Overlay -->
+    <div class="absolute inset-0 bg-gradient-to-b from-black/20 to-transparent"></div>
+  </div>
+
+  <!-- Content -->
+  <div class="relative z-10 text-center px-4 max-w-4xl mx-auto mt-10">
+    <h1
+      class="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 tracking-tight drop-shadow-lg animate-fade-in-up"
+    >
+      {title}
+    </h1>
+    {
+      description && (
+        <p class="text-lg md:text-2xl text-white/90 font-medium tracking-wide drop-shadow-md animate-fade-in-up delay-100">
+          {description}
+        </p>
+      )
+    }
+
+    <!-- Social/Action Buttons (Optional placeholder for future) -->
+    <div class="mt-8 flex justify-center gap-4 animate-fade-in-up delay-200">
+      <a href="#content" class="btn btn-circle btn-ghost text-white hover:bg-white/20 border-white/30">
+        <Icon name="lucide:arrow-down" class="w-6 h-6" />
+      </a>
+    </div>
+  </div>
+
+  <!-- Animated Wave -->
+  <AnimatedWave />
+</div>
+
+<style>
+  .animate-fade-in-up {
+    animation: fadeInUp 0.8s ease-out forwards;
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  .delay-100 {
+    animation-delay: 0.1s;
+  }
+
+  .delay-200 {
+    animation-delay: 0.2s;
+  }
+
+  @keyframes fadeInUp {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>
