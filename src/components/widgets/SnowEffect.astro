@@ -5,17 +5,61 @@
 <canvas id="snow-canvas" class="fixed inset-0 z-[1] pointer-events-none"></canvas>
 
 <script>
-  const canvas = document.getElementById("snow-canvas") as HTMLCanvasElement;
-  const ctx = canvas.getContext("2d");
+  class SnowEffect {
+    private canvas: HTMLCanvasElement;
+    private ctx: CanvasRenderingContext2D | null;
+    private width: number;
+    private height: number;
+    private particles: Snowflake[];
+    private animationId: number | null = null;
 
-  let width = window.innerWidth;
-  let height = window.innerHeight;
+    constructor() {
+      this.canvas = document.getElementById("snow-canvas") as HTMLCanvasElement;
+      this.ctx = this.canvas.getContext("2d");
+      this.width = window.innerWidth;
+      this.height = window.innerHeight;
+      this.particles = [];
 
-  canvas.width = width;
-  canvas.height = height;
+      this.resize();
+      this.init();
+      this.animate();
 
-  const particles: Snowflake[] = [];
-  const particleCount = 100; // More snowflakes for a fuller effect
+      window.addEventListener("resize", () => this.resize());
+    }
+
+    private resize() {
+      this.width = window.innerWidth;
+      this.height = window.innerHeight;
+      this.canvas.width = this.width;
+      this.canvas.height = this.height;
+    }
+
+    private init() {
+      this.particles = [];
+      for (let i = 0; i < 100; i++) {
+        this.particles.push(new Snowflake(this.width, this.height));
+      }
+    }
+
+    private animate = () => {
+      if (!this.ctx) return;
+
+      this.ctx.clearRect(0, 0, this.width, this.height);
+      this.particles.forEach((particle) => {
+        particle.update(this.width, this.height);
+        particle.draw(this.ctx!);
+      });
+
+      this.animationId = requestAnimationFrame(this.animate);
+    };
+
+    public destroy() {
+      if (this.animationId) {
+        cancelAnimationFrame(this.animationId);
+      }
+      window.removeEventListener("resize", () => this.resize());
+    }
+  }
 
   class Snowflake {
     x: number;
@@ -25,16 +69,16 @@
     speedX: number;
     opacity: number;
 
-    constructor() {
+    constructor(width: number, height: number) {
       this.x = Math.random() * width;
       this.y = Math.random() * height;
-      this.size = Math.random() * 4 + 2; // Smaller, simpler snowflakes
+      this.size = Math.random() * 4 + 2;
       this.speedY = Math.random() * 1 + 0.5;
-      this.speedX = Math.random() * 0.5 - 0.25; // Gentle horizontal drift
+      this.speedX = Math.random() * 0.5 - 0.25;
       this.opacity = Math.random() * 0.6 + 0.4;
     }
 
-    update() {
+    update(width: number, height: number) {
       this.y += this.speedY;
       this.x += this.speedX;
 
@@ -49,44 +93,34 @@
       }
     }
 
-    draw() {
-      if (!ctx) return;
+    draw(ctx: CanvasRenderingContext2D) {
       ctx.save();
       ctx.globalAlpha = this.opacity;
       ctx.fillStyle = "white";
-      
-      // Draw simple circle snowflake
       ctx.beginPath();
       ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
       ctx.fill();
-      
       ctx.restore();
     }
   }
 
-  function init() {
-    for (let i = 0; i < particleCount; i++) {
-      particles.push(new Snowflake());
+  let snowEffect: SnowEffect | null = null;
+
+  function initSnowEffect() {
+    // Destroy existing effect if any
+    if (snowEffect) {
+      snowEffect.destroy();
     }
+
+    // Create new effect
+    snowEffect = new SnowEffect();
   }
 
-  function animate() {
-    if (!ctx) return;
-    ctx.clearRect(0, 0, width, height);
-    particles.forEach((particle) => {
-      particle.update();
-      particle.draw();
-    });
-    requestAnimationFrame(animate);
-  }
+  // Initialize on page load
+  initSnowEffect();
 
-  init();
-  animate();
-
-  window.addEventListener("resize", () => {
-    width = window.innerWidth;
-    height = window.innerHeight;
-    canvas.width = width;
-    canvas.height = height;
+  // Re-initialize on Astro page navigation
+  document.addEventListener("astro:page-load", () => {
+    initSnowEffect();
   });
 </script>
