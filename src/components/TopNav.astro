@@ -26,11 +26,18 @@ type MenuItem = {
 const typedMenu = SITE_MENU as MenuItem[];
 ---
 
-<div id="top-nav" class="hidden md:flex justify-center items-center px-8 py-4 transition-all duration-300 w-full">
-  <!-- Menu items with glassmorphism background -->
+<div id="top-nav" class="hidden md:flex items-center px-8 py-4 transition-all duration-300 w-full relative">
+  <!-- Site Title (Left) -->
+  <div class="flex items-center gap-4">
+    <a href="/" class="text-xl font-black tracking-wider text-white hover:opacity-80 transition-opacity drop-shadow-md">
+      {SITE_TITLE}
+    </a>
+  </div>
+
+  <!-- Menu items with glassmorphism background (Centered) -->
   <div
     id="nav-menu"
-    class="flex items-center gap-1 px-4 py-2 rounded-full backdrop-blur-md bg-base-100/70 shadow-lg transition-all duration-300"
+    class="absolute left-1/2 -translate-x-1/2 flex items-center gap-1 px-4 py-2 rounded-full backdrop-blur-md bg-base-100/70 shadow-lg transition-all duration-300"
   >
     {
       typedMenu.map((item) => (
