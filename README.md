@@ -206,3 +206,6 @@ If you have any questions or suggestions, you can provide feedback or communicat
 @[Saicaca](https://github.com/saicaca) Their inspiration was the main reason I created this theme
 
 @[WRXinYue](https://github.com/WRXinYue) They helped me a lot when I was first getting started
+
+
+

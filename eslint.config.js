@@ -12,3 +12,4 @@ export default antfu({
     "arrow-parens": ["warn", "always"],
   },
 });
+

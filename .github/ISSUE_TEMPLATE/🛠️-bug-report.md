@@ -47,4 +47,7 @@ Describe what actually happened, including any error messages or incorrect behav
 **Contact Information:**
 
 - Name: [Your Name]
+
 - Email: [Your Email]
+
+  
