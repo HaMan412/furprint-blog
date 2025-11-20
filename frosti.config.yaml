@@ -28,17 +28,7 @@ site:
       href: /blog/page/1
       svg: "material-symbols:book-2-outline-rounded"
       target: _self # 子菜单项配置
-    - id: project
-      text: 项目
-      href: /project
-      svg: "material-symbols:code-blocks-outline"
-      target: _self
 
-    - id: playlist
-      text: 歌单
-      href: /playlist
-      svg: "material-symbols:library-music-outline"
-      target: _self
     - id: friend
       text: 友链
       href: /friend
@@ -78,4 +68,3 @@ user:
         ariaLabel: X(twitter)
         title: X(twitter)
         svg: "ri:twitter-line"
-  
