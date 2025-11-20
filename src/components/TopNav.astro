@@ -185,6 +185,8 @@ const typedMenu = SITE_MENU as MenuItem[];
   });
 
   // Real-time Clock
+  let clockInterval: number | undefined;
+
   function updateClock() {
     const clockText = document.getElementById("clock-text");
     if (clockText) {
@@ -199,9 +201,11 @@ const typedMenu = SITE_MENU as MenuItem[];
     }
   }
 
-  // Start clock
-  updateClock();
-  setInterval(updateClock, 1000);
+  function startClock() {
+    if (clockInterval) clearInterval(clockInterval);
+    updateClock();
+    clockInterval = window.setInterval(updateClock, 1000);
+  }
 
   // Mobile Menu Logic
   function initMobileMenu() {
@@ -245,10 +249,11 @@ const typedMenu = SITE_MENU as MenuItem[];
 
   // Re-run on page navigation
   document.addEventListener("astro:page-load", () => {
-    updateClock();
+    startClock();
     initMobileMenu();
   });
 
   // Init on first load
+  startClock();
   initMobileMenu();
 </script>
