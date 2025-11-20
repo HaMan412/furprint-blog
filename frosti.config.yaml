@@ -28,6 +28,11 @@ site:
       href: /blog/page/1
       svg: "material-symbols:book-2-outline-rounded"
       target: _self # 子菜单项配置
+    - id: aggregation
+      text: 聚合
+      href: /aggregation
+      svg: "material-symbols:dashboard-outline-rounded"
+      target: _self
 
     - id: friend
       text: 友链

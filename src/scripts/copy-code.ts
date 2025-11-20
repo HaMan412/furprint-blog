@@ -21,7 +21,9 @@ export function initCopyButtons() {
       try {
         await navigator.clipboard.writeText(text);
         const copyIcon = btn.querySelector(".frosti-code-toolbar-copy-icon");
-        const successIcon = btn.querySelector(".frosti-code-toolbar-copy-success");
+        const successIcon = btn.querySelector(
+          ".frosti-code-toolbar-copy-success",
+        );
 
         if (copyIcon && successIcon) {
           copyIcon.classList.add("hidden");

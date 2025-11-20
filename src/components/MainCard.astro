@@ -5,7 +5,8 @@ import Card from "@/components/temple/Card.astro";
 import { Image } from "astro:assets";
 import type { PostData } from "@interfaces/data";
 
-export interface MainCardProps extends PostData {
+export interface MainCardProps extends Omit<PostData, "title"> {
+  title?: string;
   infoIcon?: string;
   helpText?: string;
   textOverlay?: string;
@@ -33,20 +34,19 @@ const accessibleHelpText = `${helpText}: ${title}`;
 
 <Card class={`relative overflow-hidden ${extraClasses}`}>
   {/* ✨ 3. 添加背景图片容器 ✨ */}
-  {bgImage && (
-    <div
-      class="absolute inset-0 w-full h-full bg-cover bg-center opacity-20 pointer-events-none"
-      style={`background-image: url(${bgImage});`}
-    ></div>
-  )}
+  {
+    bgImage && (
+      <div
+        class="absolute inset-0 w-full h-full bg-cover bg-center opacity-20 pointer-events-none"
+        style={`background-image: url(${bgImage});`}
+      />
+    )
+  }
 
   {/* ✨ 4. 将原有内容包裹，并提升层级 ✨ */}
   <div class="relative z-10">
     {
-      false ? (
-        // Image display removed for non-article pages
-        null
-      ) : textOverlay ? (
+      false ? null : textOverlay ? ( // Image display removed for non-article pages
         // No image, but with textOverlay - show gradient background with overlay text
         <div class="relative">
           <div class={`aspect-video w-full overflow-hidden bg-gradient-to-br from-base-300 to-base-100 ${headerClass}`}>
@@ -92,11 +92,13 @@ const accessibleHelpText = `${helpText}: ${title}`;
           )}
         </div>
       ) : (
-        // No image, no textOverlay - show simple title and description at top
-        <div class="pt-6 px-6">
-          <h1 class="text-xl sm:text-2xl lg:text-4xl font-bold">{title}</h1>
-          {description && <p class="mt-2 text-sm text-base-content/80">{description}</p>}
-        </div>
+        // No image, no textOverlay - show simple title and description at top ONLY if title exists
+        title && (
+          <div class="pt-6 px-6">
+            <h1 class="text-xl sm:text-2xl lg:text-4xl font-bold">{title}</h1>
+            {description && <p class="mt-2 text-sm text-base-content/80">{description}</p>}
+          </div>
+        )
       )
     }
 

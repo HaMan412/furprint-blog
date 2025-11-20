@@ -401,47 +401,46 @@
 - 新增分享功能，现在您可以通过文末按钮直接将文章分享到社交媒体上
 - 新增 i18n ，移除了老旧的 `infoTest` ，现在所有的语言都在 `public/locales` 文件夹中
 
-    这意味着您可以添加多种语言并随时切换，教程如下：
+  这意味着您可以添加多种语言并随时切换，教程如下：
+  1. 在 `public/locales` 文件夹中添加您的语言文件，先添加一个名为语言代码的文件夹，然后在里面添加一个 json 文件，文件名必须为 `translation.json`
+  2. 复制已有的 `translation.json` 文件，然后修改其中的内容，比如：
 
-    1. 在 `public/locales` 文件夹中添加您的语言文件，先添加一个名为语言代码的文件夹，然后在里面添加一个 json 文件，文件名必须为 `translation.json`
-    2. 复制已有的 `translation.json` 文件，然后修改其中的内容，比如：
+     ```json
+     {
+       "label": {
+         "noTag": "No tags assigned",
+         "tagCard": "Tags",
+         "tagPage": "Tag - ",
+         "noCategory": "No categories assigned",
+         "categoryCard": "Categories",
+         "categoryPage": "Category - ",
+         "link": "Link: ",
+         "prevPage": "Recent posts",
+         "nextPage": "Older posts",
+         "wordCount": "words",
+         "readTime": "minutes"
+       }
+     }
+     ```
 
-        ```json
-        {
-        "label": {
-          "noTag": "No tags assigned",
-          "tagCard": "Tags",
-          "tagPage": "Tag - ",
-          "noCategory": "No categories assigned",
-          "categoryCard": "Categories",
-          "categoryPage": "Category - ",
-          "link": "Link: ",
-          "prevPage": "Recent posts",
-          "nextPage": "Older posts",
-          "wordCount": "words",
-          "readTime": "minutes"
-          }
-        }
-        ```
+  3. 在 `astro-i18next.config.mjs` 中添加您的语言代码，比如：
 
-    3. 在 `astro-i18next.config.mjs` 中添加您的语言代码，比如：
+     ```mjs
+     export default {
+       defaultLocale: "en",
+       locales: ["en", "zh", "xx"], // 这里添加您的语言代码
+     };
+     ```
 
-        ```mjs
-        export default {
-        defaultLocale: "en",
-        locales: ['en', 'zh', 'xx'] // 这里添加您的语言代码
-        };
-        ```
-    
-    4. 在 'BaseLayout.astro' 中更改为您的语言代码，比如：
+  4. 在 'BaseLayout.astro' 中更改为您的语言代码，比如：
 
-        ```astro
-        ...
-        import i18next, { t, changeLanguage } from "i18next";
+     ```astro
+     ...
+     import i18next, { t, changeLanguage } from "i18next";
 
-        changeLanguage("xx");
-        ...
-        ```
+     changeLanguage("xx");
+     ...
+     ```
 
 > [!NOTE]
 > 欢迎大家为主题添加语言支持！
@@ -485,26 +484,26 @@
 - 为博客目录功能添加了 "聚焦" 功能，现在目录会根据您当前阅读的部分自动滚动
 - 为博客 `main` 中的卡片添加了逐次进入样式，使用 `sass` 制作：
 
-    ```scss
-    .fade-in-up {
-      opacity: 0;
-      transform: translateY(50px);
-      animation: fadeInUp 0.5s ease forwards;
+  ```scss
+  .fade-in-up {
+    opacity: 0;
+    transform: translateY(50px);
+    animation: fadeInUp 0.5s ease forwards;
 
-      @for $i from 1 through 10 {
-        &:nth-child(#{$i}) {
-          animation-delay: #{$i * 0.1}s;
-        }
+    @for $i from 1 through 10 {
+      &:nth-child(#{$i}) {
+        animation-delay: #{$i * 0.1}s;
       }
     }
+  }
 
-    @keyframes fadeInUp {
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+  @keyframes fadeInUp {
+    to {
+      opacity: 1;
+      transform: translateY(0);
     }
-    ```
+  }
+  ```
 
 ### Refactored
 
@@ -601,8 +600,8 @@
 
 - 新增 `mdx/TocCopllapse.astro` 组件用于在文章中添加折叠的目录(小屏幕侧边栏无法显示时才出现)
   - 新增 `remark-heading-extractor.mjs` 在服务端提取标题并存贮在 `frontmatter` 中
-  > [!NOTE]
-  > 原本想通过此组件实现在服务端生成所有目录, 但发现侧边栏并不在 `Swup` 的按需渲染范围之中, 所以只能保留在客户端生成目录的形式
+    > [!NOTE]
+    > 原本想通过此组件实现在服务端生成所有目录, 但发现侧边栏并不在 `Swup` 的按需渲染范围之中, 所以只能保留在客户端生成目录的形式
 - 新增 `TocCard.astro` (拆分 `Tool.astro`)
 
 ### Refactored
@@ -671,8 +670,8 @@
 
 ### Chore
 
-- 更换为更严格的 ESLint 作为代码格式化和检查工具  
-- 对 i18n 配置进行了小幅优化 
+- 更换为更严格的 ESLint 作为代码格式化和检查工具
+- 对 i18n 配置进行了小幅优化
 - 移除了不必要的 node_modules 依赖
 
 ## [3.0.0] - 2025-3-23
@@ -683,9 +682,9 @@
 
 1. **主要卡片修改**
    - **卡片布局修改**
-     
+
      添加了新的组件 `Card.astro` 与 `CardGroup.astro`。后者包裹前者时，在手机端将会合并成一个卡片。示例代码：
-     
+
      ```astro
      <CardGroup>
        <Card>
@@ -699,59 +698,63 @@
        </Card>
      </CardGroup>
      ```
-     
+
      **演示：**
 
-     | version 3 | version 2 |
-     | :---: | :---: |
+     |                                         version 3                                         |                                         version 2                                         |
+     | :---------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------: |
      | ![image](https://github.com/user-attachments/assets/00945d87-29f7-4ff3-9272-98108773d0c5) | ![image](https://github.com/user-attachments/assets/0d180ed9-8f1f-446f-b2f6-844bce389f44) |
 
    - **卡片样式修改**
-     
+
      若有图片，标题将会浮在图片上方。同时右下角有一个可自定义的按钮，展示 description 或者更多信息。
-     
+
      **演示：**
 
-     | version 3 | version 2 |
-     | :---: | :---: |
+     |                                         version 3                                         |                                         version 2                                         |
+     | :---------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------: |
      | ![image](https://github.com/user-attachments/assets/14de47ce-3889-474e-84ec-605e40dd38d4) | ![image](https://github.com/user-attachments/assets/e422f969-9a19-4ffb-85fc-2d92789b1ff7) |
 
 2. **侧边栏修改**
    - `Profile.astro`
-     
+
      **演示：**
 
-     | version 3 | version 2 |
-     | :---: | :---: |
+     |                                         version 3                                         |                                         version 2                                         |
+     | :---------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------: |
      | ![image](https://github.com/user-attachments/assets/25c344a3-4485-4c97-a447-e1fb6e4c88b1) | ![image](https://github.com/user-attachments/assets/3f2eb595-d517-4a3c-b4d7-e36c3b2ad417) |
+
    - **添加了新的侧边栏组件**
      - 搜索栏
      - 标签、分类、以及归档按钮
 
        **演示：**
 
-       | version 3 | version 2 |
-       | :---: | :---: |
+       |                                         version 3                                         |                                         version 2                                         |
+       | :---------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------: |
        | ![image](https://github.com/user-attachments/assets/aeb85e5d-d6cd-428e-9000-ac5aeadfebe7) | ![image](https://github.com/user-attachments/assets/8e35bce0-587a-4116-8788-2d51cad634d6) |
 
    - **修改了目录的样式与运动效果**
-     
+
      **演示：**
 
-     | version 3 | version 2 |
-     | :---: | :---: |
+     |                                                 version 3                                                 |                                                 version 2                                                 |
+     | :-------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------: |
      | ![Peek 2025-03-23 16-06](https://github.com/user-attachments/assets/d9ba2e3d-5f56-4504-a2f9-5cdb4b2b53cd) | ![Peek 2025-03-23 16-07](https://github.com/user-attachments/assets/0d4ef32c-0962-40df-af7e-85c6c1a4415f) |
 
 3. **添加了新的页面**
    - 归档页面
 
      ![image](https://github.com/user-attachments/assets/1938ee40-c2ff-4610-a0bb-2509039b1c86)
+
    - 标签页面
 
      ![image](https://github.com/user-attachments/assets/449604e3-e65b-478c-ba18-0cf488c51015)
+
    - 分类页面
 
      ![image](https://github.com/user-attachments/assets/5758c9bc-dcd5-4372-9dc1-8a067c47c7c1)
+
    - 搜索页面
 
      ![image](https://github.com/user-attachments/assets/44ce7175-64a5-4890-8ef1-33b359cacf94)
@@ -761,26 +764,28 @@
 
      **演示：**
 
-     | version 3 | version 2 |
-     | :---: | :---: |
-     | ![image](https://github.com/user-attachments/assets/1c2ab392-8bfe-44fe-a208-ea7deef7f10d) | None |
+     |                                         version 3                                         | version 2 |
+     | :---------------------------------------------------------------------------------------: | :-------: |
+     | ![image](https://github.com/user-attachments/assets/1c2ab392-8bfe-44fe-a208-ea7deef7f10d) |   None    |
+
    - 以及其他等等：
 
      **演示：**
 
-     | version 3 | version 2 |
-     | :---: | :---: |
-     | ![image](https://github.com/user-attachments/assets/e93390c7-1331-4606-aa05-8cb4e4a6678d) | None |
+     |                                         version 3                                         | version 2 |
+     | :---------------------------------------------------------------------------------------: | :-------: |
+     | ![image](https://github.com/user-attachments/assets/e93390c7-1331-4606-aa05-8cb4e4a6678d) |   None    |
 
 5. **新增 MDX 组件**
    - `GitHubStats.astro`
-   
+
      ```astro
      <GitHubStats username="frosti-team" />
      <GitHubStats username="frosti-team" repositoryName="frosti" />
      ```
+
    - `RepositoryCard.astro`
-     
+
      ```astro
      <RepositoryCard repo="frosti-team/frosti" />
      <RepositoryCard
@@ -789,8 +794,9 @@
        isPinned={true}
      />
      ```
+
    - `FeatureCard.astro`
-     
+
      ```astro
      <FeatureCard
        title="响应式设计"
@@ -799,8 +805,9 @@
        color="oklch(0.7 0.2 140)"
      />
      ```
+
    - `FriendCard.astro`
-     
+
      ```astro
      <FriendCard
        name="SunMaple"
@@ -812,8 +819,7 @@
      ```
 
 6. **添加了 404 页面**
-![image](https://github.com/user-attachments/assets/b1df378b-751f-42c1-b6ca-b902c463dc53)
-
+   ![image](https://github.com/user-attachments/assets/b1df378b-751f-42c1-b6ca-b902c463dc53)
 
 ### Refactored
 
@@ -824,10 +830,9 @@
 
   **演示：**
 
-  | version 3 | version 2 |
-  | :---: | :---: |
+  |                                         version 3                                         |                                         version 2                                         |
+  | :---------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------: |
   | ![image](https://github.com/user-attachments/assets/d925d150-6af1-4075-8672-e84dc1293566) | ![image](https://github.com/user-attachments/assets/a4c60c34-0df8-495f-a633-7e95cc33dc16) |
-
 
 ### Fix
 

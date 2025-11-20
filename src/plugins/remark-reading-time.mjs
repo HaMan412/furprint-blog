@@ -10,7 +10,10 @@ export function remarkReadingTime() {
     const wordCount = textOnPage.split(/\s+/).filter(Boolean).length;
     const chineseCount = textOnPage.match(/[\u4E00-\u9FA5]/g)?.length || 0;
     const lineCount = textOnPage.split(/\r?\n/).length;
-    const readingTime = (wordCount / wordsPerMinute) + (chineseCount / chineseCharactersPerMinute) + (lineCount / linesPerMinute);
+    const readingTime =
+      wordCount / wordsPerMinute +
+      chineseCount / chineseCharactersPerMinute +
+      lineCount / linesPerMinute;
 
     data.astro.frontmatter.totalCharCount = wordCount + chineseCount;
     data.astro.frontmatter.readingTime = Math.ceil(readingTime);

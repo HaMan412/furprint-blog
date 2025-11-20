@@ -21,7 +21,7 @@ tags:
 
 **3.** 你最好有代理可用，否则可能会出现Github或Zeabur官网进不去的情况
 
-***
+---
 
 ## 一、前往Github fork项目仓库
 
@@ -58,8 +58,6 @@ DATABASE_TYPE=sqlite
 SQLITE_DATABASE=default_db
 ALLOWED_TOKENS=[""] ###这是你项目的apikey，同时也是稍后部署网页的登录密码
 ```
-
-
 
 <img src="https://vip.123pan.cn/1815727707/yk6baz03t0n000d7w33hdzvkav4cld73DIYPAIUvAwUOAvxvAdrxAa==.png" style="zoom:80%;" />
 

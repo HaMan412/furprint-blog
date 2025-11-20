@@ -5,7 +5,9 @@ export function initLightbox() {
   if (!lightbox || !lightboxImg) return;
 
   // 获取所有需要点击放大的图片
-  const images = document.querySelectorAll(".prose img, .gallery-image, #content img:not(.no-zoom)");
+  const images = document.querySelectorAll(
+    ".prose img, .gallery-image, #content img:not(.no-zoom)",
+  );
 
   images.forEach((img) => {
     // 强制设置鼠标样式

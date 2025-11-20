@@ -1,0 +1,316 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import MainCard from "@/components/MainCard.astro";
+import { Icon } from "astro-icon/components";
+
+// 定义链接数据接口
+interface LinkItem {
+  id: string;
+  title: string;
+  url: string;
+  description: string;
+  category: string;
+  displayCategory?: string; // 可选的显示分类
+  color?: string; // 可选的自定义颜色类
+}
+
+// 链接数据
+const links: LinkItem[] = [
+  // 开发工具
+  {
+    id: "DEV001",
+    title: "Iconfont",
+    url: "https://www.iconfont.cn/",
+    description: "阿里妈妈MUX倾力打造的矢量图标管理、交流平台",
+    category: "开发工具",
+    displayCategory: "图标库",
+    color: "from-purple-50 to-purple-100",
+  },
+  {
+    id: "DEV002",
+    title: "fonts.google",
+    url: "https://fonts.google.com/icons",
+    description: "Google开源的图标库",
+    category: "开发工具",
+    displayCategory: "图标库",
+    color: "from-blue-50 to-blue-100",
+  },
+  {
+    id: "DEV003",
+    title: "Shields",
+    url: "https://shields.io/",
+    description: "为项目生成各种徽章",
+    category: "开发工具",
+    displayCategory: "徽章工具",
+    color: "from-green-50 to-green-100",
+  },
+  {
+    id: "DEV004",
+    title: "Clarity",
+    url: "https://clarity.microsoft.com/",
+    description: "微软推出的免费用户行为分析工具",
+    category: "开发工具",
+    displayCategory: "用户分析",
+    color: "from-blue-50 to-blue-100",
+  },
+
+  // 服务平台
+  {
+    id: "SRV001",
+    title: "Cloudflare",
+    url: "https://www.cloudflare.com",
+    description: "全球网络安全、性能优化和边缘计算服务",
+    category: "服务平台",
+    displayCategory: "赛博善人",
+    color: "from-amber-50 to-amber-100",
+  },
+  {
+    id: "SRV002",
+    title: "EdgeOne",
+    url: "https://edgeone.ai",
+    description: "下一代 CDN，整合安全防护与加速服务",
+    category: "服务平台",
+    displayCategory: "CDN服务",
+    color: "from-blue-50 to-blue-100",
+  },
+  {
+    id: "SRV003",
+    title: "GitHub",
+    url: "https://github.com",
+    description: "全球最大的代码托管和协作平台",
+    category: "服务平台",
+    displayCategory: "代码托管",
+    color: "from-gray-50 to-gray-100",
+  },
+  {
+    id: "SRV004",
+    title: "Vercel",
+    url: "https://vercel.com",
+    description: "现代化的前端部署和托管平台",
+    category: "服务平台",
+    displayCategory: "部署平台",
+    color: "from-gray-50 to-gray-100",
+  },
+
+  // 资源聚合
+  {
+    id: "RES001",
+    title: "Bangumi Moe",
+    url: "https://bangumi.moe/",
+    description: "萌番组 - 专注于动漫资源的分享与下载",
+    category: "资源聚合",
+    displayCategory: "动漫资源",
+    color: "from-pink-50 to-pink-100",
+  },
+  {
+    id: "RES002",
+    title: "动漫花园",
+    url: "https://dmhy.org/",
+    description: "动漫花园资源网 - 动漫爱好者交流平台",
+    category: "资源聚合",
+    displayCategory: "动漫资源",
+    color: "from-green-50 to-green-100",
+  },
+  {
+    id: "RES003",
+    title: "Civitai",
+    url: "https://civitai.com/",
+    description: "AI 绘画模型分享社区",
+    category: "资源聚合",
+    displayCategory: "模型分享",
+    color: "from-blue-50 to-blue-100",
+  },
+  {
+    id: "RES004",
+    title: "Danbooru",
+    url: "https://danbooru.donmai.us/",
+    description: "知名的二次元图片检索站",
+    category: "资源聚合",
+    displayCategory: "标签检索",
+    color: "from-orange-50 to-orange-100",
+  },
+
+  // AI
+  {
+    id: "AI001",
+    title: "ChatGPT",
+    url: "https://chat.openai.com",
+    description: "OpenAI 开发的先进人工智能聊天机器人",
+    category: "AI",
+    displayCategory: "大语言模型",
+    color: "from-emerald-50 to-emerald-100",
+  },
+  {
+    id: "AI002",
+    title: "Claude",
+    url: "https://claude.ai",
+    description: "Anthropic 开发的强大人工智能助手",
+    category: "AI",
+    displayCategory: "代码好用",
+    color: "from-orange-50 to-orange-100",
+  },
+  {
+    id: "AI003",
+    title: "Gemini",
+    url: "https://gemini.google.com/",
+    description: "Google 最强大的人工智能模型",
+    category: "AI",
+    displayCategory: "AI大善人",
+    color: "from-blue-50 to-blue-100",
+  },
+  {
+    id: "AI004",
+    title: "Kimi",
+    url: "https://kimi.moonshot.cn/",
+    description: "Moonshot AI 开发的智能助手，支持长文本",
+    category: "AI",
+    displayCategory: "这我不熟",
+    color: "from-indigo-50 to-indigo-100",
+  },
+  {
+    id: "AI005",
+    title: "DeepSeek",
+    url: "https://chat.deepseek.com/",
+    description: "深度求索开发的开源大模型助手",
+    category: "AI",
+    displayCategory: "开源模型",
+    color: "from-cyan-50 to-cyan-100",
+  },
+  {
+    id: "AI006",
+    title: "Qwen",
+    url: "https://tongyi.aliyun.com/",
+    description: "通义千问 - 阿里云开发的大语言模型",
+    category: "AI",
+    displayCategory: "大语言模型",
+    color: "from-purple-50 to-purple-100",
+  },
+];
+
+// 按分类分组
+const linksByCategory = links.reduce(
+  (acc, link) => {
+    if (!acc[link.category]) {
+      acc[link.category] = [];
+    }
+    acc[link.category].push(link);
+    return acc;
+  },
+  {} as Record<string, LinkItem[]>,
+);
+
+const categories = Object.keys(linksByCategory);
+
+// 分类图标映射
+const categoryIcons: Record<string, string> = {
+  开发工具: "lucide:code-2",
+  服务平台: "lucide:server",
+  资源聚合: "lucide:library",
+  AI: "lucide:bot",
+};
+
+// 获取图标的函数
+const getIconUrl = (url: string) => {
+  try {
+    const domain = new URL(url).hostname;
+    return `https://unavatar.io/${domain}`;
+  } catch (e) {
+    return "";
+  }
+};
+
+// 获取域名显示的函数
+const getDomain = (url: string) => {
+  try {
+    return new URL(url).hostname;
+  } catch (e) {
+    return url;
+  }
+};
+---
+
+<BaseLayout title="聚合" description="常用网站快速入口">
+  <MainCard
+    image="https://vip.123pan.cn/1815727707/yk6baz03t0n000d7w33hdvm2j915mcwbDIYPAIUvAwUOAvxvAdrxAa==.png"
+    infoIcon="material-symbols:dashboard-outline-rounded"
+  >
+    <div class="space-y-12 p-2">
+      {
+        categories.map((category) => (
+          <section>
+            <h2 class="text-2xl font-bold mb-6 flex items-center gap-2 text-base-content/80 px-2">
+              {/* 使用映射的图标，如果没有则使用默认的 hash 图标 */}
+              <Icon name={categoryIcons[category] || "lucide:hash"} class="w-6 h-6 opacity-70 text-primary" />
+              {category}
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {linksByCategory[category].map((link) => (
+                <a
+                  href={link.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="group relative flex flex-col rounded-3xl overflow-hidden bg-base-100 shadow-lg hover:shadow-2xl transition-all duration-300 border border-base-200 dark:border-base-content/5 hover:-translate-y-1"
+                >
+                  {/* Header Section - 强制使用浅色背景和深色文字 */}
+                  <div
+                    class={`relative p-5 bg-gradient-to-br ${link.color || "from-base-200 to-base-300"} flex items-start gap-4`}
+                  >
+                    {/* Icon */}
+                    <div class="w-14 h-14 rounded-2xl bg-white p-2 shadow-sm flex-shrink-0 flex items-center justify-center">
+                      <img
+                        src={getIconUrl(link.url)}
+                        alt={link.title}
+                        class="w-full h-full object-contain no-zoom mix-blend-normal transition-transform duration-500 group-hover:rotate-12 group-hover:scale-110"
+                        loading="lazy"
+                        onerror="this.src='https://www.google.com/s2/favicons?domain=google.com&sz=64'"
+                      />
+                    </div>
+
+                    {/* Title & Category & ID - 强制深色文字 */}
+                    <div class="flex-grow min-w-0 pt-1">
+                      <h3 class="text-lg font-bold text-slate-800 leading-tight">{link.title}</h3>
+                      <div class="mt-1 flex items-center justify-between">
+                        <div class="inline-flex items-center px-2 py-0.5 rounded-md bg-white/60 text-xs font-medium text-slate-600 backdrop-blur-sm">
+                          {link.displayCategory || link.category}
+                        </div>
+                        <div class="text-xs font-mono text-slate-400 tracking-wider">{link.id}</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Body Section - 保持暗色模式适配 */}
+                  <div class="p-5 flex-grow bg-base-100 dark:bg-[#1a1b26]">
+                    <p class="text-sm text-base-content/70 leading-relaxed line-clamp-2 h-10">{link.description}</p>
+                  </div>
+
+                  {/* Footer Section - 保持暗色模式适配 */}
+                  <div class="px-5 pb-5 pt-0 bg-base-100 dark:bg-[#1a1b26] flex items-center justify-between mt-auto">
+                    <span class="inline-flex items-center gap-1.5 text-xs font-medium text-base-content/60 group-hover:text-primary transition-colors">
+                      <Icon
+                        name="lucide:external-link"
+                        class="w-3.5 h-3.5 transition-transform group-hover:scale-110"
+                      />
+                      访问网站
+                    </span>
+
+                    <span class="text-xs font-mono text-base-content/30">{getDomain(link.url)}</span>
+                  </div>
+                </a>
+              ))}
+            </div>
+          </section>
+        ))
+      }
+    </div>
+
+    <div class="mt-12 text-center">
+      <p class="text-xs text-base-content/40 font-light tracking-widest uppercase">More Coming Soon</p>
+    </div>
+  </MainCard>
+</BaseLayout>
+
+<style>
+  .no-zoom {
+    cursor: pointer !important;
+  }
+</style>

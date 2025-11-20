@@ -10,7 +10,9 @@ const translationsPath = path.resolve("src/i18n/translations.yaml");
 // 读取并解析 YAML 文件
 const config = yaml.load(fs.readFileSync(configPath, "utf8")) as Config;
 // 读取并解析翻译文件
-const translationsConfig = yaml.load(fs.readFileSync(translationsPath, "utf8")) as Record<string, any>;
+const translationsConfig = yaml.load(
+  fs.readFileSync(translationsPath, "utf8"),
+) as Record<string, any>;
 
 // 网站基本信息
 export const SITE_TAB = config.site.tab;
@@ -34,7 +36,8 @@ export const USER_SITE = config.user.site;
 export const USER_AVATAR = config.user.avatar;
 
 // 社交图标配置（侧边栏和页脚）
-export const MUSIC_ICON_URL = "https://vip.123pan.cn/1815727707/yk6baz03t0l000d7w33fsavgcc6j1mkoDIYPAIUvAwUOAvxvAdrxAa==.png";
+export const MUSIC_ICON_URL =
+  "https://vip.123pan.cn/1815727707/yk6baz03t0l000d7w33fsavgcc6j1mkoDIYPAIUvAwUOAvxvAdrxAa==.png";
 export const USER_SIDEBAR_SOCIAL_ICONS = config.user.sidebar.social;
 export const USER_FOOTER_SOCIAL_ICONS = config.user.footer.social;
 

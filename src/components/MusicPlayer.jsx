@@ -1,6 +1,6 @@
-import { useState, useRef } from 'react';
-import Player from 'react-h5-audio-player';
-import 'react-h5-audio-player/lib/styles.css';
+import { useState, useRef } from "react";
+import Player from "react-h5-audio-player";
+import "react-h5-audio-player/lib/styles.css";
 
 // 【关键修复】移除 TypeScript 的 `as any` 语法，使用纯 JavaScript 的方式来处理模块导入
 const AudioPlayer = Player.default || Player;
@@ -14,7 +14,9 @@ const MusicPlayer = ({ songs }) => {
   };
 
   const handleClickPrevious = () => {
-    setCurrentTrack((currentTrack) => (currentTrack - 1 + songs.length) % songs.length);
+    setCurrentTrack(
+      (currentTrack) => (currentTrack - 1 + songs.length) % songs.length,
+    );
   };
 
   const handleEnd = () => {
@@ -47,11 +49,16 @@ const MusicPlayer = ({ songs }) => {
           <a
             href="javascript:void(0);"
             key={index}
-            className={`song-item ${index === currentTrack ? 'playing' : ''}`}
+            className={`song-item ${index === currentTrack ? "playing" : ""}`}
             onClick={() => handleSongClick(index)}
           >
             <div className="song-index">{index + 1}</div>
-            <img src={song.cover} alt={song.title} className="song-cover" loading="lazy" />
+            <img
+              src={song.cover}
+              alt={song.title}
+              className="song-cover"
+              loading="lazy"
+            />
             <div className="song-info">
               <div className="song-title">{song.title}</div>
               <div className="song-artist">{song.artist}</div>

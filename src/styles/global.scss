@@ -263,7 +263,11 @@ code {
 @mixin category-color-variant($color-var) {
   .category-#{$color-var} {
     .category-header {
-      background: linear-gradient(120deg, oklch(var(--#{$color-var}) / 0.1), oklch(var(--#{$color-var}) / 0.05));
+      background: linear-gradient(
+        120deg,
+        oklch(var(--#{$color-var}) / 0.1),
+        oklch(var(--#{$color-var}) / 0.05)
+      );
     }
 
     .category-icon {
