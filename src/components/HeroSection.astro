@@ -39,10 +39,20 @@ const { title, description, image } = Astro.props;
       {title}
     </h1>
     {
-      description && (
-        <p class="text-lg md:text-2xl text-white/90 font-medium tracking-wide drop-shadow-md animate-fade-in-up delay-100">
+      description ? (
+        <p
+          class="text-lg md:text-2xl text-white/90 font-medium tracking-wide drop-shadow-md animate-fade-in-up delay-100"
+          style="font-family: 'ZCOOL KuaiLe', cursive;"
+        >
           {description}
         </p>
+      ) : (
+        <div
+          class="text-lg md:text-2xl text-white/90 font-medium tracking-wide drop-shadow-md animate-fade-in-up delay-100"
+          style="font-family: 'ZCOOL KuaiLe', cursive;"
+        >
+          <slot />
+        </div>
       )
     }
 

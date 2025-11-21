@@ -7,6 +7,7 @@ import { type CollectionEntry, getCollection } from "astro:content";
 import dayjs from "@utils/dayjs";
 import { DATE_FORMAT } from "@config";
 import MainCard from "@/components/MainCard.astro";
+import Comments from "@components/widgets/Comments.astro";
 
 export async function getStaticPaths() {
   const posts = await getCollection("blog");
@@ -54,6 +55,8 @@ const displayDate = blog.data.pubDate ? dayjs(blog.data.pubDate).format(DATE_FOR
           time={remarkPluginFrontmatter.readingTime}
         />
       </div>
+      <!-- Comments Section -->
+      <Comments />
     </div>
   </MainCard>
 </BaseLayout>

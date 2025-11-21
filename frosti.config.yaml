@@ -73,3 +73,18 @@ user:
         ariaLabel: X(twitter)
         title: X(twitter)
         svg: "ri:twitter-line"
+
+# 评论系统配置 (Giscus)
+# 评论存储在独立的公开仓库 blog-comments
+comment:
+  enable: true
+  repo: HaMan412/blog-comments
+  repoId: R_kgDOQaRZMA
+  category: Announcements
+  categoryId: DIC_kwDOQaRZMM4CyC4I
+  mapping: pathname
+  reactionsEnabled: "1"
+  emitMetadata: "0"
+  inputPosition: top
+  lang: zh-CN
+  loading: lazy

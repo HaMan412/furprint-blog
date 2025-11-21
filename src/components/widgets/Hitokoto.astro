@@ -1,0 +1,119 @@
+---
+// Hitokoto.astro
+// 获取"一言" (Hitokoto) 并显示，带打字机效果
+---
+
+<div
+  id="hitokoto-container"
+  class="min-h-[1.5em] flex items-center justify-center text-2xl md:text-3xl"
+  style="font-family: 'ZCOOL KuaiLe', cursive;"
+>
+  <span id="hitokoto_text" class="cursor-pointer select-none font-medium"></span>
+  <span id="hitokoto_cursor" class="font-bold text-white animate-blink ml-1">|</span>
+</div>
+
+<script>
+  const FALLBACK_QUOTES = [{ hitokoto: "It wraps me in the sparkling twilight.", from: "Original", from_who: "HaMan" }];
+
+  function fetchHitokoto() {
+    const textElement = document.getElementById("hitokoto_text");
+    const cursorElement = document.getElementById("hitokoto_cursor");
+    if (!textElement) return;
+
+    // 清空文本，准备打字
+    textElement.innerText = "";
+    if (cursorElement) cursorElement.style.display = "inline";
+
+    const typeText = (text: string, from: string) => {
+      let i = 0;
+      const speed = 100; // 打字速度 ms
+
+      // 设置 title (鼠标悬停显示出处)
+      textElement.title = from;
+
+      // 清除之前的打字动画
+      textElement.innerText = "";
+
+      const type = () => {
+        if (i < text.length) {
+          textElement.innerText += text.charAt(i);
+          i++;
+          setTimeout(type, speed);
+        }
+      };
+      // 立即开始打字
+      type();
+    };
+
+    const updateText = (data: any) => {
+      const fullText = data.hitokoto;
+      const source = `—— ${data.from_who || "佚名"}「${data.from || "未知"}」`;
+      typeText(fullText, source);
+    };
+
+    // 优先请求自部署的一言 API（使用 HTTP）
+    const timestamp = new Date().getTime();
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 2000); // 2秒超时
+
+    fetch(`http://frp-few.com:15239/?c=a&c=b&c=c&t=${timestamp}`, {
+      signal: controller.signal,
+    })
+      .then((response) => {
+        clearTimeout(timeoutId);
+        if (!response.ok) throw new Error("Network response was not ok");
+        return response.json();
+      })
+      .then((data) => {
+        console.log("✅ 自部署 Hitokoto API 成功:", data.hitokoto);
+        updateText(data);
+      })
+      .catch((err) => {
+        clearTimeout(timeoutId);
+        if (err.name === "AbortError") {
+          console.warn("⏱️ 自部署 API 超时（2秒），使用预设");
+        } else {
+          console.warn("⚠️ 自部署 API 失败，使用预设:", err.message);
+        }
+        // API 失败或超时，显示随机预设
+        const randomQuote = FALLBACK_QUOTES[Math.floor(Math.random() * FALLBACK_QUOTES.length)];
+        updateText(randomQuote);
+      });
+  }
+
+  // 页面加载时获取
+  document.addEventListener("astro:page-load", fetchHitokoto);
+
+  // 点击刷新
+  document.addEventListener("astro:page-load", () => {
+    const container = document.getElementById("hitokoto-container");
+    if (container) {
+      container.addEventListener("click", fetchHitokoto);
+    }
+  });
+</script>
+
+<style>
+  #hitokoto_text {
+    display: inline;
+    max-width: 80vw;
+    white-space: pre-wrap;
+    word-break: break-word;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); /* 增加一点阴影提高可读性 */
+  }
+
+  .animate-blink {
+    animation: blink 1s step-end infinite;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  }
+
+  @keyframes blink {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0;
+    }
+  }
+</style>

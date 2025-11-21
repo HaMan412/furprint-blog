@@ -95,7 +95,22 @@ export interface Translations {
   [language: string]: LanguageTranslation;
 }
 
+export interface CommentConfig {
+  enable: boolean;
+  repo: string;
+  repoId: string;
+  category: string;
+  categoryId: string;
+  mapping: string;
+  reactionsEnabled: string;
+  emitMetadata: string;
+  inputPosition: string;
+  lang: string;
+  loading: string;
+}
+
 export interface Config {
   site: SiteConfig;
   user: UserConfig;
+  comment: CommentConfig;
 }

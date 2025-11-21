@@ -13,6 +13,7 @@ import HeroSection from "@components/HeroSection.astro";
 import MobileTOC from "@components/widgets/MobileTOC.astro";
 import ScrollToTop from "@components/widgets/ScrollToTop.astro";
 import SnowEffect from "@components/widgets/SnowEffect.astro";
+import Hitokoto from "@components/widgets/Hitokoto.astro";
 
 // 导入所有侧边栏子组件
 import ProfileBar from "@components/sidebar/ProfileBar.astro";
@@ -31,6 +32,7 @@ const { title, description, image, headings = [], showTOC = false } = Astro.prop
     <Header description={SITE_DESCRIPTION} favicon={SITE_FAVICON} image={image} />
     <title>{`${title} - ${SITE_TAB}`}</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/plyr-react/dist/plyr.css" />
+    <link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&display=swap" rel="stylesheet" />
     <script define:vars={{ SITE_THEME }} is:inline>
       function applyTheme() {
         const storedTheme = localStorage.getItem("theme");
@@ -73,11 +75,14 @@ const { title, description, image, headings = [], showTOC = false } = Astro.prop
     </div>
 
     <!-- Global Hero Section -->
+    <!-- Global Hero Section -->
     <HeroSection
       title={title || SITE_TITLE}
-      description={description || "It wraps me in the sparkling twilight."}
       image={image || "https://vip.123pan.cn/1815727707/yk6baz03t0n000d7w33hdqlcz4xly40cDIYPAIUvAwUOAvxvAdrxAa==.png"}
-    />
+    >
+      {/* 如果传入了 description，HeroSection 会优先显示 description prop，但这里我们不传 description，而是传 slot */}
+      {description ? description : <Hitokoto />}
+    </HeroSection>
 
     <!-- 全局灯箱容器 -->
     <div
