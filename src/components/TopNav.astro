@@ -247,13 +247,47 @@ const typedMenu = SITE_MENU as MenuItem[];
     }
   }
 
+  // Scroll Nav Logic
+  let scrollHandler: (() => void) | undefined;
+
+  function initScrollNav() {
+    const navContainer = document.getElementById("top-nav-container");
+    if (!navContainer) return;
+
+    if (scrollHandler) {
+      window.removeEventListener("scroll", scrollHandler);
+    }
+
+    let lastScrollY = window.scrollY;
+    const threshold = 700; // Increased threshold further
+
+    scrollHandler = () => {
+      const currentScrollY = window.scrollY;
+
+      if (currentScrollY < threshold) {
+        navContainer.classList.remove("-translate-y-full", "opacity-0", "pointer-events-none");
+      } else if (currentScrollY > lastScrollY) {
+        // Scrolling down
+        navContainer.classList.add("-translate-y-full", "opacity-0", "pointer-events-none");
+      } else {
+        // Scrolling up
+        navContainer.classList.remove("-translate-y-full", "opacity-0", "pointer-events-none");
+      }
+      lastScrollY = currentScrollY;
+    };
+
+    window.addEventListener("scroll", scrollHandler, { passive: true });
+  }
+
   // Re-run on page navigation
   document.addEventListener("astro:page-load", () => {
     startClock();
     initMobileMenu();
+    initScrollNav();
   });
 
   // Init on first load
   startClock();
   initMobileMenu();
+  initScrollNav();
 </script>
