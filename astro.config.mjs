@@ -1,4 +1,5 @@
 import mdx from "@astrojs/mdx";
+import react from "@astrojs/react";
 import sitemap from "@astrojs/sitemap";
 import tailwind from "@astrojs/tailwind";
 import playformCompress from "@playform/compress";
@@ -7,13 +8,12 @@ import icon from "astro-icon";
 import { defineConfig } from "astro/config";
 import rehypeExternalLinks from "rehype-external-links";
 import rehypeKatex from "rehype-katex";
+
 import remarkMath from "remark-math";
 
 import { CODE_THEME, USER_SITE } from "./src/config.ts";
 
 import { remarkReadingTime } from "./src/plugins/remark-reading-time.mjs";
-
-import react from "@astrojs/react";
 
 // https://astro.build/config
 export default defineConfig({
@@ -54,36 +54,36 @@ export default defineConfig({
               type: "element",
               tagName: "div",
               properties: {
-                class: "not-prose frosti-code",
+                class: "not-prose aeralis-code",
               },
               children: [
                 {
                   type: "element",
                   tagName: "div",
                   properties: {
-                    class: "frosti-code-toolbar",
+                    class: "aeralis-code-toolbar",
                   },
                   children: [
                     {
                       type: "element",
                       tagName: "span",
-                      properties: { class: "frosti-code-toolbar-language" },
+                      properties: { class: "aeralis-code-toolbar-language" },
                       children: [{ type: "text", value: language }],
                     },
                     {
                       type: "element",
                       tagName: "button",
                       properties: {
-                        class: "btn-copy",
+                        "class": "btn-copy",
                         "aria-label": "Copy code",
-                        type: "button",
+                        "type": "button",
                       },
                       children: [
                         {
                           type: "element",
                           tagName: "span",
                           properties: {
-                            class: "frosti-code-toolbar-copy-icon",
+                            "class": "aeralis-code-toolbar-copy-icon",
                             "aria-hidden": "true",
                           },
                           children: [
@@ -91,16 +91,16 @@ export default defineConfig({
                               type: "element",
                               tagName: "svg",
                               properties: {
-                                xmlns: "http://www.w3.org/2000/svg",
-                                width: "18",
-                                height: "18",
-                                viewBox: "0 0 24 24",
-                                fill: "none",
-                                stroke: "currentColor",
+                                "xmlns": "http://www.w3.org/2000/svg",
+                                "width": "18",
+                                "height": "18",
+                                "viewBox": "0 0 24 24",
+                                "fill": "none",
+                                "stroke": "currentColor",
                                 "stroke-width": "2",
                                 "stroke-linecap": "round",
                                 "stroke-linejoin": "round",
-                                class: "copy-icon",
+                                "class": "copy-icon",
                               },
                               children: [
                                 {
@@ -132,7 +132,7 @@ export default defineConfig({
                           type: "element",
                           tagName: "span",
                           properties: {
-                            class: "frosti-code-toolbar-copy-success hidden",
+                            "class": "aeralis-code-toolbar-copy-success hidden",
                             "aria-hidden": "true",
                           },
                           children: [
@@ -140,16 +140,16 @@ export default defineConfig({
                               type: "element",
                               tagName: "svg",
                               properties: {
-                                xmlns: "http://www.w3.org/2000/svg",
-                                width: "18",
-                                height: "18",
-                                viewBox: "0 0 24 24",
-                                fill: "none",
-                                stroke: "currentColor",
+                                "xmlns": "http://www.w3.org/2000/svg",
+                                "width": "18",
+                                "height": "18",
+                                "viewBox": "0 0 24 24",
+                                "fill": "none",
+                                "stroke": "currentColor",
                                 "stroke-width": "2",
                                 "stroke-linecap": "round",
                                 "stroke-linejoin": "round",
-                                class: "success-icon",
+                                "class": "success-icon",
                               },
                               children: [
                                 {
@@ -172,7 +172,7 @@ export default defineConfig({
                   ...node,
                   properties: {
                     ...node.properties,
-                    class: "frosti-code-content",
+                    class: "aeralis-code-content",
                   },
                   children: [
                     {

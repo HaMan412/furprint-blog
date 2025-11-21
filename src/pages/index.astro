@@ -10,18 +10,53 @@ import FeatureCard from "@/components/mdx/FeatureCard.astro";
     <div class="space-y-8">
       <!-- Hero Section -->
       <section class="py-6">
-        <div class="flex flex-col items-center text-center">
-          <h1
-            class="text-4xl font-bold mb-4 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent leading-loose"
+        <div
+          class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary/5 via-base-100 to-secondary/5 border border-base-200/50 p-8 md:p-12 shadow-sm group"
+        >
+          <!-- Decorative Background Elements -->
+          <div
+            class="absolute -top-10 -right-10 w-40 h-40 bg-primary/10 rounded-full blur-3xl group-hover:bg-primary/20 transition-colors duration-500"
           >
-            ⭐️ 哈曼の赛博小窝
-          </h1>
-          <p class="text-xl text-base-content/80 max-w-3xl mb-8">来者皆为客，祝君武运昌隆</p>
-          <div class="flex flex-wrap gap-4 justify-center">
-            <a href="/blog" class="btn btn-primary gap-2 btn-shine-effect">
-              <Icon name="lucide:book-open" class="w-5 h-5" />
-              <span>即刻查阅文章</span>
-            </a>
+          </div>
+          <div
+            class="absolute -bottom-10 -left-10 w-40 h-40 bg-secondary/10 rounded-full blur-3xl group-hover:bg-secondary/20 transition-colors duration-500"
+          >
+          </div>
+          <Icon
+            name="lucide:sparkles"
+            class="absolute top-10 right-10 w-24 h-24 text-primary/5 rotate-12 group-hover:rotate-45 transition-transform duration-700"
+          />
+          <Icon
+            name="lucide:cat"
+            class="absolute bottom-12 right-20 w-16 h-16 text-secondary/10 -rotate-12 group-hover:scale-110 transition-transform duration-500"
+          />
+          <Icon
+            name="lucide:paw-print"
+            class="absolute top-8 left-12 w-20 h-20 text-primary/10 -rotate-12 group-hover:rotate-0 transition-transform duration-700"
+          />
+          <Icon
+            name="lucide:flower"
+            class="absolute bottom-20 left-10 w-12 h-12 text-accent/10 group-hover:rotate-90 transition-transform duration-500"
+          />
+
+          <div class="relative flex flex-col items-center text-center z-10 gap-6">
+            <h1
+              class="text-4xl md:text-5xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent leading-relaxed drop-shadow-sm -ml-20"
+            >
+              <span class="inline-block animate-bounce">⭐️</span> 哈曼の赛博小窝
+            </h1>
+            <p class="text-lg md:text-xl text-base-content/80 max-w-2xl font-medium leading-relaxed">
+              来者皆为客，祝君武运昌隆
+            </p>
+            <div class="flex flex-wrap gap-4 justify-center">
+              <a
+                href="/blog"
+                class="btn btn-primary rounded-full shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300 gap-2 px-6 btn-shine-effect"
+              >
+                <Icon name="lucide:book-open" class="w-5 h-5" />
+                <span class="font-bold">即刻查阅文章</span>
+              </a>
+            </div>
           </div>
         </div>
       </section>
@@ -31,7 +66,7 @@ import FeatureCard from "@/components/mdx/FeatureCard.astro";
     <section class="py-6">
       <h2 class="text-2xl font-bold mb-6 flex items-center gap-2">
         <Icon name="lucide:sparkles" class="w-6 h-6 text-primary" />
-        <span>正在运行的项目</span>
+        <span>正在运行的开源项目</span>
       </h2>
 
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -43,14 +78,14 @@ import FeatureCard from "@/components/mdx/FeatureCard.astro";
         />
 
         <FeatureCard
-          title="FurprintTV 在线观影"
+          title="LibreTV 在线观影"
           description="LibreTV开源项目，可在线观影，搜索想看的影片&番剧即可（下滑可找到观影地址与访问密码）"
           icon="lucide:clapperboard"
           color="oklch(0.9 0.2 254)"
         />
 
         <FeatureCard
-          title="Furmail 临时邮件"
+          title="MoeMail 临时邮件"
           description="MoeMail开源项目，仅支持接受邮件，可用于注册等常用环境，可创建临时邮箱或永久邮箱，临时邮箱到期自动销毁（下滑有网址）"
           icon="lucide:mail-check"
           color="oklch(0.9 0.2 10)"
@@ -70,18 +105,18 @@ import FeatureCard from "@/components/mdx/FeatureCard.astro";
           {
             [
               {
-                project: "FurprintTV 在线观影",
+                project: "LibreTV 在线观影",
                 description: "累了就看会儿电影看会儿番剧吧~ 访问密码：furprint",
                 url: "https://libretv.furprint.top/",
               },
               {
-                project: "Furmail 临时邮件",
+                project: "MoeMail 临时邮件",
                 description: "仅可接收邮件，可用于注册等多种场景，禁止用于注册包括但不限于黄赌毒等违法网站&平台！",
                 url: "https://mail.furprint.top/",
               },
               {
                 project: "Furonline VPN备用节点",
-                description: "请合理规范使用！！！订阅链接：https://furprint.online/furprint?sub",
+                description: "请合理规范使用，订阅链接：https://furprint.online/furprint?sub",
                 url: "https://furprint.top/",
               },
             ].map((contrib) => (

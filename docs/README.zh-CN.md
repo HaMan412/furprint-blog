@@ -3,27 +3,61 @@
 </pre>
 
 <div align="center">
-<img alt="Frosti Logo" src="https://github.com/EveSunMaple/Frosti/blob/main/docs/logo.png" width="280px">
+<img alt="Aeralis Logo" src="https://github.com/EveSunMaple/Aeralis/blob/main/docs/logo.png" width="280px">
 </div>
 
-[![license](https://badgen.net/github/license/EveSunMaple/Frosti)](https://github.com/EveSunMaple/Frosti/blob/main/LICENSE)&nbsp;&nbsp;&nbsp;[![release](https://badgen.net/github/release/EveSunMaple/Frosti)](https://github.com/EveSunMaple/Frosti/releases)&nbsp;&nbsp;&nbsp;[![stackblitz](https://developer.stackblitz.com/img/open_in_stackblitz_small.svg)](https://stackblitz.com/github/EveSunMaple/Frosti)
+[![license](https://badgen.net/github/license/EveSunMaple/Aeralis)](https://github.com/EveSunMaple/Aeralis/blob/main/LICENSE)&nbsp;&nbsp;&nbsp;[![release](https://badgen.net/github/release/EveSunMaple/Aeralis)](https://github.com/EveSunMaple/Aeralis/releases)&nbsp;&nbsp;&nbsp;[![stackblitz](https://developer.stackblitz.com/img/open_in_stackblitz_small.svg)](https://stackblitz.com/github/EveSunMaple/Aeralis)
 
-[**🖥️ Frosti Demo**](https://frosti.saroprock.com)&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;[**🌏 中文 README**](https://github.com/EveSunMaple/Frosti/blob/main/docs/README.zh-CN.md)&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;[**❤️My Blog**](https://www.saroprock.com)
+[**🖥️ Aeralis Demo**](https://aeralis.saroprock.com)&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;[**🌏 中文 README**](https://github.com/EveSunMaple/Aeralis/blob/main/docs/README.zh-CN.md)&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;[**❤️My Blog**](https://www.saroprock.com)
 
-## 📷 Preview
+## 📖 简介
 
-![preview](./preview-light.png)
+Aeralis 是一个基于 [Astro](https://astro.build/) 的静态博客系统。它的设计目标是简单、快速、易用。
 
-## ✨ 特点
+## ✨ 特性
 
-- ✅ **白天** / **黑夜** 模式可用
-- ✅ 极速的访问速度与优秀的 SEO
-- ✅ 视图过渡动画（使用 ClientRouter）
-- ✅ 您可以搜索您的文章（使用 Pagefind）
-- ✅ 使用 [Tailwind CSS](https://tailwindcss.com/) 与 [daisyUI](https://daisyui.com/) 构建自适应页面
-- ✅ RSS 订阅支持
-- 🛠️ 博客易上手
-  - 可以在 `frosti.config.yaml` 自定义您博客的内容
+- **快速**: 基于 Astro 构建，Aeralis 极其快速。
+- **简单**: 无需复杂配置，只需用 Markdown 编写博客文章。
+- **响应式**: Aeralis 适用于所有设备，从移动端到桌面端。
+- **可定制**: 你可以轻松定制博客的外观和感觉。
+- **SEO 友好**: Aeralis 针对搜索引擎进行了优化。
+- **RSS 支持**: Aeralis 自动为你的博客生成 RSS 订阅源。
+- **站点地图支持**: Aeralis 自动为你的博客生成站点地图。
+- **Markdown 支持**: Aeralis 支持 GitHub 风格的 Markdown。
+- **语法高亮**: Aeralis 支持代码块的语法高亮。
+- **数学公式支持**: Aeralis 支持 LaTeX 数学公式。
+- **图表支持**: Aeralis 支持 Mermaid 图表。
+- **评论支持**: Aeralis 支持 Giscus 评论。
+- **分析支持**: Aeralis 支持 Google Analytics 和 Umami Analytics。
+- **搜索支持**: Aeralis 支持本地搜索。
+- **国际化支持**: Aeralis 支持多语言。
+
+## 🚀 快速开始
+
+### 1. 克隆仓库
+
+```bash
+git clone https://github.com/EveSunMaple/Aeralis.git Aeralis
+```
+
+### 2. 安装依赖
+
+```bash
+cd Aeralis
+npm install
+```
+
+### 3. 启动开发服务器
+
+```bash
+npm run dev
+```
+
+### 4. 构建生产版本
+
+```bash
+npm run build
+```
 
 ## ✒️ 文章信息
 

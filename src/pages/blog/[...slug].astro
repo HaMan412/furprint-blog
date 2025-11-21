@@ -25,7 +25,7 @@ const { Content, remarkPluginFrontmatter, headings } = await blog.render();
 const displayDate = blog.data.pubDate ? dayjs(blog.data.pubDate).format(DATE_FORMAT) : "";
 ---
 
-<BaseLayout title={blog.data.title} image={blog.data.image} headings={headings} showTOC={true}>
+<BaseLayout title={blog.data.title} image={blog.data.image} headings={headings} showTOC={true} hideSubtitle={true}>
   <MainCard title={blog.data.title} description={blog.data.description} image={blog.data.image} infoIcon="lucide:info">
     <!-- Article info using PostInfo component -->
     <PostInfo

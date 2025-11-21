@@ -3,94 +3,73 @@ A clean, elegant, and fast static blog template! 🚀 Built with Astro
 </pre>
 
 <div align="center">
-<img alt="Frosti Logo" src="https://github.com/EveSunMaple/Frosti/blob/main/docs/logo.png" width="280px">
+<img alt="Aeralis Logo" src="https://github.com/EveSunMaple/Aeralis/blob/main/docs/logo.png" width="280px">
 </div>
 
-[![license](https://badgen.net/github/license/EveSunMaple/Frosti)](https://github.com/EveSunMaple/Frosti/blob/main/LICENSE)&nbsp;&nbsp;&nbsp;[![release](https://badgen.net/github/release/EveSunMaple/Frosti)](https://github.com/EveSunMaple/Frosti/releases)&nbsp;&nbsp;&nbsp;[![stackblitz](https://developer.stackblitz.com/img/open_in_stackblitz_small.svg)](https://stackblitz.com/github/EveSunMaple/Frosti)
+[![license](https://badgen.net/github/license/EveSunMaple/Aeralis)](https://github.com/EveSunMaple/Aeralis/blob/main/LICENSE)&nbsp;&nbsp;&nbsp;[![release](https://badgen.net/github/release/EveSunMaple/Aeralis)](https://github.com/EveSunMaple/Aeralis/releases)&nbsp;&nbsp;&nbsp;[![stackblitz](https://developer.stackblitz.com/img/open_in_stackblitz_small.svg)](https://stackblitz.com/github/EveSunMaple/Aeralis)
 
-[**🖥️ Frosti Demo**](https://frosti.saroprock.com)&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;[**🌏 Chinese README**](https://github.com/EveSunMaple/Frosti/blob/main/docs/README.zh-CN.md)&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;[**❤️My Blog**](https://www.saroprock.com)
+[**🖥️ Aeralis Demo**](https://aeralis.saroprock.com)&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;[**🌏 Chinese README**](https://github.com/EveSunMaple/Aeralis/blob/main/docs/README.zh-CN.md)&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;[**❤️My Blog**](https://www.saroprock.com)
 
-## 📷 Preview
+## 📖 Introduction
 
-![preview](./docs/preview-light.png)
+Aeralis is a static blog system based on [Astro](https://astro.build/). It is designed to be simple, fast, and easy to use.
 
 ## ✨ Features
 
-- ✅ **Light** / **Dark** mode available
-- ✅ Super fast performance with excellent SEO
-- ✅ View transition animations (using ClientRouter)
-- ✅ Search functionality for your articles (using Pagefind)
-- ✅ Responsive design built with [Tailwind CSS](https://tailwindcss.com/) and [daisyUI](https://daisyui.com/)
-- ✅ RSS feed support
-- 🛠️ Easy to use blog
-  - Customize your blog content in `frosti.config.yaml`
+- **Fast**: Built with Astro, Aeralis is extremely fast.
+- **Simple**: No complex configuration, just write your blog posts in Markdown.
+- **Responsive**: Aeralis works on all devices, from mobile to desktop.
+- **Customizable**: You can easily customize the look and feel of your blog.
+- **SEO Friendly**: Aeralis is optimized for search engines.
+- **RSS Support**: Aeralis automatically generates an RSS feed for your blog.
+- **Sitemap Support**: Aeralis automatically generates a sitemap for your blog.
+- **Markdown Support**: Aeralis supports GitHub Flavored Markdown.
+- **Syntax Highlighting**: Aeralis supports syntax highlighting for code blocks.
+- **Math Support**: Aeralis supports LaTeX math equations.
+- **Diagram Support**: Aeralis supports Mermaid diagrams.
+- **Comment Support**: Aeralis supports Giscus comments.
+- **Analytics Support**: Aeralis supports Google Analytics and Umami Analytics.
+- **Search Support**: Aeralis supports local search.
+- **I18n Support**: Aeralis supports multiple languages.
 
-## ✒️ Article Information
+## 🚀 Quick Start
 
-|    Name     |       Meaning       | Required |
-| :---------: | :-----------------: | :------: |
-|    title    |    Article title    |   Yes    |
-| description | Article description |   Yes    |
-|   pubDate   |  Publication date   |   Yes    |
-|    image    | Article cover image |    No    |
-| categories  | Article categories  |    No    |
-|    tags     |    Article tags     |    No    |
-|    badge    |    Article badge    |    No    |
-|    draft    |    Draft status     |    No    |
+### 1. Clone the repository
 
-> [!TIP]
->
-> - You can pin your article by setting the `badge` property to `Pin`
-> - Setting `draft: true` will mark the article as a draft, and it won't appear in the article list
-
-## ⬇️ Usage
-
-1. Install pnpm package manager (if you haven't already)
-
-```sh
-npm i -g pnpm
+```bash
+git clone https://github.com/EveSunMaple/Aeralis.git Aeralis
 ```
 
-2. Clone the project
+### 2. Install dependencies
 
-```sh
-git clone https://github.com/EveSunMaple/Frosti.git Frosti
+```bash
+cd Aeralis
+npm install
 ```
 
-3. Enter the project folder
+### 3. Start the development server
 
-```sh
-cd Frosti
+```bash
+npm run dev
 ```
 
-4. Install dependencies
+### 4. Build for production
 
-```sh
-pnpm i
+```bash
+npm run build
 ```
 
-5. Debug and run the project
+## 🛠️ Configuration
 
-```sh
-# If this is your first deployment, build first
-pnpm run build
-
-pnpm run dev
-```
-
-> [!NOTE]
-> You must build before starting the debug server, otherwise pagefind won't have an index, and the search functionality will not work.
-
-## 🔧 Configuration
-
-Frosti uses `frosti.config.yaml` as its configuration file, where you can configure the website's basic information, navigation bar, footer, and more.
+Aeralis uses `aeralis.config.yaml` as its configuration file, where you can configure the website's basic information, navigation bar, footer, and more.
 
 ### Website Basic Information (site)
 
 ```yaml
 site:
-  tab: Frosti # Text displayed in the browser tab
-  title: Frosti # Website title
+  url: https://aeralis.saroprock.com # Website URL
+  tab: Aeralis # Text displayed in the browser tab
+  title: Aeralis # Website title
   description: A clean, elegant, and fast static blog template! # Website description for SEO
   language: en # Website language code, e.g., "en" for English, "zh" for Chinese
   favicon: /favicon.ico # Website favicon path

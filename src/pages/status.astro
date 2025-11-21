@@ -1,0 +1,261 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import MainCard from "@/components/MainCard.astro";
+import { Icon } from "astro-icon/components";
+import { services } from "@/config/services";
+import { fetchMonitors, mapStatus, getAverageResponseTime, getUptimePercentage } from "@/lib/uptimerobot";
+
+// Get API key from environment
+const apiKey = import.meta.env.PUBLIC_UPTIMEROBOT_API_KEY;
+
+// Fetch monitor data from UptimeRobot
+let monitorData: any[] = [];
+let uptimeError: string | null = null;
+
+if (!apiKey) {
+  uptimeError = "未配置 UptimeRobot API 密钥";
+} else {
+  try {
+    const monitorIds = services.map((s) => s.uptimeRobotId);
+    const response = await fetchMonitors(apiKey, monitorIds);
+
+    if (response.stat === 'ok' && response.monitors) {
+      monitorData = services.map((service) => {
+        const monitor = response.monitors!.find(
+          (m) => m.id.toString() === service.uptimeRobotId
+        );
+
+        if (!monitor) {
+          return {
+            ...service,
+status: 'down',
+            responseTime: 0,
+            uptime: 0,
+            lastCheck: new Date().toISOString()
+          };
+        }
+
+        return {
+          ...service,
+          status: mapStatus(monitor.status),
+          responseTime: getAverageResponseTime(monitor) || 0,
+          uptime: getUptimePercentage(monitor),
+          lastCheck: new Date().toISOString(),
+          responseTimes: monitor.response_times || []
+        };
+      });
+    } else {
+      uptimeError = response.error?.message || "获取监控数据失败";
+    }
+  } catch (error) {
+    uptimeError = `API 请求失败: ${error}`;
+  }
+}
+---
+
+<BaseLayout title="系统状态" description="服务运行状态监控" hideSubtitle={true}>
+  <MainCard
+    image="https://vip.123pan.cn/1815727707/yk6baz03t0n000d7w33hdvm2j915mcwbDIYPAIUvAwUOAvxvAdrxAa==.png"
+    infoIcon="lucide:activity"
+  >
+    {uptimeError ? (
+      <!-- Error Display -->
+      <div class="mb-8 p-6 rounded-2xl border border-red-200 bg-gradient-to-r from-red-50 to-rose-50">
+        <div class="flex items-center gap-3">
+          <div class="w-12 h-12 rounded-full bg-red-500 flex items-center justify-center">
+            <Icon name="lucide:alert-circle" class="w-7 h-7 text-white" />
+          </div>
+          <div>
+            <h2 class="text-2xl font-bold text-red-800">无法获取状态数据</h2>
+            <p class="text-sm text-red-600">{uptimeError}</p>
+          </div>
+        </div>
+      </div>
+    ) : (
+      <>
+        <!-- Overall Status Banner -->
+        <div
+          id="overall-status"
+          class:list={[
+            "mb-8 p-6 rounded-2xl border transition-all duration-300 bg-gradient-to-r",
+            monitorData.every((m) => m.status === 'operational')
+              ? "from-green-50 to-emerald-50 border-green-200"
+              : monitorData.some((m) => m.status === 'down')
+              ? "from-red-50 to-rose-50 border-red-200"
+              : "from-yellow-50 to-amber-50 border-yellow-200"
+          ]}
+        >
+          <div class="flex items-center gap-3">
+            <div class:list={[
+              "w-12 h-12 rounded-full flex items-center justify-center",
+              monitorData.every((m) => m.status === 'operational') ? "bg-green-500" :
+              monitorData.some((m) => m.status === 'down') ? "bg-red-500" : "bg-yellow-500"
+            ]}>
+              <Icon
+                name={
+                  monitorData.every((m) => m.status === 'operational') ? "lucide:check" :
+                  monitorData.some((m) => m.status === 'down') ? "lucide:alert-circle" : "lucide:alert-triangle"
+                }
+                class="w-7 h-7 text-white"
+              />
+            </div>
+            <div>
+              <h2 class:list={[
+                "text-2xl font-bold",
+                monitorData.every((m) => m.status === 'operational') ? "text-green-800" :
+                monitorData.some((m) => m.status === 'down') ? "text-red-800" : "text-yellow-800"
+              ]}>
+                {monitorData.every((m) => m.status === 'operational') ? "所有系统运行正常" :
+                 monitorData.some((m) => m.status === 'down') ? "部分系统异常" : "部分系统响应缓慢"}
+              </h2>
+              <p class:list={[
+                "text-sm",
+                monitorData.every((m) => m.status === 'operational') ? "text-green-600" :
+                monitorData.some((m) => m.status === 'down') ? "text-red-600" : "text-yellow-600"
+              ]}>
+                {(() => {
+                  const total = monitorData.length;
+                  const downCount = monitorData.filter(m => m.status === 'down').length;
+                  const degradedCount = monitorData.filter(m => m.status === 'degraded').length;
+                  const abnormalCount = downCount + degradedCount;
+
+                  if (abnormalCount === 0) {
+                    return `当前 ${total} 个服务全部正常`;
+                  } else {
+                    return `当前总共 ${total} 个服务，其中 ${abnormalCount} 个服务异常`;
+                  }
+                })()}
+                <span class="mx-1">·</span>
+                喵喵喵
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Services Grid -->
+        <div class="space-y-3">
+          {monitorData.map((service) => (
+            <div class="service-card relative rounded-lg border border-base-200 bg-base-100/80 backdrop-blur-sm hover:shadow-lg transition-all duration-300 overflow-visible p-4">
+              {/* Status Bar Top */}
+              <div class:list={[
+                "absolute top-0 left-0 right-0 h-0.5",
+                service.status === 'operational' ? "bg-green-500" :
+                service.status === 'degraded' ? "bg-yellow-500" : "bg-red-500"
+              ]} />
+
+              {/* Header */}
+              <div class="flex items-center justify-between mb-3">
+                <div class="flex items-center gap-2.5">
+                  <div class="w-8 h-8 rounded-lg bg-base-200 flex items-center justify-center">
+                    <Icon name={service.type === "worker" ? "lucide:server" : "lucide:layout"} class="w-4 h-4" />
+                  </div>
+                  <div>
+                    <h3 class="text-base font-bold flex items-center gap-2">
+                      {service.name}
+                      <div class:list={[
+                        "w-1.5 h-1.5 rounded-full",
+                        service.status === 'operational' ? "bg-green-500" :
+                        service.status === 'degraded' ? "bg-yellow-500" : "bg-red-500"
+                      ]} />
+                    </h3>
+                    <a
+                      href={service.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="text-xs text-base-content/50 hover:text-primary transition-colors flex items-center gap-1"
+                    >
+                      {new URL(service.url).hostname}
+                      <Icon name="lucide:external-link" class="w-2.5 h-2.5" />
+                    </a>
+                  </div>
+                </div>
+                <div class="text-right">
+                  <div class="text-xl font-bold text-green-600">{service.uptime.toFixed(1)}%</div>
+                  <div class="text-xs text-base-content/50">30天在线率</div>
+                </div>
+              </div>
+
+              {/* 24-Hour Capsule Chart */}
+              {service.responseTimes && service.responseTimes.length > 0 && (
+                <div class="rounded-lg bg-gradient-to-br from-base-200/30 to-base-300/20 p-3">
+                  <div class="flex items-center justify-between mb-2">
+                    <span class="text-xs font-medium text-base-content/70">最近 24 小时</span>
+                    <span class="text-xs text-base-content/50">
+                      平均响应: <span class="font-mono font-semibold">{service.responseTime}ms</span>
+                    </span>
+                  </div>
+
+                  {/* Capsule Pills */}
+                  <div class="flex items-center gap-0.5">
+                    {service.responseTimes.slice(0, 48).reverse().map((rt: any, index: number) => {
+                      const isUp = rt.value > 0;
+                      const isFast = rt.value > 0 && rt.value < 500;
+                      const isMedium = rt.value >= 500 && rt.value < 1000;
+                      const time = new Date(rt.datetime * 1000);
+                      const timeStr = time.toLocaleString('zh-CN', {
+                        month: 'short',
+                        day: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                      });
+
+                      return (
+                        <div class="group/pill relative flex-1">
+                          {/* Capsule Pill */}
+                          <div
+                            class:list={[
+                              "h-7 rounded-full transition-all duration-200",
+                              "hover:scale-110 hover:shadow-md cursor-pointer",
+                              isFast ? "bg-green-500" : isMedium ? "bg-yellow-500" : isUp ? "bg-orange-500" : "bg-red-500"
+                            ]}
+                          />
+
+                          {/* Tooltip - Fixed z-index */}
+                          <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 opacity-0 group-hover/pill:opacity-100 pointer-events-none transition-opacity duration-200 z-[9999]">
+                            <div class="bg-base-100 border border-base-300 rounded-lg shadow-xl p-2.5 min-w-[140px] whitespace-nowrap">
+                              <div class="text-xs font-medium text-base-content/60 mb-1.5">{timeStr}</div>
+                              <div class="flex items-center justify-between gap-2 mb-1">
+                                <span class="text-xs text-base-content/50">状态:</span>
+                                <span class:list={[
+                                  "text-xs font-bold",
+                                  isFast ? "text-green-600" : isMedium ? "text-yellow-600" : isUp ? "text-orange-600" : "text-red-600"
+                                ]}>
+                                  {isFast ? "快速" : isMedium ? "正常" : isUp ? "较慢" : "离线"}
+                                </span>
+                              </div>
+                              <div class="flex items-center justify-between gap-2">
+                                <span class="text-xs text-base-content/50">响应:</span>
+                                <span class="text-xs font-mono font-semibold">{rt.value}ms</span>
+                              </div>
+                              {/* Arrow */}
+                              <div class="absolute top-full left-1/2 -translate-x-1/2 -mt-px">
+                                <div class="border-4 border-transparent border-t-base-100"></div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+
+                  {/* Bottom Info */}
+                  <div class="flex items-center justify-between mt-2 text-xs text-base-content/50">
+                    <span>0 incidents, 0m down</span>
+                    <span>{service.responseTimes.length} 个数据点</span>
+                  </div>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+
+        <!-- Last Updated -->
+        <div class="mt-8 text-center text-sm text-base-content/40">
+          <p>
+            数据来源: UptimeRobot API · 刷新页面以获取最新状态
+          </p>
+        </div>
+      </>
+    )}
+  </MainCard>
+</BaseLayout>

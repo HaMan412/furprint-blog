@@ -2,7 +2,7 @@
 
 ## Our Pledge
 
-We, the contributors and maintainers of the Frosti project, pledge to create and maintain a welcoming and inclusive environment for all individuals who contribute to this project. We are committed to fostering an open and supportive community where everyone feels valued and respected.
+We, the contributors and maintainers of the Aeralis project, pledge to create and maintain a welcoming and inclusive environment for all individuals who contribute to this project. We are committed to fostering an open and supportive community where everyone feels valued and respected.
 
 ## Our Standards
 

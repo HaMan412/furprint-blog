@@ -2,11 +2,13 @@ export function initCopyButtons() {
   const copyButtons = document.querySelectorAll(".btn-copy");
   copyButtons.forEach((btn) => {
     btn.addEventListener("click", async () => {
-      const codeBlock = btn.closest(".frosti-code");
-      if (!codeBlock) return;
+      const codeBlock = btn.closest(".aeralis-code");
+      if (!codeBlock)
+        return;
 
       const codeContent = codeBlock.querySelector("code");
-      if (!codeContent) return;
+      if (!codeContent)
+        return;
 
       let text = "";
       const lines = codeContent.querySelectorAll(".line");
@@ -14,15 +16,16 @@ export function initCopyButtons() {
         text = Array.from(lines)
           .map((line) => line.textContent)
           .join("\n");
-      } else {
+      }
+      else {
         text = codeContent.textContent || "";
       }
 
       try {
         await navigator.clipboard.writeText(text);
-        const copyIcon = btn.querySelector(".frosti-code-toolbar-copy-icon");
+        const copyIcon = btn.querySelector(".aeralis-code-toolbar-copy-icon");
         const successIcon = btn.querySelector(
-          ".frosti-code-toolbar-copy-success",
+          ".aeralis-code-toolbar-copy-success",
         );
 
         if (copyIcon && successIcon) {
@@ -34,7 +37,8 @@ export function initCopyButtons() {
             successIcon.classList.add("hidden");
           }, 2000);
         }
-      } catch (err) {
+      }
+      catch (err) {
         console.error("Failed to copy:", err);
       }
     });

@@ -8,8 +8,7 @@
   class="min-h-[1.5em] flex items-center justify-center text-2xl md:text-3xl"
   style="font-family: 'ZCOOL KuaiLe', cursive;"
 >
-  <span id="hitokoto_text" class="cursor-pointer select-none font-medium"></span>
-  <span id="hitokoto_cursor" class="font-bold text-white animate-blink ml-1">|</span>
+  <span id="hitokoto_text" class="select-none font-medium"></span>
 </div>
 
 <script>
@@ -17,12 +16,10 @@
 
   function fetchHitokoto() {
     const textElement = document.getElementById("hitokoto_text");
-    const cursorElement = document.getElementById("hitokoto_cursor");
     if (!textElement) return;
 
     // 清空文本，准备打字
-    textElement.innerText = "";
-    if (cursorElement) cursorElement.style.display = "inline";
+    textElement.innerHTML = "";
 
     const typeText = (text: string, from: string) => {
       let i = 0;
@@ -31,14 +28,15 @@
       // 设置 title (鼠标悬停显示出处)
       textElement.title = from;
 
-      // 清除之前的打字动画
-      textElement.innerText = "";
-
       const type = () => {
         if (i < text.length) {
-          textElement.innerText += text.charAt(i);
+          // 每次打字都更新文本 + 光标
+          textElement.innerHTML = text.substring(0, i + 1) + '<span class="cursor">|</span>';
           i++;
           setTimeout(type, speed);
+        } else {
+          // 打字完成，保留光标在文字末尾
+          textElement.innerHTML = text + '<span class="cursor">|</span>';
         }
       };
       // 立即开始打字
@@ -83,30 +81,27 @@
       });
   }
 
-  // 页面加载时获取
+  // 仅在页面加载时获取一言
   document.addEventListener("astro:page-load", fetchHitokoto);
-
-  // 点击刷新
-  document.addEventListener("astro:page-load", () => {
-    const container = document.getElementById("hitokoto-container");
-    if (container) {
-      container.addEventListener("click", fetchHitokoto);
-    }
-  });
 </script>
 
-<style>
+<style is:global>
   #hitokoto_text {
     display: inline;
     max-width: 80vw;
     white-space: pre-wrap;
     word-break: break-word;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); /* 增加一点阴影提高可读性 */
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
   }
 
-  .animate-blink {
+  /* 光标样式 - 必须使用 is:global 因为光标是动态插入的 */
+  #hitokoto_text .cursor {
+    display: inline;
+    font-weight: bold;
+    color: white;
     animation: blink 1s step-end infinite;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    margin-left: 2px;
   }
 
   @keyframes blink {
