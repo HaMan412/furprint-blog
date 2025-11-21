@@ -51,12 +51,14 @@
       typeText(fullText, source);
     };
 
-    // 优先请求自部署的一言 API（使用 HTTP）
+    // 使用自部署的 HTTPS 一言 API
     const timestamp = new Date().getTime();
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 2000); // 2秒超时
+    const timeoutId = setTimeout(() => controller.abort(), 3000); // 3秒超时
 
-    fetch(`http://frp-few.com:15239/?c=a&c=b&c=c&t=${timestamp}`, {
+    const apiUrl = `https://hitokoto.furprint.top/?t=${timestamp}`;
+
+    fetch(apiUrl, {
       signal: controller.signal,
     })
       .then((response) => {
@@ -65,17 +67,17 @@
         return response.json();
       })
       .then((data) => {
-        console.log("✅ 自部署 Hitokoto API 成功:", data.hitokoto);
+        console.log("✅ 一言 API 成功:", data.hitokoto);
         updateText(data);
       })
       .catch((err) => {
         clearTimeout(timeoutId);
         if (err.name === "AbortError") {
-          console.warn("⏱️ 自部署 API 超时（2秒），使用预设");
+          console.warn("⏱️ API 超时（3秒），使用预设");
         } else {
-          console.warn("⚠️ 自部署 API 失败，使用预设:", err.message);
+          console.warn("⚠️ API 失败，使用预设:", err.message);
         }
-        // API 失败或超时，显示随机预设
+        // API 失败或超时，显示预设
         const randomQuote = FALLBACK_QUOTES[Math.floor(Math.random() * FALLBACK_QUOTES.length)];
         updateText(randomQuote);
       });
