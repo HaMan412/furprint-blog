@@ -18,9 +18,11 @@ let error = "";
 
 try {
   const response = await fetch("https://api.github.com/repos/HaMan412/furprint-blog/commits?per_page=5");
+
   if (!response.ok) {
     throw new Error("Failed to fetch commits");
   }
+
   commits = await response.json();
 } catch (e) {
   console.error("Error fetching commits:", e);
