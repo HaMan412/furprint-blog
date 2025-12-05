@@ -3,7 +3,7 @@ title: Clash Verge的基础使用与配置git代理
 description: Clash Verge的基础使用与配置git代理
 pubDate: "2025-06-13"
 draft: false
-image: "![](https://image.furprint.top/Blogs/clash-banner.webp)"
+image: "https://image.furprint.top/Blogs/clash-banner.webp"
 categories:
   - Documentation
 tags:
