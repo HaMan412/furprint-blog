@@ -3,7 +3,7 @@ title: Gemini Balance apikey轮训代理保姆级搭建教程
 description: Gemini Balance apikey 轮训代理保姆级搭建教程
 pubDate: "2025-10-22"
 draft: false
-image: "https://vip.123pan.cn/1815727707/yk6baz03t0l000d7w33feu0ai5v9hf1mDIYPAIUvAwUOAvxvAdrxAa==.png"
+image: "![](https://image.furprint.top/Blogs/gemini-balance-banner.webp)"
 categories:
   - Documentation
 tags:
